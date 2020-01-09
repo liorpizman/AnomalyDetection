@@ -1,6 +1,6 @@
 # AnomalyDetection
 
-A system which that will create a comparison between different anomaly detection algorithms based on streaming data from UAV sensors in to order to get the earliest possible detection of GPS spoofing attacks on UAV’s.
+A system which will create a comparison between different anomaly detection algorithms based on streaming data from UAV sensors in to order to get the earliest possible detection of GPS spoofing attacks on UAV’s.
 
 ## Getting Started
 
