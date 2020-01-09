@@ -14,16 +14,17 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.similarity_functions_title = tk.Label(self, text="Choose similarity functions",
                                                    font=controller.title_font)
 
-        self.similarity_functions = Checkbar(self, load_similarity_list(), callback=self.set_similarity_score)
+        self.similarity_functions = Checkbar(self, load_similarity_list(), checkCallback=self.set_similarity_score)
 
         self.back_button = tk.Button(self, text="Back",
                                      command=lambda: controller.show_frame("FeatureSelectionWindow"))
 
         self.run_button = tk.Button(self, text="Run",
-                                    command= self.run_models)  # , command=lambda: controller.create_function_to_run)
+                                    command=self.run_models)
 
         self.save_model_var = tk.IntVar()
-        self.save_model_check_button = tk.Checkbutton(self, text="save model", variable=self.save_model_var, command=self.set_saving_model)
+        self.save_model_check_button = tk.Checkbutton(self, text="save model", variable=self.save_model_var,
+                                                      command=self.set_saving_model)
 
         # Layout using grid
         self.similarity_functions_title.grid(row=0, column=2, pady=3)
@@ -44,6 +45,7 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.controller.set_similarity_score(similarity_list)
 
     def run_models(self):
+        self.controller.show_frame("LoadingWindow")
         self.controller.run_models()
         print("run")
 

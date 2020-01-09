@@ -7,8 +7,6 @@ from tkinter.filedialog import askdirectory
 from gui.checkbox import Checkbar
 from gui.menubar import Menubar
 
-
-
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~  Class Description ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     This class contains the main configuration of graphic user interface
@@ -17,7 +15,6 @@ from gui.menubar import Menubar
 ANOMALY_DETECTION_METHODS = 'anomaly_detection_methods'
 FEATURE_SELECTION_METHODS = 'feature_selection_methods'
 SIMILARITY_FUNCTIONS = 'similarity_functions'
-
 
 # Remove all strings to yaml files (including labels and titles)
 
@@ -28,9 +25,6 @@ class GUI(ttk.Frame):
         ttk.Frame.__init__(self, parent, *args, **kwargs)
         self.load_classification_methods()
         self.init_gui(parent)
-
-    # def openwindow(self):
-    #     self.new_win = tkinter.Toplevel(self.root)  # Set parent
 
     def load_classification_methods(self):
         with open(r'.\shared\classification_methods.yaml') as file:

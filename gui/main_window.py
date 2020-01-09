@@ -18,7 +18,8 @@ class MainWindow(tk.Frame):
 
         button1 = tk.Button(self, text="New model", pady=5, padx=5,
                             command=lambda: controller.show_frame("NewModel"))
-        button2 = tk.Button(self, text="Load existing model", pady=5, padx=5,
+        # in the meantime it will be disabled
+        button2 = tk.Button(self, state='disabled', text="Load existing model", pady=5, padx=5,
                             command=lambda: controller.show_frame("LoadModel"))
 
         button1.pack(side="left", fill="x", pady=10, padx=50)
