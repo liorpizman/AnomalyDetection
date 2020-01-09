@@ -1,8 +1,15 @@
+import os
+
 import numpy as np
 from numpy import dot
 from numpy.linalg import norm
 import pandas as pd
 import yaml
+
+from utils.shared.lstm_hyper_parameters import lstm_hyper_parameters
+
+import shutil
+from datetime import datetime
 
 
 def cosine_similarity(x, y):
@@ -25,7 +32,7 @@ def euclidean_distance(x, y):
     return np.linalg.norm(x - y)
 
 
-def anomaly_score(input_vector, output_vector, dist='cosine'):
+def anomaly_score(input_vector, output_vector, similarity_score='Cosine similarity'):
     """
     calculate the anomaly of single output decoder
     :param x: input vector
@@ -34,21 +41,22 @@ def anomaly_score(input_vector, output_vector, dist='cosine'):
     """
     assert len(input_vector) == len(output_vector)
     assert len(input_vector) > 0
-    assert dist == 'cosine' or dist == 'euclidean'
+    assert similarity_score == 'Cosine similarity' or similarity_score == 'euclidean'
 
     switcher = {
-        "cosine": 1 - cosine_similarity(input_vector, output_vector),
+        "Cosine similarity": 1 - cosine_similarity(input_vector, output_vector),
         "euclidean_distance": euclidean_distance(input_vector, output_vector)
     }
 
-    return switcher.get(dist, euclidean_distance(input_vector, output_vector))
+    return switcher.get(similarity_score, euclidean_distance(input_vector, output_vector))
 
 
-def anomaly_score_multi(input_vectors, output_vectors):
+def anomaly_score_multi(input_vectors, output_vectors, similarity_score):
     """
     calculate the anomaly of a multiple output decoder
     :param input_vectors: list of input vectors
     :param output_vectors: list of output vectors
+    :param similarity_score: name of similarity score function
     :return: anomaly score based on cosine similarity
     """
     sum = 0
@@ -58,7 +66,7 @@ def anomaly_score_multi(input_vectors, output_vectors):
     assert input_length > 0
 
     for i in range(input_length):
-        sum += anomaly_score(input_vectors[i], output_vectors[i])
+        sum += anomaly_score(input_vectors[i], output_vectors[i],similarity_score)
 
     return sum / input_length
 
@@ -136,7 +144,7 @@ def get_thresholds(list_scores, percent):
     return [get_threshold(scores, percent) for scores in list_scores]
 
 
-def get_previous_method_scores(prediction, windows):
+def get_method_scores(prediction, windows):
     """
     get previous method scores (TPR, FPR, delay)
     :param prediction: predictions
@@ -150,37 +158,40 @@ def get_previous_method_scores(prediction, windows):
 
     detection_delay = -1
 
-    for window in windows:
-        upper = window["upper"]
-        lower = window["lower"]
-        assert len(prediction) >= upper
-        assert upper > lower
+    #for window in windows:
+        # upper = window["upper"]
+        # lower = window["lower"]
 
-        was_detected = False
+    lower = 180 - lstm_hyper_parameters.get_window_size() + 1
+    upper = 249
+    assert len(prediction) >= upper
+    assert upper > lower
 
-        for i in range(lower):
-            if prediction[i] == 1:
-                fp += 1
-            else:
-                tn += 1
+    was_detected = False
 
-        for i in range(lower, upper):
-            if prediction[i] == 1:
-                tp += 1
-                if not was_detected:
-                    was_detected = True
-                    detection_delay = i - lower
-            else:
-                fn += 1
+    for i in range(lower):
+        if prediction[i] == 1:
+            fp += 1
+        else:
+            tn += 1
 
-        for i in range(upper, len(prediction)):
-            if prediction[i] == 1:
-                fp += 1
-            else:
-                tn += 1
+    for i in range(lower, upper):
+        if prediction[i] == 1:
+            tp += 1
+            if not was_detected:
+                was_detected = True
+                detection_delay = i - lower
+        else:
+            fn += 1
 
-        if not was_detected:
-            detection_delay = upper - lower
+    for i in range(upper, len(prediction)):
+        if prediction[i] == 1:
+            fp += 1
+        else:
+            tn += 1
+
+    if not was_detected:
+        detection_delay = upper - lower
 
     tpr = tp / (tp + fn)
     fpr = fp / (fp + tn)
@@ -188,20 +199,65 @@ def get_previous_method_scores(prediction, windows):
     return tpr, fpr, detection_delay
 
 
-def report_results(results_dir_path, verbose=1):
+# def report_results(results_dir_path, verbose=1):
+#     """
+#
+#     :param results_dir_path:
+#     :param verbose:
+#     :return:
+#     """
+#     ATTACKS = load_attacks()
+#     FLIGHT_ROUTES = load_flight_routes()
+#
+#     for result in ["nab", "fpr", "tpr", "delay"]:
+#         results = pd.DataFrame(columns=ATTACKS)
+#         for i, flight_route in enumerate(FLIGHT_ROUTES):
+#             df = pd.read_csv(f'{results_dir_path}/{flight_route}_{result}.csv')
+#             mean = df.mean(axis=0).values
+#             std = df.std(axis=0).values
+#             output = [f'{round(x, 2)}±{round(y, 2)}%' for x, y in zip(mean, std)]
+#             results.loc[i] = output
+#
+#         results.index = FLIGHT_ROUTES
+#
+#         if verbose:
+#             print(results)
+#
+#         results.to_csv(f'{results_dir_path}/final_{result}.csv')
+
+def get_subdirectories(path):
+    directories = []
+    for directory in os.listdir(path):
+        if os.path.isdir(os.path.join(path, directory)):
+            directories.append(directory)
+    return directories
+
+def create_directories(path):
+    if os.path.exists(path) and os.path.isdir(path):
+        shutil.rmtree(path)
+    else:
+        os.makedirs(path)
+
+
+def get_current_time():
+    now = datetime.now()
+    return now.strftime("%b-%d-%Y-%H-%M-%S")
+
+def report_results(results_dir_path, test_data_path ,FLIGHT_ROUTES ,verbose=1):
     """
 
     :param results_dir_path:
     :param verbose:
     :return:
     """
-    ATTACKS = load_attacks()
-    FLIGHT_ROUTES = load_flight_routes()
+    for flight_route in FLIGHT_ROUTES:
+        fligth_dir = os.path.join(test_data_path, flight_route)
+        ATTACKS = get_subdirectories(fligth_dir)
 
-    for result in ["nab", "fpr", "tpr", "delay"]:
+    for result in ["fpr", "tpr", "delay"]:
         results = pd.DataFrame(columns=ATTACKS)
         for i, flight_route in enumerate(FLIGHT_ROUTES):
-            df = pd.read_csv(f'{results_dir_path}/{flight_route}_{result}.csv')
+            df = pd.read_csv(f'{results_dir_path}/{flight_route}/{flight_route}_{result}.csv')
             mean = df.mean(axis=0).values
             std = df.std(axis=0).values
             output = [f'{round(x, 2)}±{round(y, 2)}%' for x, y in zip(mean, std)]
