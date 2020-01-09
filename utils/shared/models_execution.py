@@ -7,6 +7,7 @@ class models_execution:
 
     @staticmethod
     def run_models():
+        # do it in function
         algorithms = input_settings.get_algorithms()
         similarity_score = input_settings.get_similarity()
         training_data_path = input_settings.get_training_data_path()
