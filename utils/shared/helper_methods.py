@@ -5,6 +5,7 @@ from numpy import dot
 from numpy.linalg import norm
 import pandas as pd
 import yaml
+import matplotlib.pyplot as plt
 
 from utils.shared.lstm_hyper_parameters import lstm_hyper_parameters
 
@@ -301,3 +302,42 @@ def load_attacks():
 
 def load_flight_routes():
     return load_from_yaml('names', 'FLIGHT_ROUTES')
+
+
+def plot(data, xlabel, ylabel, title,plot_dir):
+    """
+    plot
+    :param data: the data
+    :param xlabel: x-axis label
+    :param ylabel: y-axis label
+    :param title: title
+    :return:
+    """
+    plt.plot(data)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.savefig(f'{plot_dir}/{title}.png')
+
+    #plt.show()
+
+def plot_reconstruction_error_scatter(scores, labels, threshold,plot_dir, title="Outlier Score - After Training",):
+    """
+    plot reconstruction error as a scatter plot
+    :param scores:
+    :param labels:
+    :param threshold:
+    :return:
+    """
+    plt.figure(figsize=(28, 7))
+    plt.scatter(range(len(scores)), scores, c=['k' if label == 1 else 'w' for label in labels],
+                edgecolors=['k' if label == 1 else 'y' for label in labels], s=15, alpha=0.4)
+    plt.xlabel("Index")
+    plt.ylabel("Score")
+    plt.title(title)
+
+    plt.hlines(y=threshold, xmin=plt.xlim()[0], xmax=plt.xlim()[1], colors='r')
+
+
+    plt.savefig(f'{plot_dir}/{title}.png')
+    #plt.show()
