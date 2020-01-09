@@ -48,21 +48,26 @@ class AnomalyDetectionGUI(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()
 
+    def set_new_model_training_input_path(self, input):
+        self.model_controller.set_training_data_path(input)
 
-    def set_new_model_training_input_path(self,input):
-        self.model_controller.set_training_data_dir(input)
+    def set_new_model_test_input_path(self, input):
+        self.model_controller.set_test_data_path(input)
 
-    def set_new_model_test_input_path(self,input):
-        self.model_controller.set_test_data_dir(input)
+    def set_new_model_results_input_path(self,input):
+        self.model_controller.set_results_path(input)
 
-    def set_algorithm_parameters(self,algorithm_name,algorithm_parameters):
-        self.model_controller.set_algorithm_parameters(algorithm_name,algorithm_parameters)
+    def set_algorithm_parameters(self, algorithm_name, algorithm_parameters):
+        self.model_controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
 
-    def remove_algorithm_parameters(self,algorithm_name, algorithm_parameters):
+    def remove_algorithm_parameters(self, algorithm_name, algorithm_parameters):
         self.model_controller.remove_algorithm_parameters(algorithm_name, algorithm_parameters)
 
-    def set_similarity_score(self,similarity_list):
+    def set_similarity_score(self, similarity_list):
         self.model_controller.set_similarity_score(similarity_list)
+
+    def set_saving_model(self, save_model):
+        self.model_controller.set_saving_model(save_model)
 
     def run_models(self):
         self.model_controller.run_models()

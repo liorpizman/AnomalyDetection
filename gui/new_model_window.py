@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import END
 
-from gui.utils.helper_methods import set_training_path, set_test_path
+from gui.utils.helper_methods import set_training_path, set_test_path, set_path
 
 
 class NewModel(tk.Frame):
@@ -15,11 +15,15 @@ class NewModel(tk.Frame):
 
         self.training_label = tk.Label(self, text="Training directory")
         self.training_input = tk.Entry(self, width=80)
-        self.training_btn = tk.Button(self, text="Browse", command= self.set_input_path)
+        self.training_btn = tk.Button(self, text="Browse", command=self.set_input_path)
 
         self.test_label = tk.Label(self, text="Test directory")
         self.test_input = tk.Entry(self, width=80)
-        self.test_btn = tk.Button(self, text="Browse", command= self.set_test_path)
+        self.test_btn = tk.Button(self, text="Browse", command=self.set_test_path)
+
+        self.results_label = tk.Label(self, text="Results directory")
+        self.results_input = tk.Entry(self, width=80)
+        self.results_btn = tk.Button(self, text="Browse", command=self.set_results_path)
 
         self.back_button = tk.Button(self, text="Back",
                                      command=lambda: controller.show_frame("MainWindow"))
@@ -38,19 +42,27 @@ class NewModel(tk.Frame):
         self.test_label.grid(row=2, column=0, pady=3)
         self.test_btn.grid(row=2, column=2, pady=3)
 
+        self.results_input.grid(row=3, column=1, pady=3, padx=10)
+        self.results_label.grid(row=3, column=0, pady=3)
+        self.results_btn.grid(row=3, column=2, pady=3)
+
         self.back_button.grid(row=15, column=0, pady=3)
         self.next_button.grid(row=15, column=3, pady=3)
 
-
     def set_input_path(self):
         self.training_input.delete(0, END)
-        path = set_training_path()
-        self.training_input.insert(0,path)
+        path = set_path()
+        self.training_input.insert(0, path)
         self.controller.set_new_model_training_input_path(path)
-
 
     def set_test_path(self):
         self.test_input.delete(0, END)
-        path = set_test_path()
-        self.test_input.insert(0,path)
+        path = set_path()
+        self.test_input.insert(0, path)
         self.controller.set_new_model_test_input_path(path)
+
+    def set_results_path(self):
+        self.results_input.delete(0, END)
+        path = set_path()
+        self.results_input.insert(0, path)
+        self.controller.set_new_model_results_input_path(path)

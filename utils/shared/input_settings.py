@@ -3,26 +3,36 @@ from utils.shared.lstm_hyper_parameters import lstm_hyper_parameters
 
 class input_settings:
 
-    TRAINING_DATA_DIR = ""
-    TEST_DATA_DIR = ""
+    TRAINING_DATA_PATH = ""
+    TEST_DATA_PATH = ""
+    RESULTS_DATA_PATH = ""
     ALGORITHMS = set()
     SIMILARITY_SCORES = set()
+    SAVE_MODEL = False
 
     @staticmethod
-    def set_training_data_dir(dir):
-        input_settings.TRAINING_DATA_DIR = dir
+    def set_training_data_path(path):
+        input_settings.TRAINING_DATA_PATH = path
 
     @staticmethod
-    def get_training_data_dir():
-        return input_settings.TRAINING_DATA_DIR
+    def get_training_data_path():
+        return input_settings.TRAINING_DATA_PATH
 
     @staticmethod
-    def set_test_data_dir(dir):
-        input_settings.TEST_DATA_DIR = dir
+    def set_test_data_path(path):
+        input_settings.TEST_DATA_PATH = path
 
     @staticmethod
-    def get_test_data_dir():
-        return input_settings.TEST_DATA_DIR
+    def get_test_data_path():
+        return input_settings.TEST_DATA_PATH
+
+    @staticmethod
+    def set_results_path(path):
+        input_settings.RESULTS_DATA_PATH = path
+
+    @staticmethod
+    def get_results_path():
+        return input_settings.RESULTS_DATA_PATH
 
     @staticmethod
     def get_algorithms():
@@ -61,6 +71,14 @@ class input_settings:
     @staticmethod
     def set_similarity_score(similarity_list):
         input_settings.SIMILARITY_SCORES = similarity_list
+
+    @staticmethod
+    def set_saving_model(save_model):
+        input_settings.SAVE_MODEL = save_model
+
+    @staticmethod
+    def get_saving_model():
+        return input_settings.SAVE_MODEL
 
 
 
