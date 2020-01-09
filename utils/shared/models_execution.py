@@ -4,7 +4,6 @@ from utils.shared.input_settings import input_settings
 
 class models_execution:
 
-
     @staticmethod
     def run_models():
         algorithms = input_settings.get_algorithms()
@@ -15,7 +14,7 @@ class models_execution:
         save_model = input_settings.get_saving_model()
 
         for algorithm in algorithms:
-            model_execution_function = getattr(models_execution, algorithm+"_execution")
+            model_execution_function = getattr(models_execution, algorithm + "_execution")
             model_execution_function(training_data_path,
                                      test_data_path,
                                      results_path,
@@ -28,7 +27,6 @@ class models_execution:
                        results_path,
                        similarity_score,
                        save_model):
-
         run_model(training_data_path,
                   test_data_path,
                   results_path,

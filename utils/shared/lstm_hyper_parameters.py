@@ -1,4 +1,3 @@
-
 class lstm_hyper_parameters:
     # number of training samples to use for encoding and decoding each time for the LSTM
     LSTM_WINDOW_SIZE = None
@@ -53,11 +52,11 @@ class lstm_hyper_parameters:
         return lstm_hyper_parameters.LSTM_ACTIVATION
 
     @staticmethod
-    def set_loss (loss ):
+    def set_loss(loss):
         lstm_hyper_parameters.LSTM_LOSS = loss
 
     @staticmethod
-    def remove_loss (loss ):
+    def remove_loss(loss):
         lstm_hyper_parameters.LSTM_LOSS = None
 
     @staticmethod
@@ -65,11 +64,11 @@ class lstm_hyper_parameters:
         return lstm_hyper_parameters.LSTM_LOSS
 
     @staticmethod
-    def set_optimizer (optimizer ):
+    def set_optimizer(optimizer):
         lstm_hyper_parameters.LSTM_OPTIMIZER = optimizer
 
     @staticmethod
-    def remove_optimizer (optimizer ):
+    def remove_optimizer(optimizer):
         lstm_hyper_parameters.LSTM_OPTIMIZER = None
 
     @staticmethod
@@ -77,16 +76,13 @@ class lstm_hyper_parameters:
         return lstm_hyper_parameters.LSTM_OPTIMIZER
 
     @staticmethod
-    def set_threshold (threshold ):
+    def set_threshold(threshold):
         lstm_hyper_parameters.LSTM_THRESHOLD_FROM_TRAINING_PERCENT = float(threshold)
 
     @staticmethod
-    def remove_threshold (threshold ):
+    def remove_threshold(threshold):
         lstm_hyper_parameters.LSTM_THRESHOLD_FROM_TRAINING_PERCENT = None
 
     @staticmethod
     def get_threshold():
         return lstm_hyper_parameters.LSTM_THRESHOLD_FROM_TRAINING_PERCENT
-
-
-

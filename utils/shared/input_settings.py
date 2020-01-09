@@ -2,7 +2,6 @@ from utils.shared.lstm_hyper_parameters import lstm_hyper_parameters
 
 
 class input_settings:
-
     TRAINING_DATA_PATH = ""
     TEST_DATA_PATH = ""
     RESULTS_DATA_PATH = ""
@@ -43,8 +42,8 @@ class input_settings:
         return input_settings.SIMILARITY_SCORES
 
     @staticmethod
-    def set_algorithm_parameters(algorithm_name,algorithm_parameters):
-        algorithm_setting_function = getattr(input_settings, "set_"+algorithm_name)
+    def set_algorithm_parameters(algorithm_name, algorithm_parameters):
+        algorithm_setting_function = getattr(input_settings, "set_" + algorithm_name)
         algorithm_setting_function(algorithm_parameters)
 
     @staticmethod
@@ -56,7 +55,7 @@ class input_settings:
 
     @staticmethod
     def remove_algorithm_parameters(algorithm_name, algorithm_parameters):
-        algorithm_remove_function = getattr(input_settings, "remove_"+algorithm_name)
+        algorithm_remove_function = getattr(input_settings, "remove_" + algorithm_name)
         algorithm_remove_function(algorithm_parameters)
 
     @staticmethod
@@ -79,8 +78,3 @@ class input_settings:
     @staticmethod
     def get_saving_model():
         return input_settings.SAVE_MODEL
-
-
-
-
-

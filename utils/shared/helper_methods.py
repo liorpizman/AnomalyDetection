@@ -66,7 +66,7 @@ def anomaly_score_multi(input_vectors, output_vectors, similarity_score):
     assert input_length > 0
 
     for i in range(input_length):
-        sum += anomaly_score(input_vectors[i], output_vectors[i],similarity_score)
+        sum += anomaly_score(input_vectors[i], output_vectors[i], similarity_score)
 
     return sum / input_length
 
@@ -158,9 +158,9 @@ def get_method_scores(prediction, windows):
 
     detection_delay = -1
 
-    #for window in windows:
-        # upper = window["upper"]
-        # lower = window["lower"]
+    # for window in windows:
+    # upper = window["upper"]
+    # lower = window["lower"]
 
     lower = 180 - lstm_hyper_parameters.get_window_size() + 1
     upper = 249
@@ -232,6 +232,7 @@ def get_subdirectories(path):
             directories.append(directory)
     return directories
 
+
 def create_directories(path):
     if os.path.exists(path) and os.path.isdir(path):
         shutil.rmtree(path)
@@ -243,7 +244,8 @@ def get_current_time():
     now = datetime.now()
     return now.strftime("%b-%d-%Y-%H-%M-%S")
 
-def report_results(results_dir_path, test_data_path ,FLIGHT_ROUTES ,verbose=1):
+
+def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, verbose=1):
     """
 
     :param results_dir_path:

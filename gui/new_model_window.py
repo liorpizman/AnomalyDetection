@@ -1,5 +1,8 @@
+import os
 import tkinter as tk
 from tkinter import END
+
+import win32api
 
 from gui.utils.helper_methods import set_training_path, set_test_path, set_path
 
@@ -9,7 +12,7 @@ class NewModel(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        controller.geometry('800x600')
+        controller.geometry('700x500')
         # Create Widgets
         self.new_model_title = tk.Label(self, text="New model", font=controller.title_font)
 
@@ -29,7 +32,7 @@ class NewModel(tk.Frame):
                                      command=lambda: controller.show_frame("MainWindow"))
 
         self.next_button = tk.Button(self, text="Next",
-                                     command=lambda: controller.show_frame("AlgorithmsWindow"))
+                                     command=lambda: self.validate_next_step())
 
         # Layout using grid
         self.new_model_title.grid(row=0, column=1, pady=3)
@@ -49,6 +52,13 @@ class NewModel(tk.Frame):
         self.back_button.grid(row=15, column=0, pady=3)
         self.next_button.grid(row=15, column=3, pady=3)
 
+    def validate_next_step(self):
+        if not self.is_valid_directory(self.training_input.get()) or not self.is_valid_directory(
+                self.test_input.get()) or not self.is_valid_directory(self.results_input.get()):
+            win32api.MessageBox(0, 'At least one of your inputs is invalid!', 'Invalid inputs', 0x00001000)
+        else:
+            self.controller.show_frame("AlgorithmsWindow")
+
     def set_input_path(self):
         self.training_input.delete(0, END)
         path = set_path()
@@ -66,3 +76,8 @@ class NewModel(tk.Frame):
         path = set_path()
         self.results_input.insert(0, path)
         self.controller.set_new_model_results_input_path(path)
+
+    def is_valid_directory(self, path):
+        if not os.path.exists(os.path.dirname(path)):
+            return False
+        return True

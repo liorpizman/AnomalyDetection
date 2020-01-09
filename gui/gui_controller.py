@@ -4,6 +4,8 @@ from tkinter import font as tkfont
 from gui.algorithms_window import AlgorithmsWindow
 from gui.feature_selection_window import FeatureSelectionWindow
 from gui.load_model_window import LoadModel
+from gui.loading_window import LoadingWindow
+from gui.lstm_window import LSTMWindow
 from gui.main_window import MainWindow
 from gui.model_controller import model_controller
 from gui.new_model_window import NewModel
@@ -27,11 +29,16 @@ class AnomalyDetectionGUI(tk.Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        # container.title('Anomaly Detection Classifier')
-        # container.geometry("650x400")
         # container.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
         self.frames = {}
-        for F in (MainWindow, NewModel, LoadModel, AlgorithmsWindow, FeatureSelectionWindow, SimilarityFunctionsWindow):
+        for F in (MainWindow,
+                  NewModel,
+                  LoadModel,
+                  AlgorithmsWindow,
+                  FeatureSelectionWindow,
+                  SimilarityFunctionsWindow,
+                  LoadingWindow,
+                  LSTMWindow):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -54,7 +61,7 @@ class AnomalyDetectionGUI(tk.Tk):
     def set_new_model_test_input_path(self, input):
         self.model_controller.set_test_data_path(input)
 
-    def set_new_model_results_input_path(self,input):
+    def set_new_model_results_input_path(self, input):
         self.model_controller.set_results_path(input)
 
     def set_algorithm_parameters(self, algorithm_name, algorithm_parameters):
