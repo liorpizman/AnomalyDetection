@@ -41,3 +41,13 @@ class model_controller:
 
     def run_models(self):
         models_execution.run_models()
+
+    def set_new_model_running(self, new_model_running):
+        input_settings.set_new_model_running(new_model_running)
+
+    def set_existing_algorithms(self,algorithms_dict):
+        input_settings.set_existing_algorithms(algorithms_dict)
+
+    def set_existing_algorithms_threshold(self, threshold):
+        input_settings.set_existing_algorithms_threshold(threshold)
+

@@ -21,7 +21,7 @@ from collections import defaultdict
 
 
 
-def get_lstm_parameters():
+def get_lstm_new_model_parameters():
     return  (lstm_hyper_parameters.get_window_size(),
             lstm_hyper_parameters.get_encoding_dimension(),
             lstm_hyper_parameters.get_activation(),
@@ -30,11 +30,18 @@ def get_lstm_parameters():
             lstm_hyper_parameters.get_threshold(),)
 
 
-def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model):
 
-    window_size ,encoding_dimension ,activation ,loss ,optimizer ,threshold = get_lstm_parameters()
+def run_model(training_data_path, test_data_path, results_path,
+              similarity_score, save_model , new_model_running,algorithm_path,threshold):
 
-    FLIGHT_ROUTES = get_subdirectories(training_data_path)
+    if new_model_running:
+        window_size ,encoding_dimension ,activation ,loss ,optimizer ,threshold = get_lstm_new_model_parameters()
+    else:
+        lstm = load_model(algorithm_path)
+        window_size = 15
+        scalar, X_train = None, None
+
+    FLIGHT_ROUTES = get_subdirectories(test_data_path)
 
     current_time = get_current_time()
 
@@ -45,16 +52,19 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
     for flight_route in FLIGHT_ROUTES:
 
-        # check if scalar is necessary
-        lstm, X_train, scalar = execute_train(flight_route,
-                                              training_data_path=training_data_path,
-                                              results_path=f'{results_path}/lstm/{current_time}',
-                                              window_size=window_size,
-                                              encoding_dimension=encoding_dimension,
-                                              activation=activation,
-                                              loss=loss,
-                                              optimizer=optimizer,
-                                              save_model=save_model)
+        if new_model_running:
+            lstm, scalar , X_train= execute_train(flight_route,
+                                                        training_data_path=training_data_path,
+                                                        results_path=f'{results_path}/lstm/{current_time}',
+                                                        window_size=window_size,
+                                                        encoding_dimension=encoding_dimension,
+                                                        activation=activation,
+                                                        loss=loss,
+                                                        optimizer=optimizer,
+                                                        save_model=save_model,
+                                                        add_plots=True,
+                                                        )
+
 
         for similarity in similarity_score:
 
@@ -64,9 +74,12 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                     window_size = window_size,
                                                                     threshold = threshold,
                                                                     lstm = lstm,
-                                                                    X_train = X_train,
                                                                     scalar = scalar,
-                                                                   results_path =f'{results_path}/lstm/{current_time}' )
+                                                                   results_path =f'{results_path}/lstm/{current_time}' ,
+                                                                   add_plots=True,
+                                                                   run_new_model=new_model_running,
+                                                                   X_train=X_train
+                                                                   )
 
             current_results_path = f'{results_path}/lstm/{current_time}/{similarity}/{flight_route}'
             create_directories(current_results_path)
@@ -90,7 +103,6 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
         report_results(f'{results_path}/lstm/{current_time}/{similarity}',test_data_path,FLIGHT_ROUTES)
 
-    ##################################################################
 
 
 def execute_train(flight_route,
@@ -122,43 +134,46 @@ def execute_train(flight_route,
         lstm.save(f'{results_path}/{flight_route}.h5')
     if add_plots:
         plot(history['loss'], ylabel='loss', xlabel='epoch', title=f'{flight_route} Epoch Loss', plot_dir = results_path)
-    #lstm = load_model('C:\\Users\Yehuda Pashay\Desktop\check\\flights_data\\data_for_testing_hackton\\results\\lstm\\Jan-09-2020-10-58-51\\chicago_to_guadalajara.h5')
+
+    return lstm, scalar ,X_train
 
 
-    return lstm, X_train, scalar  # check if scalar is necessary
-
-
-#####################################################
 def execute_predict(flight_route,
                     test_data_path=None,
                     similarity_score=None,
                     window_size=None,
                     threshold=None,
                     lstm=None,
-                    X_train=None,
                     scalar=None,
                     results_path = None,
-                    add_plots = True):
+                    add_plots = True,
+                    run_new_model = False,
+                    X_train = None):
+
     tpr_scores = defaultdict(list)
     fpr_scores = defaultdict(list)
     delay_scores = defaultdict(list)
 
-    X_pred = lstm.predict(X_train, verbose=1)
-    scores_train = []
-    for i, pred in enumerate(X_pred):
-        scores_train.append(anomaly_score_multi(X_train[i], pred, similarity_score))
+    if run_new_model:
+        X_pred = lstm.predict(X_train, verbose=1)
+        scores_train = []
+        for i, pred in enumerate(X_pred):
+            scores_train.append(anomaly_score_multi(X_train[i], pred, similarity_score))
 
-    # choose threshold for which <LSTM_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
-    THRESHOLD = get_threshold(scores_train, threshold)
+        # choose threshold for which <LSTM_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
+        threshold = get_threshold(scores_train, threshold)
+
+        if add_plots:
+            plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
+                                          plot_dir=results_path,
+                                          title=f'Outlier Score Training for {flight_route})')
+
+
 
     fligth_dir = os.path.join(test_data_path, flight_route)
     ATTACKS = get_subdirectories(fligth_dir)
 
-    # csv_append = True
-    if add_plots:
-        plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=THRESHOLD,
-                                      plot_dir=results_path,
-                                      title=f'Outlier Score Training for {flight_route})')
+
     for attack in ATTACKS:
         for flight_csv in os.listdir(f'{test_data_path}/{flight_route}/{attack}'):
             # if is_excluded_flight(flight_route, flight_csv):
@@ -168,6 +183,11 @@ def execute_predict(flight_route,
             df_test_labels = df_test[['label']].values
             df_test = df_test[
                 ['Direction', 'Speed', 'Altitude', 'lat', 'long', 'first_dis', 'second_dis', 'third_dis', 'fourth_dis']]
+
+            if not run_new_model:
+                scalar = MaxAbsScaler()
+                scalar.fit(df_test)
+
             X_test = scalar.transform(df_test)
             X_test, y_test = get_testing_data_lstm(X_test, df_test_labels, window_size)
 
@@ -177,22 +197,15 @@ def execute_predict(flight_route,
                 scores_test.append(anomaly_score_multi(X_test[i], pred, similarity_score))
 
             if add_plots:
-                plot_reconstruction_error_scatter(scores=scores_test, labels=y_test, threshold=THRESHOLD,plot_dir = results_path, title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
+                plot_reconstruction_error_scatter(scores=scores_test, labels=y_test, threshold=threshold,plot_dir = results_path, title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
 
-            predictions = [1 if x >= THRESHOLD else 0 for x in scores_test]
+            predictions = [1 if x >= threshold else 0 for x in scores_test]
 
-            method_scores = get_method_scores(predictions, "")
-
-            # if csv_append:
-            #     tpr_scores["csv file"].append(flight_csv)
-            #     fpr_scores["csv file"].append(flight_csv)
-            #     delay_scores["csv file"].append(flight_csv)
+            method_scores = get_method_scores(predictions, run_new_model)
 
             tpr_scores[attack].append(method_scores[0])
             fpr_scores[attack].append(method_scores[1])
             delay_scores[attack].append(method_scores[2])
-
-            csv_append = False
 
     return tpr_scores, fpr_scores, delay_scores
 

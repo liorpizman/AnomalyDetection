@@ -9,6 +9,9 @@ class input_settings:
     ALGORITHMS = set()
     SIMILARITY_SCORES = set()
     SAVE_MODEL = False
+    NEW_MODEL_RUNNING = False
+    LOAD_MODEL_THRESHOLD = None
+    EXISTING_ALGORITHMS = dict()
 
     @staticmethod
     def set_training_data_path(path):
@@ -80,6 +83,33 @@ class input_settings:
     def get_saving_model():
         return input_settings.SAVE_MODEL
 
+    @staticmethod
+    def set_new_model_running(new_model_running):
+        input_settings.NEW_MODEL_RUNNING = new_model_running
+
+    @staticmethod
+    def get_new_model_running():
+        return input_settings.NEW_MODEL_RUNNING
+
+    @staticmethod
+    def set_existing_algorithms(existing_algorithms):
+        input_settings.EXISTING_ALGORITHMS = existing_algorithms
+
+    @staticmethod
+    def get_existing_algorithms():
+        return input_settings.EXISTING_ALGORITHMS
+
+    @staticmethod
+    def get_existing_algorithm_path(algorithm_name):
+        return input_settings.EXISTING_ALGORITHMS[algorithm_name]
+
+    @staticmethod
+    def get_existing_algorithms_threshold():
+        return input_settings.LOAD_MODEL_THRESHOLD
+
+    @staticmethod
+    def set_existing_algorithms_threshold(threshold):
+        input_settings.LOAD_MODEL_THRESHOLD = threshold
 
 
 

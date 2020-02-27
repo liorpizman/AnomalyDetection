@@ -26,10 +26,10 @@ class NewModel(tk.Frame):
         self.results_btn = tk.Button(self, text="Browse", command=self.set_results_path)
 
         self.back_button = tk.Button(self, text="Back",
-                                     command=lambda: controller.show_frame("MainWindow"))
+                                     command=self.back_window)#lambda: controller.show_frame("MainWindow"))
 
         self.next_button = tk.Button(self, text="Next",
-                                     command=lambda: controller.show_frame("AlgorithmsWindow"))
+                                     command=self.next_window)#lambda: controller.show_frame("AlgorithmsWindow"))
 
         # Layout using grid
         self.new_model_title.grid(row=0, column=1, pady=3)
@@ -66,3 +66,11 @@ class NewModel(tk.Frame):
         path = set_path()
         self.results_input.insert(0, path)
         self.controller.set_new_model_results_input_path(path)
+
+    def back_window(self):
+        self.controller.set_new_model_running(False)
+        self.controller.show_frame("MainWindow")
+
+    def next_window(self):
+        self.controller.set_new_model_running(True)
+        self.controller.show_frame("AlgorithmsWindow")

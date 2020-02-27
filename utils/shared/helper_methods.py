@@ -145,7 +145,7 @@ def get_thresholds(list_scores, percent):
     return [get_threshold(scores, percent) for scores in list_scores]
 
 
-def get_method_scores(prediction, windows):
+def get_method_scores(prediction, run_new_model):
     """
     get previous method scores (TPR, FPR, delay)
     :param prediction: predictions
@@ -163,7 +163,10 @@ def get_method_scores(prediction, windows):
         # upper = window["upper"]
         # lower = window["lower"]
 
-    lower = 180 - lstm_hyper_parameters.get_window_size() + 1
+    if run_new_model:
+        lower = 180 - lstm_hyper_parameters.get_window_size() + 1
+    else:
+        lower = 180 - 15 + 1
     upper = 249
     assert len(prediction) >= upper
     assert upper > lower
