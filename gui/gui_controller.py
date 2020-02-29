@@ -5,7 +5,7 @@ from gui.algorithms_window import AlgorithmsWindow
 from gui.feature_selection_window import FeatureSelectionWindow
 from gui.existing_algorithms_window import ExistingAlgorithmsWindow
 from gui.load_model_window import LoadModel
-from gui.loading_window import LoadingWindow
+from gui.final_window import FinalWindow
 from gui.lstm_window import LSTMWindow
 from gui.main_window import MainWindow
 from gui.model_controller import model_controller
@@ -39,7 +39,7 @@ class AnomalyDetectionGUI(tk.Tk):
                   FeatureSelectionWindow,
                   SimilarityFunctionsWindow,
                   ExistingAlgorithmsWindow,
-                  LoadingWindow,
+                  FinalWindow,
                   LSTMWindow):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
