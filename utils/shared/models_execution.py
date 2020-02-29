@@ -23,7 +23,10 @@ class models_execution:
             threshold = input_settings.get_existing_algorithms_threshold()
 
         for algorithm in algorithms:
-            algorithm_path = input_settings.get_existing_algorithm_path(algorithm)
+            if new_model_running:
+                algorithm_path = None
+            else:
+                algorithm_path = input_settings.get_existing_algorithm_path(algorithm)
             model_execution_function = getattr(models_execution, algorithm + "_execution")
             model_execution_function(test_data_path,
                                      results_path,

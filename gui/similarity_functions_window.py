@@ -45,7 +45,7 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.controller.set_similarity_score(similarity_list)
 
     def run_models(self):
-        self.controller.show_frame("LoadingWindow")
+        self.controller.show_frame("FinalWindow")
         self.controller.run_models()
         print("run")
 

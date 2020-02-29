@@ -2,3 +2,5 @@
 gui/__pycache__/
 gui/__pycache__/*
 __pycache__/*
+gui/utils/__pycache__/*
+utils/shared/__pycache__/*
