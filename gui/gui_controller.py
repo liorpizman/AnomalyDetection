@@ -3,6 +3,7 @@ from tkinter import font as tkfont
 
 from gui.algorithms_window import AlgorithmsWindow
 from gui.feature_selection_window import FeatureSelectionWindow
+from gui.existing_algorithms_window import ExistingAlgorithmsWindow
 from gui.load_model_window import LoadModel
 from gui.loading_window import LoadingWindow
 from gui.lstm_window import LSTMWindow
@@ -37,6 +38,7 @@ class AnomalyDetectionGUI(tk.Tk):
                   AlgorithmsWindow,
                   FeatureSelectionWindow,
                   SimilarityFunctionsWindow,
+                  ExistingAlgorithmsWindow,
                   LoadingWindow,
                   LSTMWindow):
             page_name = F.__name__
@@ -78,6 +80,15 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def run_models(self):
         self.model_controller.run_models()
+
+    def set_new_model_running(self, new_model_running):
+        self.model_controller.set_new_model_running(new_model_running)
+
+    def set_existing_algorithms(self, algorithms_dict):
+        self.model_controller.set_existing_algorithms(algorithms_dict)
+
+    def set_existing_algorithms_threshold(self, threshold):
+        self.model_controller.set_existing_algorithms_threshold(threshold)
 
 
 if __name__ == "__main__":

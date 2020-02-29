@@ -145,7 +145,7 @@ def get_thresholds(list_scores, percent):
     return [get_threshold(scores, percent) for scores in list_scores]
 
 
-def get_method_scores(prediction, windows):
+def get_method_scores(prediction, run_new_model):
     """
     get previous method scores (TPR, FPR, delay)
     :param prediction: predictions
@@ -163,7 +163,11 @@ def get_method_scores(prediction, windows):
     # upper = window["upper"]
     # lower = window["lower"]
 
-    lower = 180 - lstm_hyper_parameters.get_window_size() + 1
+    if run_new_model:
+        lower = 180 - lstm_hyper_parameters.get_window_size() + 1
+    else:
+        lower = 180 - 15 + 1
+
     upper = 249
     assert len(prediction) >= upper
     assert upper > lower
@@ -304,7 +308,7 @@ def load_flight_routes():
     return load_from_yaml('names', 'FLIGHT_ROUTES')
 
 
-def plot(data, xlabel, ylabel, title,plot_dir):
+def plot(data, xlabel, ylabel, title, plot_dir):
     """
     plot
     :param data: the data
@@ -319,9 +323,10 @@ def plot(data, xlabel, ylabel, title,plot_dir):
     plt.title(title)
     plt.savefig(f'{plot_dir}/{title}.png')
 
-    #plt.show()
+    # plt.show()
 
-def plot_reconstruction_error_scatter(scores, labels, threshold,plot_dir, title="Outlier Score - After Training",):
+
+def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title="Outlier Score - After Training", ):
     """
     plot reconstruction error as a scatter plot
     :param scores:
@@ -338,6 +343,5 @@ def plot_reconstruction_error_scatter(scores, labels, threshold,plot_dir, title=
 
     plt.hlines(y=threshold, xmin=plt.xlim()[0], xmax=plt.xlim()[1], colors='r')
 
-
     plt.savefig(f'{plot_dir}/{title}.png')
-    #plt.show()
+    # plt.show()
