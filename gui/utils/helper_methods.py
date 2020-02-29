@@ -1,13 +1,22 @@
 import os
 import yaml
 import tkinter
-from tkinter.filedialog import askdirectory
+from tkinter.filedialog import askdirectory ,askopenfilename
 from gui.utils.constants import *
 
 
 def set_path():
     tkinter.Tk().withdraw()
     dirname = askdirectory(initialdir=os.getcwd(), title='Please select a directory')
+    if len(dirname) > 0:
+        return dirname
+    else:
+        return ""
+
+
+def set_file_path():
+    tkinter.Tk().withdraw()
+    dirname = askopenfilename(initialdir=os.getcwd(), title='Please select a file')
     if len(dirname) > 0:
         return dirname
     else:
