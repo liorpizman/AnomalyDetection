@@ -5,6 +5,7 @@ from tkinter import END
 import win32api
 
 from gui.utils.helper_methods import set_training_path, set_test_path, set_path
+from utils.shared.helper_methods import is_valid_directory
 
 
 class NewModel(tk.Frame):
@@ -29,10 +30,10 @@ class NewModel(tk.Frame):
         self.results_btn = tk.Button(self, text="Browse", command=self.set_results_path)
 
         self.back_button = tk.Button(self, text="Back",
-                                     command=self.back_window)  # lambda: controller.show_frame("MainWindow"))
+                                     command=self.back_window)
 
         self.next_button = tk.Button(self, text="Next",
-                                     command=self.next_window)  # lambda: controller.show_frame("AlgorithmsWindow"))
+                                     command=self.next_window)
 
         # Layout using grid
         self.new_model_title.grid(row=0, column=1, pady=3)
@@ -51,13 +52,6 @@ class NewModel(tk.Frame):
 
         self.back_button.grid(row=15, column=0, pady=3)
         self.next_button.grid(row=15, column=3, pady=3)
-
-    def validate_next_step(self):
-        if not self.is_valid_directory(self.training_input.get()) or not self.is_valid_directory(
-                self.test_input.get()) or not self.is_valid_directory(self.results_input.get()):
-            win32api.MessageBox(0, 'At least one of your inputs is invalid!', 'Invalid inputs', 0x00001000)
-        else:
-            self.controller.show_frame("AlgorithmsWindow")
 
     def set_input_path(self):
         self.training_input.delete(0, END)
@@ -82,10 +76,13 @@ class NewModel(tk.Frame):
         self.controller.show_frame("MainWindow")
 
     def next_window(self):
-        self.controller.set_new_model_running(True)
-        self.controller.show_frame("AlgorithmsWindow")
+        if not is_valid_directory(self.training_input.get()) or not is_valid_directory(
+                self.test_input.get()) or not is_valid_directory(self.results_input.get()):
+            win32api.MessageBox(0, 'At least one of your inputs is invalid!', 'Invalid inputs', 0x00001000)
+        else:
+            self.controller.set_new_model_running(True)
+            self.set_features_columns_options()
+            self.controller.reinitialize_frame("AlgorithmsWindow")
 
-    def is_valid_directory(self, path):
-        if not os.path.exists(os.path.dirname(path)):
-            return False
-        return True
+    def set_features_columns_options(self):
+        self.controller.set_features_columns_options()

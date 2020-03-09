@@ -21,6 +21,11 @@ class AlgorithmsWindow(tk.Frame):
                                                   buttonCallback=self.show_algorithms_options,
                                                   editButtons=True)
 
+        self.features_columns_options = {}
+
+        self.menubutton = tk.Menubutton(self, text="Features",
+                                        indicatoron=True, borderwidth=3, relief="raised")
+
         self.back_button = tk.Button(self, text="Back to menu",
                                      command=lambda: controller.show_frame("MainWindow"))
 
@@ -30,7 +35,8 @@ class AlgorithmsWindow(tk.Frame):
         # Layout using grid
         self.algorithms_title.grid(row=0, column=2, pady=3)
         self.anomaly_detection_methods.grid(row=2, column=2, pady=3)
-
+        self.menubutton.grid(row=4, column=0, columnspan=150, pady=3)
+        self.grid_rowconfigure(5, minsize=30)
         self.back_button.grid(row=50, column=2, pady=3)
         self.next_button.grid(row=50, column=3, pady=3)
 
@@ -49,8 +55,35 @@ class AlgorithmsWindow(tk.Frame):
         self.controller.remove_algorithm_parameters(algorithm_name, algorithm_parameters)
 
     def validate_next_step(self):
-        if InputSettings.get_algorithms() != set():
+        features_list = self.get_selected_features()
+        if not features_list:
+            win32api.MessageBox(0, 'Please select feature for the models before the next step.', 'Invalid Feature',
+                                0x00001000)
+        elif InputSettings.get_algorithms() != set():
+            self.controller.set_users_selected_features(features_list)
             self.controller.show_frame("FeatureSelectionWindow")
         else:
             win32api.MessageBox(0, 'Please edit LSTM parameters before the next step.', 'Invalid Parameters',
                                 0x00001000)
+
+    def get_features_columns_options(self):
+        return self.controller.get_features_columns_options()
+
+    def reinitialize(self):
+        #initialize features columns options
+        self.features_columns_options = {}
+        self.menu = tk.Menu(self.menubutton, tearoff=False)
+        self.menubutton.configure(menu=self.menu)
+        for feature in self.get_features_columns_options():
+            self.features_columns_options[feature] = tk.IntVar(value=0)
+            self.menu.add_checkbutton(label=feature, variable=self.features_columns_options[feature],
+                                 onvalue=1, offvalue=0)
+
+    def get_selected_features(self):
+        features = []
+        for name, var in self.features_columns_options.items():
+            if var.get():
+                features.append(name)
+        return features
+
+

@@ -13,6 +13,10 @@ import shutil
 from datetime import datetime
 
 
+def is_valid_directory(path):
+    return os.path.exists(os.path.dirname(path))
+
+
 def cosine_similarity(x, y):
     """
     calculate cosine similarity between 2 given vectors
@@ -203,32 +207,6 @@ def get_method_scores(prediction, run_new_model):
 
     return tpr, fpr, detection_delay
 
-
-# def report_results(results_dir_path, verbose=1):
-#     """
-#
-#     :param results_dir_path:
-#     :param verbose:
-#     :return:
-#     """
-#     ATTACKS = load_attacks()
-#     FLIGHT_ROUTES = load_flight_routes()
-#
-#     for result in ["nab", "fpr", "tpr", "delay"]:
-#         results = pd.DataFrame(columns=ATTACKS)
-#         for i, flight_route in enumerate(FLIGHT_ROUTES):
-#             df = pd.read_csv(f'{results_dir_path}/{flight_route}_{result}.csv')
-#             mean = df.mean(axis=0).values
-#             std = df.std(axis=0).values
-#             output = [f'{round(x, 2)}±{round(y, 2)}%' for x, y in zip(mean, std)]
-#             results.loc[i] = output
-#
-#         results.index = FLIGHT_ROUTES
-#
-#         if verbose:
-#             print(results)
-#
-#         results.to_csv(f'{results_dir_path}/final_{result}.csv')
 
 def get_subdirectories(path):
     directories = []
