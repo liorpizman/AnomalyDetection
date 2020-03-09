@@ -14,9 +14,8 @@ from datetime import datetime
 
 
 def is_valid_directory(path):
-    if not os.path.exists(os.path.dirname(path)):
-        return False
-    return True
+    return os.path.exists(os.path.dirname(path))
+
 
 def cosine_similarity(x, y):
     """
@@ -207,6 +206,7 @@ def get_method_scores(prediction, run_new_model):
     fpr = fp / (fp + tn)
 
     return tpr, fpr, detection_delay
+
 
 def get_subdirectories(path):
     directories = []
