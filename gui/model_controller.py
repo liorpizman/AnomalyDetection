@@ -1,5 +1,4 @@
 from utils.shared.input_settings import input_settings
-# from utils.shared.models_execution import models_execution
 from utils.shared.models_execution import models_execution
 
 
@@ -49,3 +48,12 @@ class model_controller:
 
     def set_existing_algorithms_threshold(self, threshold):
         input_settings.set_existing_algorithms_threshold(threshold)
+
+    def set_features_columns_options(self):
+        input_settings.set_features_columns_options()
+
+    def get_features_columns_options(self):
+        return input_settings.get_features_columns_options()
+
+    def set_users_selected_features(self, features_list):
+        input_settings.set_users_selected_features(features_list)

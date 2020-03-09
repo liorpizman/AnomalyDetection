@@ -3,8 +3,6 @@ import pandas as pd
 from utils.shared.lstm_hyper_parameters import lstm_hyper_parameters
 from utils.shared.routes import *
 from utils.shared.models.lstm_autoencoder import get_lstm_autoencoder_model
-# from utils.shared.lstm_hyper_parameters import LSTM_WINDOW_SIZE, LSTM_ENCODING_DIMENSION, \
-#   LSTM_THRESHOLD_FROM_TRAINING_PERCENT
 from utils.shared.helper_methods import get_training_data_lstm, get_testing_data_lstm, anomaly_score_multi, \
     get_threshold, report_results, get_method_scores, is_excluded_flight, load_exclude_flights, \
     load_attacks, load_flight_routes, get_subdirectories, create_directories, get_current_time, plot, \
@@ -26,7 +24,7 @@ def get_lstm_new_model_parameters():
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
-              algorithm_path, threshold):
+              algorithm_path, threshold, features_list):
     if new_model_running:
         window_size, encoding_dimension, activation, loss, optimizer, threshold = get_lstm_new_model_parameters()
     else:
@@ -55,7 +53,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                   loss=loss,
                                                   optimizer=optimizer,
                                                   save_model=save_model,
-                                                  add_plots=True)
+                                                  add_plots=True,
+                                                  features_list=features_list)
 
         for similarity in similarity_score:
             tpr_scores, fpr_scores, delay_scores = execute_predict(flight_route,
@@ -68,7 +67,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                    results_path=f'{results_path}/lstm/{current_time}',
                                                                    add_plots=True,
                                                                    run_new_model=new_model_running,
-                                                                   X_train=X_train)
+                                                                   X_train=X_train,
+                                                                   features_list=features_list)
 
             current_results_path = f'{results_path}/lstm/{current_time}/{similarity}/{flight_route}'
             create_directories(current_results_path)
@@ -102,12 +102,11 @@ def execute_train(flight_route,
                   loss=None,
                   optimizer=None,
                   save_model=False,
-                  add_plots=True):
+                  add_plots=True,
+                  features_list=None):
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
 
-    df_train = df_train[
-        ['Direction', 'Speed', 'Altitude', 'lat', 'long', 'first_dis', 'second_dis', 'third_dis', 'fourth_dis']
-    ]
+    df_train = df_train[features_list]
 
     scalar = MaxAbsScaler()
 
@@ -135,7 +134,8 @@ def execute_predict(flight_route,
                     results_path=None,
                     add_plots=True,
                     run_new_model=False,
-                    X_train=None):
+                    X_train=None,
+                    features_list=None):
     tpr_scores = defaultdict(list)
     fpr_scores = defaultdict(list)
     delay_scores = defaultdict(list)
@@ -154,24 +154,15 @@ def execute_predict(flight_route,
                                               plot_dir=results_path,
                                               title=f'Outlier Score Training for {flight_route})')
 
-    fligth_dir = os.path.join(test_data_path, flight_route)
-    ATTACKS = get_subdirectories(fligth_dir)
+    flight_dir = os.path.join(test_data_path, flight_route)
+    ATTACKS = get_subdirectories(flight_dir)
 
     for attack in ATTACKS:
         for flight_csv in os.listdir(f'{test_data_path}/{flight_route}/{attack}'):
 
             df_test = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
             df_test_labels = df_test[['label']].values
-            df_test = df_test[
-                ['Direction',
-                 'Speed',
-                 'Altitude',
-                 'lat',
-                 'long',
-                 'first_dis',
-                 'second_dis',
-                 'third_dis',
-                 'fourth_dis']]
+            df_test = df_test[features_list]
 
             if not run_new_model:
                 scalar = MaxAbsScaler()

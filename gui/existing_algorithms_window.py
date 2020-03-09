@@ -1,8 +1,10 @@
 import tkinter as tk
+import win32api
 from tkinter import END
 from tkinter.ttk import Combobox
 
 from gui.utils.helper_methods import set_path, set_file_path
+from utils.shared.helper_methods import is_valid_directory
 
 
 class ExistingAlgorithmsWindow(tk.Frame):
@@ -73,6 +75,10 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.next_button = tk.Button(self, text="Next",
                                      command=self.next_window)
 
+        self.features_columns_options = {}
+
+        self.menubutton = tk.Menubutton(self, text="Features",
+                                   indicatoron=True, borderwidth=3, relief="raised")
         # Layout using grid
         self.existing_algorithms_title.grid(row=0, column=1, pady=3)
 
@@ -92,6 +98,8 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.isolation_forest_input.grid(row=4, column=1, pady=3, padx=10)
         self.isolation_forest_btn.grid(row=4, column=2, pady=3)
 
+        self.menubutton.grid(row=7, column=0,columnspan=150, pady=3)
+        self.grid_rowconfigure(8, minsize=30)
 
         self.back_button.grid(row=15, column=0, pady=3)
         self.next_button.grid(row=15, column=3, pady=3)
@@ -105,6 +113,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
             self.browse_buttons[entry_name]['state'] = 'active'
             self.input_entries[entry_name]['state'] = 'normal'
         else:
+            self.input_entries[entry_name].delete(0, END)
             self.browse_buttons[entry_name]['state'] = 'disabled'
             self.input_entries[entry_name]['state'] = 'disabled'
             self.algorithms.pop(entry_name,None)
@@ -116,6 +125,44 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.algorithms[algorithm] = path
 
     def next_window(self):
-        self.controller.set_existing_algorithms(self.algorithms)
-        self.controller.set_existing_algorithms_threshold(float(self.threshold_combo.get()))
-        self.controller.show_frame("FeatureSelectionWindow")
+        if self.validate_next_step():
+            features_list = self.get_selected_features()
+            self.controller.set_existing_algorithms(self.algorithms)
+            self.controller.set_existing_algorithms_threshold(float(self.threshold_combo.get()))
+            self.controller.set_users_selected_features(features_list)
+            self.controller.show_frame("FeatureSelectionWindow")
+
+    def get_features_columns_options(self):
+        return self.controller.get_features_columns_options()
+
+    def reinitialize_frame(self):
+        # initialize features columns options
+        self.features_columns_options = {}
+        self.menu = tk.Menu(self.menubutton, tearoff=False)
+        self.menubutton.configure(menu=self.menu)
+        for feature in self.get_features_columns_options():
+            self.features_columns_options[feature] = tk.IntVar(value=0)
+            self.menu.add_checkbutton(label=feature, variable=self.features_columns_options[feature],
+                                      onvalue=1, offvalue=0)
+
+    def validate_next_step(self):
+        if not self.algorithms:
+            win32api.MessageBox(0, 'Please select algorithm & path for the model before the next step.', 'Invalid algorithm', 0x00001000)
+            return False
+        for path in self.algorithms.values():
+            if not is_valid_directory(path):
+                win32api.MessageBox(0, 'At least one of your inputs is invalid!', 'Invalid inputs', 0x00001000)
+                return False
+        features_list = self.get_selected_features()
+        if not features_list:
+            win32api.MessageBox(0, 'Please select feature for the models before the next step.', 'Invalid Feature',
+                                0x00001000)
+            return False
+        return True
+
+    def get_selected_features(self):
+        features = []
+        for name, var in self.features_columns_options.items():
+            if var.get():
+                features.append(name)
+        return features

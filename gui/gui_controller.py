@@ -57,7 +57,13 @@ class AnomalyDetectionGUI(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()
 
-    def set_new_model_training_input_path(self, input):
+    def reinitialize_frame(self, page_name):
+        '''Show a frame for the given page name'''
+        frame = self.frames[page_name]
+        frame.reinitialize_frame()
+        frame.tkraise()
+
+    def set_new_model_training_input_path(self,input):
         self.model_controller.set_training_data_path(input)
 
     def set_new_model_test_input_path(self, input):
@@ -89,6 +95,16 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def set_existing_algorithms_threshold(self, threshold):
         self.model_controller.set_existing_algorithms_threshold(threshold)
+
+    def set_features_columns_options(self):
+        self.model_controller.set_features_columns_options()
+
+    def get_features_columns_options(self):
+        return self.model_controller.get_features_columns_options()
+
+    def set_users_selected_features(self,features_list):
+        self.model_controller.set_users_selected_features(features_list)
+
 
 
 if __name__ == "__main__":

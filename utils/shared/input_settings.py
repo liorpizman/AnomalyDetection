@@ -1,3 +1,8 @@
+import os
+
+import pandas as pd
+
+from utils.shared.helper_methods import get_subdirectories
 from utils.shared.lstm_hyper_parameters import lstm_hyper_parameters
 
 
@@ -11,6 +16,8 @@ class input_settings:
     NEW_MODEL_RUNNING = False
     LOAD_MODEL_THRESHOLD = None
     EXISTING_ALGORITHMS = dict()
+    FEATURES_COLUMNS_OPTIONS = []
+    USERS_SELECTED_FEATURES =[]
 
     @staticmethod
     def set_training_data_path(path):
@@ -109,3 +116,27 @@ class input_settings:
     @staticmethod
     def set_existing_algorithms_threshold(threshold):
         input_settings.LOAD_MODEL_THRESHOLD = threshold
+
+    @staticmethod
+    def get_features_columns_options():
+        return input_settings.FEATURES_COLUMNS_OPTIONS
+
+    @staticmethod
+    def set_features_columns_options():
+        test_data_path = input_settings.get_test_data_path()
+        flight_route = get_subdirectories(test_data_path).__getitem__(0)
+        flight_dir = os.path.join(test_data_path, flight_route)
+        attack = get_subdirectories(flight_dir).__getitem__(0)
+        flight_csv = os.listdir(f'{test_data_path}/{flight_route}/{attack}').__getitem__(0)
+        df_test = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
+        input_settings.FEATURES_COLUMNS_OPTIONS = list(df_test.columns)
+
+    @staticmethod
+    def get_users_selected_features():
+        return input_settings.USERS_SELECTED_FEATURES
+
+    @staticmethod
+    def set_users_selected_features(features_list):
+        input_settings.USERS_SELECTED_FEATURES = features_list
+
+
