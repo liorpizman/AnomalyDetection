@@ -55,6 +55,5 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.controller.set_saving_model(self.save_model_var.get() == 1)
 
     def loading_process(self):
-        # self.controller.run_models()
-        time.sleep(10)
+        self.controller.run_models()
         self.controller.show_frame("ResultsWindow")

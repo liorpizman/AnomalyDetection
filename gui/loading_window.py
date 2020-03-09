@@ -5,9 +5,7 @@ from gui.animated_gif import AnimatedGif
 from datetime import timedelta
 from timeit import default_timer as timer
 from string import Template
-
-LOADING_GIF = 'loading.gif'
-DELAY_BETWEEN_FRAMES = 0.02
+from gui.utils.constants import LOADING_WINDOW_SETTINGS
 
 
 class LoadingWindow(tk.Frame):
@@ -17,9 +15,12 @@ class LoadingWindow(tk.Frame):
         self.controller = controller
         self.title_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
 
+        loading_gif = LOADING_WINDOW_SETTINGS.get('LOADING_GIF')
+        delay_between_frames = LOADING_WINDOW_SETTINGS.get('DELAY_BETWEEN_FRAMES')
+
         # Create Widgets
         self.loading_title = tk.Label(self, text="Loading, please wait!", font=self.controller.title_font)
-        self.loading_gif = AnimatedGif(self, LOADING_GIF, DELAY_BETWEEN_FRAMES)
+        self.loading_gif = AnimatedGif(self, loading_gif, delay_between_frames)
         self.clock_label = tk.Label(self, text="", font=self.title_font)
 
         # Layout using grid
