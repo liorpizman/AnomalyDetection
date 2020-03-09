@@ -5,11 +5,12 @@ from gui.algorithms_window import AlgorithmsWindow
 from gui.feature_selection_window import FeatureSelectionWindow
 from gui.existing_algorithms_window import ExistingAlgorithmsWindow
 from gui.load_model_window import LoadModel
-from gui.final_window import FinalWindow
+from gui.loading_window import LoadingWindow
 from gui.lstm_window import LSTMWindow
 from gui.main_window import MainWindow
-from gui.model_controller import model_controller
+from gui.model_controller import ModelController
 from gui.new_model_window import NewModel
+from gui.results_window import ResultsWindow
 from gui.similarity_functions_window import SimilarityFunctionsWindow
 
 
@@ -18,7 +19,7 @@ class AnomalyDetectionGUI(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
-        self.model_controller = model_controller(self)
+        self.model_controller = ModelController(self)
 
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.geometry('800x600')
@@ -39,7 +40,8 @@ class AnomalyDetectionGUI(tk.Tk):
                   FeatureSelectionWindow,
                   SimilarityFunctionsWindow,
                   ExistingAlgorithmsWindow,
-                  FinalWindow,
+                  LoadingWindow,
+                  ResultsWindow,
                   LSTMWindow):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
@@ -58,12 +60,12 @@ class AnomalyDetectionGUI(tk.Tk):
         frame.tkraise()
 
     def reinitialize_frame(self, page_name):
-        '''Show a frame for the given page name'''
+        '''Reinitialize_frame a frame for the given page name'''
         frame = self.frames[page_name]
-        frame.reinitialize_frame()
+        frame.reinitialize()
         frame.tkraise()
 
-    def set_new_model_training_input_path(self,input):
+    def set_new_model_training_input_path(self, input):
         self.model_controller.set_training_data_path(input)
 
     def set_new_model_test_input_path(self, input):

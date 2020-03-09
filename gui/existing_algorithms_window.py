@@ -135,7 +135,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
     def get_features_columns_options(self):
         return self.controller.get_features_columns_options()
 
-    def reinitialize_frame(self):
+    def reinitialize(self):
         # initialize features columns options
         self.features_columns_options = {}
         self.menu = tk.Menu(self.menubutton, tearoff=False)
