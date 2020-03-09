@@ -8,8 +8,9 @@ from gui.load_model_window import LoadModel
 from gui.loading_window import LoadingWindow
 from gui.lstm_window import LSTMWindow
 from gui.main_window import MainWindow
-from gui.model_controller import model_controller
+from gui.model_controller import ModelController
 from gui.new_model_window import NewModel
+from gui.results_window import ResultsWindow
 from gui.similarity_functions_window import SimilarityFunctionsWindow
 
 
@@ -18,7 +19,7 @@ class AnomalyDetectionGUI(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
-        self.model_controller = model_controller(self)
+        self.model_controller = ModelController(self)
 
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
         self.geometry('800x600')
@@ -40,6 +41,7 @@ class AnomalyDetectionGUI(tk.Tk):
                   SimilarityFunctionsWindow,
                   ExistingAlgorithmsWindow,
                   LoadingWindow,
+                  ResultsWindow,
                   LSTMWindow):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
@@ -55,6 +57,12 @@ class AnomalyDetectionGUI(tk.Tk):
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
+        frame.tkraise()
+
+    def reinitialize_frame(self, page_name):
+        '''Reinitialize_frame a frame for the given page name'''
+        frame = self.frames[page_name]
+        frame.reinitialize()
         frame.tkraise()
 
     def set_new_model_training_input_path(self, input):

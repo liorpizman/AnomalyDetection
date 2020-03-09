@@ -1,5 +1,6 @@
-import tkinter as tk
 import threading
+import time
+import tkinter as tk
 
 from gui.checkbox import Checkbar
 from gui.utils.helper_methods import load_similarity_list
@@ -46,9 +47,14 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.controller.set_similarity_score(similarity_list)
 
     def run_models(self):
-        the_process = threading.Thread(name='process', target=self.controller.run_models)
-        the_process.start()
-        self.controller.show_frame("LoadingWindow")
+        model_process_thread = threading.Thread(name='model_process', target=self.loading_process)
+        model_process_thread.start()
+        self.controller.reinitialize_frame("LoadingWindow")
 
     def set_saving_model(self):
         self.controller.set_saving_model(self.save_model_var.get() == 1)
+
+    def loading_process(self):
+        # self.controller.run_models()
+        time.sleep(10)
+        self.controller.show_frame("ResultsWindow")

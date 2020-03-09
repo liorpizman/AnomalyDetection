@@ -2,7 +2,7 @@ import tkinter as tk
 
 from gui.checkbox import Checkbar
 from gui.utils.helper_methods import load_feature_selection_list
-from utils.shared.input_settings import input_settings
+from utils.shared.input_settings import InputSettings
 
 
 class FeatureSelectionWindow(tk.Frame):
@@ -30,7 +30,7 @@ class FeatureSelectionWindow(tk.Frame):
         self.next_button.grid(row=50, column=15, pady=3)
 
     def back_window(self):
-        new_model_running = input_settings.get_new_model_running()
+        new_model_running = InputSettings.get_new_model_running()
         if new_model_running:
             self.controller.show_frame("AlgorithmsWindow")
         else:
