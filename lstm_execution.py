@@ -4,13 +4,11 @@ from utils.shared.lstm_hyper_parameters import lstm_hyper_parameters
 from utils.shared.routes import *
 from utils.shared.models.lstm_autoencoder import get_lstm_autoencoder_model
 from utils.shared.helper_methods import get_training_data_lstm, get_testing_data_lstm, anomaly_score_multi, \
-    get_threshold, report_results, get_method_scores, is_excluded_flight, load_exclude_flights, \
-    load_attacks, load_flight_routes, get_subdirectories, create_directories, get_current_time, plot, \
+    get_threshold, report_results, get_method_scores, get_subdirectories, create_directories, get_current_time, plot, \
     plot_reconstruction_error_scatter
 
 from tensorflow.python.keras.models import load_model
 from sklearn.preprocessing import MaxAbsScaler
-from utils.windows import windows
 from collections import defaultdict
 
 
@@ -74,22 +72,15 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
             create_directories(current_results_path)
 
             df = pd.DataFrame(tpr_scores)
-            # df.to_csv(f'{results_path}{flight_route}/lstm/{similarity}/_tpr.csv', index=False)
             df.to_csv(f'{current_results_path}/{flight_route}_tpr.csv', index=False)
 
             df = pd.DataFrame(fpr_scores)
-            # df.to_csv(f'{results_path}{flight_route}/lstm/{similarity}/_fpr.csv', index=False)
             df.to_csv(f'{current_results_path}/{flight_route}_fpr.csv', index=False)
 
             df = pd.DataFrame(delay_scores)
-            # df.to_csv(f'{results_path}{flight_route}/lstm/{similarity}/_delay.csv', index=False)
             df.to_csv(f'{current_results_path}/{flight_route}_delay.csv', index=False)
 
     for similarity in similarity_score:
-        # report_results('export/results/lstm')
-        # fligth_dir = os.path.join(test_data_path, flight_route)
-        # ATTACKS = get_subdirectories(fligth_dir)
-
         report_results(f'{results_path}/lstm/{current_time}/{similarity}', test_data_path, FLIGHT_ROUTES)
 
 
@@ -115,7 +106,7 @@ def execute_train(flight_route,
 
     lstm = get_lstm_autoencoder_model(window_size, df_train.shape[1],
                                       encoding_dimension, activation, loss, optimizer)
-    history = lstm.fit(X_train, X_train, epochs=10, verbose=1).history  # check if history is necessary
+    history = lstm.fit(X_train, X_train, epochs=10, verbose=1).history
     if save_model:
         lstm.save(f'{results_path}/{flight_route}.h5')
     if add_plots:

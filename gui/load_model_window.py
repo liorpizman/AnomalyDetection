@@ -1,7 +1,7 @@
 import tkinter as tk
 import win32api
 
-from gui.utils.helper_methods import set_training_path, set_test_path ,set_path
+from gui.utils.helper_methods import set_path
 from tkinter import END
 
 from utils.shared.helper_methods import is_valid_directory
@@ -58,19 +58,16 @@ class LoadModel(tk.Frame):
             self.controller.set_new_model_running(False)
             self.set_features_columns_options()
             self.controller.reinitialize_frame("ExistingAlgorithmsWindow")
-            #self.controller.show_frame("ExistingAlgorithmsWindow",True)
 
     def set_test_path(self):
         self.test_input.delete(0, END)
         path = set_path()
         self.test_input.insert(0, path)
-        #self.set_new_model_test_input_path()
 
     def set_results_path(self):
         self.results_input.delete(0, END)
         path = set_path()
         self.results_input.insert(0, path)
-        #self.set_new_model_results_input_path()
 
     def set_features_columns_options(self):
         self.controller.set_features_columns_options()
