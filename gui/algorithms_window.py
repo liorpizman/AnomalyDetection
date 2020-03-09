@@ -1,13 +1,9 @@
-import time
 import tkinter as tk
-import tkinter.ttk as ttk
-from functools import partial
-
 import win32api
 
 from gui.checkbox import Checkbar
 from gui.utils.helper_methods import load_anomaly_detection_list
-from utils.shared.input_settings import input_settings
+from utils.shared.input_settings import InputSettings
 
 
 class AlgorithmsWindow(tk.Frame):
@@ -53,7 +49,7 @@ class AlgorithmsWindow(tk.Frame):
         self.controller.remove_algorithm_parameters(algorithm_name, algorithm_parameters)
 
     def validate_next_step(self):
-        if input_settings.get_algorithms() != set():
+        if InputSettings.get_algorithms() != set():
             self.controller.show_frame("FeatureSelectionWindow")
         else:
             win32api.MessageBox(0, 'Please edit LSTM parameters before the next step.', 'Invalid Parameters',
