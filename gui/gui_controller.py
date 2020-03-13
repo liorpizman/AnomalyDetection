@@ -1,4 +1,7 @@
-import tkinter as tk
+try:
+    import Tkinter as tk
+except ImportError:
+    import tkinter as tk
 from tkinter import font as tkfont
 
 from gui.algorithms_window import AlgorithmsWindow

@@ -1,26 +1,55 @@
-import tkinter as tk
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+import os
+
+from gui.utils.constants import CROSS_WINDOWS_SETTINGS
+from gui.widgets_configurations.helper_methods import set_button_configuration, set_logo_configuration
+
+try:
+    import Tkinter as tk
+except ImportError:
+    import tkinter as tk
+
+try:
+    import ttk
+
+    py3 = False
+except ImportError:
+    import tkinter.ttk as ttk
+
+    py3 = True
+
 from gui.menubar import Menubar
 
 
 class MainWindow(tk.Frame):
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        '''This class configures and populates the main window.'''
+        ttk.Frame.__init__(self, parent)
         self.controller = controller
         self.menubar = Menubar(controller)
+        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
+        photo_location = os.path.join(system_logo)
+        global logo_img
+        logo_img = tk.PhotoImage(file=photo_location)
 
-        controller.title('Anomaly Detection Classifier')
-        controller.geometry('500x200')
-        controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        self.controller.geometry("500x350")
+        self.controller.minsize(500, 350)
+        self.controller.maxsize(500, 350)
+        self.controller.resizable(1, 1)
+        self.controller.title("Anomaly Detection Classifier")
+        self.controller.configure(background="#eeeeee")
 
-        label = tk.Label(self, text="Anomaly Detection Classifier", font=controller.title_font)
-        label.pack(side="top", fill="x", pady=10, padx=30)
+        self.create_model_btn = tk.Button(self, command=lambda: self.controller.show_frame("NewModel"))
+        self.create_model_btn.place(relx=0.302, rely=0.59, height=42, width=121)
+        set_button_configuration(self.create_model_btn, text='''Create model''')
 
-        button1 = tk.Button(self, text="New model", pady=5, padx=5,
-                            command=lambda: controller.show_frame("NewModel"))
-        # in the meantime it will be disabled
-        button2 = tk.Button(self, text="Load existing model", pady=5, padx=5,
-                            command=lambda: controller.show_frame("LoadModel"))
+        self.load_model_btn = tk.Button(self, command=lambda: self.controller.show_frame("LoadModel"))
+        self.load_model_btn.place(relx=0.302, rely=0.767, height=42, width=120)
+        set_button_configuration(self.load_model_btn, text='''Load model''')
 
-        button1.pack(side="left", fill="x", pady=10, padx=50)
-        button2.pack(side="right", fill="x", pady=10, padx=50)
+        self.logo_png = tk.Button(self)
+        self.logo_png.place(relx=0.16, rely=0.029, height=172, width=300)
+        set_logo_configuration(self.logo_png, image=logo_img)
