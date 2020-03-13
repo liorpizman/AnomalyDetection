@@ -10,6 +10,10 @@ LSTM_ENCODER_DIMENSION = 'lstm_encoder_dimension'
 LSTM_THRESHOLD_FROM_TRAINING_PERCENT = "lstm_threshold_from_training_percent"
 
 LOADING_WINDOW_SETTINGS = {
-    'LOADING_GIF': 'loading.gif',
+    'LOADING_GIF': './images/loading.gif',
     'DELAY_BETWEEN_FRAMES': 0.02
+}
+
+CROSS_WINDOWS_SETTINGS = {
+    'LOGO': './images/anomaly_detection_logo.png'
 }

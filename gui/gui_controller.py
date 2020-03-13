@@ -1,4 +1,7 @@
-import tkinter as tk
+try:
+    import Tkinter as tk
+except ImportError:
+    import tkinter as tk
 from tkinter import font as tkfont
 
 from gui.algorithms_window import AlgorithmsWindow
@@ -104,9 +107,8 @@ class AnomalyDetectionGUI(tk.Tk):
     def get_features_columns_options(self):
         return self.model_controller.get_features_columns_options()
 
-    def set_users_selected_features(self,features_list):
+    def set_users_selected_features(self, features_list):
         self.model_controller.set_users_selected_features(features_list)
-
 
 
 if __name__ == "__main__":
