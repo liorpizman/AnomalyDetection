@@ -34,6 +34,7 @@ class ResultsWindow(tk.Frame):
         global logo_img
         logo_img = tk.PhotoImage(file=photo_location)
 
+        # Page header
         self.logo_png = tk.Button(self)
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
@@ -45,6 +46,7 @@ class ResultsWindow(tk.Frame):
 
         # ------------------------------------ Results will be added here ------------------------------------
 
+        # Page footer
         self.back_button = tk.Button(self, command=lambda: controller.show_frame("MainWindow"))
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')

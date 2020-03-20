@@ -37,6 +37,7 @@ class NewModel(tk.Frame):
         global logo_img
         logo_img = tk.PhotoImage(file=photo_location)
 
+        # Page header
         self.logo_png = tk.Button(self)
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
@@ -47,9 +48,10 @@ class NewModel(tk.Frame):
             text='''Please insert 'Mobilicom Ltd' simulated data / ADS-B dataset input files.''')
         set_widget_to_left(self.instructions)
 
+        # Training input directory
         self.training_label = tk.Label(self)
         self.training_label.place(relx=0.015, rely=0.4, height=32, width=146)
-        self.training_label.configure(text='''Training directory''')
+        self.training_label.configure(text='''Train directory''')
         set_widget_to_left(self.training_label)
 
         self.training_input = tk.Entry(self)
@@ -59,6 +61,7 @@ class NewModel(tk.Frame):
         self.training_btn.place(relx=0.833, rely=0.4, height=25, width=60)
         set_button_configuration(self.training_btn, text='''Browse''')
 
+        # Testing input directory
         self.test_label = tk.Label(self)
         self.test_label.place(relx=0.015, rely=0.5, height=32, width=146)
         self.test_label.configure(text='''Test directory''')
@@ -71,6 +74,7 @@ class NewModel(tk.Frame):
         self.test_btn.place(relx=0.833, rely=0.5, height=25, width=60)
         set_button_configuration(self.test_btn, text='''Browse''')
 
+        # Results output directory
         self.results_label = tk.Label(self)
         self.results_label.place(relx=0.015, rely=0.6, height=32, width=146)
         self.results_label.configure(text='''Results directory''')
@@ -83,6 +87,7 @@ class NewModel(tk.Frame):
         self.results_btn.place(relx=0.833, rely=0.6, height=25, width=60)
         set_button_configuration(self.results_btn, text='''Browse''')
 
+        # Page footer
         self.next_button = tk.Button(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')
