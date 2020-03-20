@@ -4,9 +4,9 @@ import os
 import win32api
 
 from gui.menubar import Menubar
-from gui.utils.helper_methods import set_training_path, set_test_path, set_path, CROSS_WINDOWS_SETTINGS
+from gui.utils.helper_methods import set_path, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_copyright_configuration, set_logo_configuration, \
-    set_button_configuration
+    set_button_configuration, set_widget_to_left
 from utils.shared.helper_methods import is_valid_directory
 from tkinter import END
 
@@ -37,25 +37,20 @@ class NewModel(tk.Frame):
         global logo_img
         logo_img = tk.PhotoImage(file=photo_location)
 
-        self.controller.geometry("700x550")
-        self.controller.minsize(700, 550)
-        self.controller.maxsize(700, 550)
-        self.controller.resizable(1, 1)
-        self.controller.title("Anomaly Detection Classifier")
-        self.controller.configure(background="#eeeeee")
-
         self.logo_png = tk.Button(self)
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
 
         self.instructions = tk.Label(self)
-        self.instructions.place(relx=0.005, rely=0.3, height=32, width=635)
+        self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
             text='''Please insert 'Mobilicom Ltd' simulated data / ADS-B dataset input files.''')
+        set_widget_to_left(self.instructions)
 
         self.training_label = tk.Label(self)
-        self.training_label.place(relx=0.005, rely=0.4, height=32, width=146)
+        self.training_label.place(relx=0.015, rely=0.4, height=32, width=146)
         self.training_label.configure(text='''Training directory''')
+        set_widget_to_left(self.training_label)
 
         self.training_input = tk.Entry(self)
         self.training_input.place(relx=0.195, rely=0.4, height=25, relwidth=0.624)
@@ -65,8 +60,9 @@ class NewModel(tk.Frame):
         set_button_configuration(self.training_btn, text='''Browse''')
 
         self.test_label = tk.Label(self)
-        self.test_label.place(relx=0.005, rely=0.5, height=32, width=146)
+        self.test_label.place(relx=0.015, rely=0.5, height=32, width=146)
         self.test_label.configure(text='''Test directory''')
+        set_widget_to_left(self.test_label)
 
         self.test_input = tk.Entry(self)
         self.test_input.place(relx=0.195, rely=0.5, height=25, relwidth=0.624)
@@ -76,8 +72,9 @@ class NewModel(tk.Frame):
         set_button_configuration(self.test_btn, text='''Browse''')
 
         self.results_label = tk.Label(self)
-        self.results_label.place(relx=0.005, rely=0.6, height=32, width=146)
+        self.results_label.place(relx=0.015, rely=0.6, height=32, width=146)
         self.results_label.configure(text='''Results directory''')
+        set_widget_to_left(self.results_label)
 
         self.results_input = tk.Entry(self)
         self.results_input.place(relx=0.195, rely=0.6, height=25, relwidth=0.624)
@@ -87,11 +84,11 @@ class NewModel(tk.Frame):
         set_button_configuration(self.results_btn, text='''Browse''')
 
         self.next_button = tk.Button(self, command=self.next_window)
-        self.next_button.place(relx=0.859, rely=0.839, height=25, width=81)
+        self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')
 
         self.back_button = tk.Button(self, command=self.back_window)
-        self.back_button.place(relx=0.08, rely=0.839, height=25, width=81)
+        self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
 
         self.copyright = tk.Label(self)
