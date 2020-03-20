@@ -2,8 +2,10 @@
 #  -*- coding: utf-8 -*-
 import os
 
+from gui.menubar import Menubar
 from gui.utils.constants import CROSS_WINDOWS_SETTINGS
-from gui.widgets_configurations.helper_methods import set_button_configuration, set_logo_configuration
+from gui.widgets_configurations.helper_methods import set_button_configuration, set_logo_configuration, \
+    set_copyright_configuration
 
 try:
     import Tkinter as tk
@@ -19,8 +21,6 @@ except ImportError:
 
     py3 = True
 
-from gui.menubar import Menubar
-
 
 class MainWindow(tk.Frame):
 
@@ -35,21 +35,25 @@ class MainWindow(tk.Frame):
         global logo_img
         logo_img = tk.PhotoImage(file=photo_location)
 
-        self.controller.geometry("500x350")
-        self.controller.minsize(500, 350)
-        self.controller.maxsize(500, 350)
+        self.controller.geometry("700x550")
+        self.controller.minsize(700, 550)
+        self.controller.maxsize(700, 550)
         self.controller.resizable(1, 1)
         self.controller.title("Anomaly Detection Classifier")
         self.controller.configure(background="#eeeeee")
 
+        self.logo_png = tk.Button(self)
+        self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
+        set_logo_configuration(self.logo_png, image=logo_img)
+
         self.create_model_btn = tk.Button(self, command=lambda: self.controller.show_frame("NewModel"))
-        self.create_model_btn.place(relx=0.302, rely=0.59, height=42, width=121)
+        self.create_model_btn.place(relx=0.41, rely=0.5, height=42, width=120)
         set_button_configuration(self.create_model_btn, text='''Create model''')
 
         self.load_model_btn = tk.Button(self, command=lambda: self.controller.show_frame("LoadModel"))
-        self.load_model_btn.place(relx=0.302, rely=0.767, height=42, width=120)
+        self.load_model_btn.place(relx=0.41, rely=0.7, height=42, width=120)
         set_button_configuration(self.load_model_btn, text='''Load model''')
 
-        self.logo_png = tk.Button(self)
-        self.logo_png.place(relx=0.16, rely=0.029, height=172, width=300)
-        set_logo_configuration(self.logo_png, image=logo_img)
+        self.copyright = tk.Label(self)
+        self.copyright.place(relx=0, rely=0.958, height=25, width=750)
+        set_copyright_configuration(self.copyright)
