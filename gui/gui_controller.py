@@ -5,7 +5,7 @@ except ImportError:
 from tkinter import font as tkfont
 
 from gui.algorithms_window import AlgorithmsWindow
-from gui.feature_selection_window import FeatureSelectionWindow
+from gui.DEPRECATED_feature_selection_window import FeatureSelectionWindow
 from gui.existing_algorithms_window import ExistingAlgorithmsWindow
 from gui.load_model_window import LoadModel
 from gui.loading_window import LoadingWindow
