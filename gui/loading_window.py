@@ -1,11 +1,31 @@
-import tkinter as tk
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
 
-from tkinter import font as tkfont
+import os
+
+from tkinter.font import Font
 from gui.animated_gif import AnimatedGif
 from datetime import timedelta
 from timeit import default_timer as timer
 from string import Template
-from gui.utils.constants import LOADING_WINDOW_SETTINGS
+from gui.menubar import Menubar
+from gui.utils.constants import LOADING_WINDOW_SETTINGS, CROSS_WINDOWS_SETTINGS
+from gui.widgets_configurations.helper_methods import set_logo_configuration, set_copyright_configuration, \
+    set_widget_to_left
+
+try:
+    import Tkinter as tk
+except ImportError:
+    import tkinter as tk
+
+try:
+    import ttk
+
+    py3 = False
+except ImportError:
+    import tkinter.ttk as ttk
+
+    py3 = True
 
 
 class LoadingWindow(tk.Frame):
@@ -13,20 +33,37 @@ class LoadingWindow(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.title_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
+        self.menubar = Menubar(controller)
+        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
+        photo_location = os.path.join(system_logo)
+        global logo_img
+        logo_img = tk.PhotoImage(file=photo_location)
+
+        self.logo_png = tk.Button(self)
+        self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
+        set_logo_configuration(self.logo_png, image=logo_img)
+
+        self.instructions = tk.Label(self)
+        self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
+        self.instructions.configure(text='''Loading model, please wait...''')
+        set_widget_to_left(self.instructions)
 
         loading_gif = LOADING_WINDOW_SETTINGS.get('LOADING_GIF')
         delay_between_frames = LOADING_WINDOW_SETTINGS.get('DELAY_BETWEEN_FRAMES')
 
-        # Create Widgets
-        self.loading_title = tk.Label(self, text="Loading, please wait!", font=self.controller.title_font)
-        self.loading_gif = AnimatedGif(self, loading_gif, delay_between_frames)
-        self.clock_label = tk.Label(self, text="", font=self.title_font)
+        self.title_font = Font(family='Helvetica', size=12, weight="bold")
 
-        # Layout using grid
-        self.loading_title.grid(row=0, column=2, pady=3)
-        self.clock_label.grid(row=20, column=2, pady=3)
-        self.loading_gif.grid(row=2, column=2, pady=3)
+        self.loading_gif = AnimatedGif(self, loading_gif, delay_between_frames)
+        self.loading_gif.place(relx=0.1, rely=0.35, height=330, width=600)
+
+        self.clock_label = tk.Label(self, text="", font=self.title_font)
+        self.clock_label.place(relx=0.38, rely=0.7, height=32, width=150)
+
+        self.copyright = tk.Label(self)
+        self.copyright.place(relx=0, rely=0.958, height=25, width=750)
+        set_copyright_configuration(self.copyright)
+
         self.loading_gif.start()
 
     def reinitialize(self):

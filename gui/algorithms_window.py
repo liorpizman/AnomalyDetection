@@ -91,7 +91,7 @@ class AlgorithmsWindow(tk.Frame):
                                 0x00001000)
         elif InputSettings.get_algorithms() != set():
             self.controller.set_users_selected_features(features_list)
-            self.controller.show_frame("FeatureSelectionWindow")
+            self.controller.show_frame("SimilarityFunctionsWindow")
         else:
             win32api.MessageBox(0, 'Please edit LSTM parameters before the next step.', 'Invalid Parameters',
                                 0x00001000)
