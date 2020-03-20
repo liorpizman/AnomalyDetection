@@ -1,44 +1,74 @@
-import tkinter as tk
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+import os
 import win32api
 
 from gui.checkbox import Checkbar
-from gui.utils.helper_methods import load_anomaly_detection_list
+from gui.menubar import Menubar
+from gui.utils.helper_methods import load_anomaly_detection_list, CROSS_WINDOWS_SETTINGS
+from gui.widgets_configurations.helper_methods import set_logo_configuration, set_copyright_configuration, \
+    set_button_configuration, set_menu_button_configuration, set_widget_to_left
 from utils.shared.input_settings import InputSettings
+
+try:
+    import Tkinter as tk
+except ImportError:
+    import tkinter as tk
+
+try:
+    import ttk
+
+    py3 = False
+except ImportError:
+    import tkinter.ttk as ttk
+
+    py3 = True
 
 
 class AlgorithmsWindow(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
         self.controller = controller
+        self.menubar = Menubar(controller)
+        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
+        photo_location = os.path.join(system_logo)
+        global logo_img
+        logo_img = tk.PhotoImage(file=photo_location)
 
-        # Create Widgets
-        self.algorithms_title = tk.Label(self, text="Choose anomaly detection algorithms", font=controller.title_font)
+        self.logo_png = tk.Button(self)
+        self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
+        set_logo_configuration(self.logo_png, image=logo_img)
+
+        self.instructions = tk.Label(self)
+        self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
+        self.instructions.configure(
+            text='''Please select the algorithms for which you want to build anomaly detection models.''')
+        set_widget_to_left(self.instructions)
 
         self.anomaly_detection_methods = Checkbar(self,
                                                   load_anomaly_detection_list(),
                                                   buttonCallback=self.show_algorithms_options,
                                                   editButtons=True)
-
+        self.anomaly_detection_methods.place(relx=0.1, rely=0.35, height=400, width=700)
         self.features_columns_options = {}
 
-        self.menubutton = tk.Menubutton(self, text="Features",
-                                        indicatoron=True, borderwidth=3, relief="raised")
+        self.menubutton = tk.Menubutton(self)
+        self.menubutton.place(relx=0.1, rely=0.65, height=25, width=81)
+        set_menu_button_configuration(self.menubutton)
 
-        self.back_button = tk.Button(self, text="Back to menu",
-                                     command=lambda: controller.show_frame("MainWindow"))
+        self.next_button = tk.Button(self, command=self.validate_next_step)
+        self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
+        set_button_configuration(self.next_button, text='''Next''')
 
-        self.next_button = tk.Button(self, text="Next",
-                                     command=self.validate_next_step)
+        self.back_button = tk.Button(self, command=lambda: controller.show_frame("NewModel"))
+        self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
+        set_button_configuration(self.back_button, text='''Back''')
 
-        # Layout using grid
-        self.algorithms_title.grid(row=0, column=2, pady=3)
-        self.anomaly_detection_methods.grid(row=2, column=2, pady=3)
-        self.menubutton.grid(row=4, column=0, columnspan=150, pady=3)
-        self.grid_rowconfigure(5, minsize=30)
-        self.back_button.grid(row=50, column=2, pady=3)
-        self.next_button.grid(row=50, column=3, pady=3)
+        self.copyright = tk.Label(self)
+        self.copyright.place(relx=0, rely=0.958, height=25, width=750)
+        set_copyright_configuration(self.copyright)
 
     def show_algorithms_options(self):
         for check, var in zip(self.anomaly_detection_methods.get_checks(),
@@ -70,14 +100,14 @@ class AlgorithmsWindow(tk.Frame):
         return self.controller.get_features_columns_options()
 
     def reinitialize(self):
-        #initialize features columns options
+        # initialize features columns options
         self.features_columns_options = {}
         self.menu = tk.Menu(self.menubutton, tearoff=False)
         self.menubutton.configure(menu=self.menu)
         for feature in self.get_features_columns_options():
             self.features_columns_options[feature] = tk.IntVar(value=0)
             self.menu.add_checkbutton(label=feature, variable=self.features_columns_options[feature],
-                                 onvalue=1, offvalue=0)
+                                      onvalue=1, offvalue=0)
 
     def get_selected_features(self):
         features = []
@@ -85,5 +115,3 @@ class AlgorithmsWindow(tk.Frame):
             if var.get():
                 features.append(name)
         return features
-
-

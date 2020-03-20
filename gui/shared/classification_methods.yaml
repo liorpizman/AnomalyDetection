@@ -1,6 +1,6 @@
 anomaly_detection_methods:
   - LSTM
-  - one class SVM (OCSVM)
+  - One Class SVM (OCSVM)
   - HTM
   - Isolation Forest
 
