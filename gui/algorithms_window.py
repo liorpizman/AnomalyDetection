@@ -37,6 +37,7 @@ class AlgorithmsWindow(tk.Frame):
         global logo_img
         logo_img = tk.PhotoImage(file=photo_location)
 
+        # Page header
         self.logo_png = tk.Button(self)
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
@@ -58,6 +59,7 @@ class AlgorithmsWindow(tk.Frame):
         self.menubutton.place(relx=0.1, rely=0.65, height=25, width=81)
         set_menu_button_configuration(self.menubutton)
 
+        # Page footer
         self.next_button = tk.Button(self, command=self.validate_next_step)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')

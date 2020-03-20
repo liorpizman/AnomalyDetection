@@ -40,6 +40,7 @@ class LoadingWindow(tk.Frame):
         global logo_img
         logo_img = tk.PhotoImage(file=photo_location)
 
+        # Page header
         self.logo_png = tk.Button(self)
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
@@ -60,6 +61,7 @@ class LoadingWindow(tk.Frame):
         self.clock_label = tk.Label(self, text="", font=self.title_font)
         self.clock_label.place(relx=0.38, rely=0.7, height=32, width=150)
 
+        # Page footer
         self.copyright = tk.Label(self)
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)

@@ -42,6 +42,7 @@ class MainWindow(tk.Frame):
         self.controller.title("Anomaly Detection Classifier")
         self.controller.configure(background="#eeeeee")
 
+        # Page header
         self.logo_png = tk.Button(self)
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
@@ -54,6 +55,7 @@ class MainWindow(tk.Frame):
         self.load_model_btn.place(relx=0.41, rely=0.7, height=42, width=120)
         set_button_configuration(self.load_model_btn, text='''Load model''')
 
+        # Page footer
         self.copyright = tk.Label(self)
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
