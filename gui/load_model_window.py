@@ -101,7 +101,7 @@ class LoadModel(tk.Frame):
             self.set_new_model_results_input_path()
             self.controller.set_new_model_running(False)
             self.set_features_columns_options()
-            self.controller.reinitialize_frame("ExistingAlgorithmsWindow")
+            self.controller.show_frame("ExistingAlgorithmsWindow")
 
     def set_test_path(self):
         self.test_input.delete(0, END)
