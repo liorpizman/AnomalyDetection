@@ -10,6 +10,7 @@ from utils.shared.helper_methods import get_training_data_lstm, get_testing_data
 from tensorflow.python.keras.models import load_model
 from sklearn.preprocessing import MaxAbsScaler
 from collections import defaultdict
+import json
 
 
 def get_lstm_new_model_parameters():
@@ -108,6 +109,10 @@ def execute_train(flight_route,
                                       encoding_dimension, activation, loss, optimizer)
     history = lstm.fit(X_train, X_train, epochs=10, verbose=1).history
     if save_model:
+        data = {}
+        data['features'] = features_list
+        with open(f'{results_path}/model_data.json', 'w') as outfile:
+            json.dump(data, outfile)
         lstm.save(f'{results_path}/{flight_route}.h5')
     if add_plots:
         plot(history['loss'], ylabel='loss', xlabel='epoch', title=f'{flight_route} Epoch Loss', plot_dir=results_path)

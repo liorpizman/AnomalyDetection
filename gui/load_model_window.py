@@ -1,6 +1,7 @@
 import tkinter as tk
 import win32api
 
+from gui.utils.Inputs_validation_helper import load_model_paths_validation
 from gui.utils.helper_methods import set_path
 from tkinter import END
 
@@ -50,14 +51,9 @@ class LoadModel(tk.Frame):
         self.controller.show_frame("MainWindow")
 
     def next_window(self):
-        if not is_valid_directory(self.test_input.get()) or not is_valid_directory(self.results_input.get()):
-            win32api.MessageBox(0, 'At least one of your inputs is invalid!', 'Invalid inputs', 0x00001000)
-        else:
-            self.set_new_model_test_input_path()
-            self.set_new_model_results_input_path()
-            self.controller.set_new_model_running(False)
-            self.set_features_columns_options()
-            self.controller.reinitialize_frame("ExistingAlgorithmsWindow")
+        if load_model_paths_validation(self.test_input.get(), self.results_input.get()):
+            self.set_load_model_parameters()
+            self.controller.show_frame("ExistingAlgorithmsWindow")
 
     def set_test_path(self):
         self.test_input.delete(0, END)
@@ -69,11 +65,7 @@ class LoadModel(tk.Frame):
         path = set_path()
         self.results_input.insert(0, path)
 
-    def set_features_columns_options(self):
-        self.controller.set_features_columns_options()
-
-    def set_new_model_test_input_path(self):
+    def set_load_model_parameters(self):
         self.controller.set_new_model_test_input_path(self.test_input.get())
-
-    def set_new_model_results_input_path(self):
         self.controller.set_new_model_results_input_path(self.results_input.get())
+        self.controller.set_new_model_running(False)

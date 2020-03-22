@@ -1,12 +1,8 @@
-import os
 import tkinter as tk
 from tkinter import END
 
-import win32api
-
-from gui.utils.helper_methods import set_training_path, set_test_path, set_path
-from utils.shared.helper_methods import is_valid_directory
-
+from gui.utils.Inputs_validation_helper import new_model_paths_validation
+from gui.utils.helper_methods import set_path
 
 class NewModel(tk.Frame):
 
@@ -57,32 +53,29 @@ class NewModel(tk.Frame):
         self.training_input.delete(0, END)
         path = set_path()
         self.training_input.insert(0, path)
-        self.controller.set_new_model_training_input_path(path)
 
     def set_test_path(self):
         self.test_input.delete(0, END)
         path = set_path()
         self.test_input.insert(0, path)
-        self.controller.set_new_model_test_input_path(path)
 
     def set_results_path(self):
         self.results_input.delete(0, END)
         path = set_path()
         self.results_input.insert(0, path)
-        self.controller.set_new_model_results_input_path(path)
 
     def back_window(self):
         self.controller.set_new_model_running(False)
         self.controller.show_frame("MainWindow")
 
     def next_window(self):
-        if not is_valid_directory(self.training_input.get()) or not is_valid_directory(
-                self.test_input.get()) or not is_valid_directory(self.results_input.get()):
-            win32api.MessageBox(0, 'At least one of your inputs is invalid!', 'Invalid inputs', 0x00001000)
-        else:
-            self.controller.set_new_model_running(True)
-            self.set_features_columns_options()
+        if new_model_paths_validation(self.training_input.get(), self.test_input.get(), self.results_input.get()):
+            self.set_new_model_parameters()
             self.controller.reinitialize_frame("AlgorithmsWindow")
 
-    def set_features_columns_options(self):
+    def set_new_model_parameters(self):
+        self.controller.set_new_model_training_input_path(self.training_input.get())
+        self.controller.set_new_model_test_input_path(self.test_input.get())
+        self.controller.set_new_model_results_input_path(self.results_input.get())
+        self.controller.set_new_model_running(True)
         self.controller.set_features_columns_options()
