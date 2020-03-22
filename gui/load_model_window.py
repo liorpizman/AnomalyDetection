@@ -1,7 +1,7 @@
 import tkinter as tk
 import win32api
 
-from gui.utils.Inputs_validation_helper import load_model_paths_validation
+from gui.utils.inputs_validation_helper import load_model_paths_validation
 from gui.utils.helper_methods import set_path
 from tkinter import END
 

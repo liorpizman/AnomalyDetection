@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import END
 
-from gui.utils.Inputs_validation_helper import new_model_paths_validation
+from gui.utils.inputs_validation_helper import new_model_paths_validation
 from gui.utils.helper_methods import set_path
 
 class NewModel(tk.Frame):

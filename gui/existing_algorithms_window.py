@@ -3,7 +3,7 @@ import win32api
 from tkinter import END
 from tkinter.ttk import Combobox
 
-from gui.utils.Inputs_validation_helper import is_valid_model_paths
+from gui.utils.inputs_validation_helper import is_valid_model_paths
 from gui.utils.helper_methods import set_path, set_file_path
 from utils.shared.helper_methods import is_valid_directory
 
