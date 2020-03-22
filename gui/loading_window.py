@@ -11,7 +11,7 @@ from string import Template
 from gui.menubar import Menubar
 from gui.utils.constants import LOADING_WINDOW_SETTINGS, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_copyright_configuration, \
-    set_widget_to_left
+    set_widget_to_left, set_button_configuration
 
 try:
     import Tkinter as tk
@@ -62,11 +62,27 @@ class LoadingWindow(tk.Frame):
         self.clock_label.place(relx=0.38, rely=0.7, height=32, width=150)
 
         # Page footer
+        self.stop_button = tk.Button(self, command=self.stop_model_process)
+        self.stop_button.place(relx=0.813, rely=0.839, height=25, width=81)
+        set_button_configuration(self.stop_button, text='''Stop''')
+
+        self.back_button = tk.Button(self, command=self.back_window)
+        self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
+        set_button_configuration(self.back_button, text='''Back''')
+        self.back_button.configure(state='disabled')
+
         self.copyright = tk.Label(self)
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
         self.loading_gif.start()
+
+    def back_window(self):
+        self.controller.show_frame("SimilarityFunctionsWindow")
+
+    def stop_model_process(self):
+        # to do
+        pass
 
     def reinitialize(self):
         self.start_time = timer()

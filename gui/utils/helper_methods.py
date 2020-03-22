@@ -1,8 +1,9 @@
 import os
 import yaml
 import tkinter
-from tkinter.filedialog import askdirectory ,askopenfilename
+from tkinter.filedialog import askdirectory, askopenfilename
 from gui.utils.constants import *
+import json
 
 
 def set_path():
@@ -75,3 +76,18 @@ def load_lstm_encoder_dimension_list():
 
 def load_lstm_threshold_list():
     return load_classification_methods(LSTM_THRESHOLD_FROM_TRAINING_PERCENT)
+
+
+def read_json_file(path):
+    data = None
+    with open(path) as json_file:
+        data = json.load(json_file)
+    return data
+
+
+def get_model_path(path):
+    files = os.listdir(path)
+    for file in files:
+        if file.endswith('.h5'):
+            return os.path.join(path, file)
+    return ""
