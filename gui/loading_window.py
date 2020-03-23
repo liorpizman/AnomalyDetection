@@ -91,7 +91,6 @@ class LoadingWindow(tk.Frame):
             pass
 
     def reinitialize(self):
-        self._FINISH = False
         self.model_process_thread = threading.Thread(name='model_process', target=self.loading_process)
         self.model_process_thread.start()
         self.start_time = timer()
