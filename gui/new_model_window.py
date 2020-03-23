@@ -99,6 +99,10 @@ class NewModel(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
+        # -------------------------------should be replaced at final submission  -------------------------------------
+        self.set_inputs_first_permutation()
+        # ------------------------------- end ------------------------------------------------------------------------
+
     def set_input_path(self):
         self.training_input.delete(0, END)
         path = set_path()
@@ -129,3 +133,29 @@ class NewModel(tk.Frame):
         self.controller.set_new_model_results_input_path(self.results_input.get())
         self.controller.set_new_model_running(True)
         self.controller.set_features_columns_options()
+
+    # -------------------------------should be replaced at final submission  -------------------------------------
+
+    def set_inputs_first_permutation(self):
+        self.set_permutations(
+            training_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\input_for_training",
+            test_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\input_for_testing",
+            results_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\results"
+        )
+
+    def set_inputs_second_permutation(self):
+        self.set_permutations(
+            training_path="C:\\Users\\Yehuda Pashay\\Desktop\\check\\flights_data\\check_data\\input_for_training",
+            test_path="C:\\Users\\Yehuda Pashay\\Desktop\\check\\flights_data\\check_data\\input_for_testing",
+            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\check\\flights_data\\check_data\\results"
+        )
+
+    def set_permutations(self, training_path, test_path, results_path):
+        self.controller.set_new_model_training_input_path(training_path)
+        self.controller.set_new_model_test_input_path(test_path)
+        self.controller.set_new_model_results_input_path(results_path)
+        self.training_input.insert(0, training_path)
+        self.test_input.insert(0, test_path)
+        self.results_input.insert(0, results_path)
+
+    # ------------------------------- end ------------------------------------------------------------------------

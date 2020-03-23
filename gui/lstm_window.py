@@ -47,7 +47,7 @@ class LSTMWindow(tk.Frame):
         set_widget_to_left(self.instructions)
 
         self.options_to_show = LSTMFrameOptions(self)
-        self.options_to_show.place(relx=0.015, rely=0.35, height=400, width=650)
+        self.options_to_show.place(relx=0.1, rely=0.35, height=400, width=650)
 
         # Page footer
         self.next_button = tk.Button(self, command=lambda: self.save_algorithm_parameters(

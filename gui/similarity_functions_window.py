@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
 
+import multiprocessing
 import os
-import threading
 
 from gui.checkbox import Checkbar
 from gui.menubar import Menubar
@@ -59,7 +59,7 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.save_model_check_button.place(relx=0.65, rely=0.75, height=25, width=100)
 
         # Page footer
-        self.next_button = tk.Button(self, command=self.run_models)
+        self.next_button = tk.Button(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')
 
@@ -79,14 +79,8 @@ class SimilarityFunctionsWindow(tk.Frame):
                 similarity_list.add(check.cget("text"))
         self.controller.set_similarity_score(similarity_list)
 
-    def run_models(self):
-        model_process_thread = threading.Thread(name='model_process', target=self.loading_process)
-        model_process_thread.start()
+    def next_window(self):
         self.controller.reinitialize_frame("LoadingWindow")
 
     def set_saving_model(self):
         self.controller.set_saving_model(self.save_model_var.get() == 1)
-
-    def loading_process(self):
-        self.controller.run_models()
-        self.controller.show_frame("ResultsWindow")

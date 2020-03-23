@@ -57,3 +57,9 @@ class ModelController:
 
     def set_users_selected_features(self, features_list):
         InputSettings.set_users_selected_features(features_list)
+
+    def add_new_thread(self, new_thread):
+        InputSettings.add_new_thread(new_thread)
+
+    def get_existing_thread(self):
+        return InputSettings.get_existing_thread()
