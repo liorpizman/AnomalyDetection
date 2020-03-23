@@ -2,6 +2,7 @@
 #  -*- coding: utf-8 -*-
 
 import os
+import threading
 
 from tkinter.font import Font
 from gui.animated_gif import AnimatedGif
@@ -75,16 +76,23 @@ class LoadingWindow(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
+        # Page logic
         self.loading_gif.start()
 
     def back_window(self):
         self.controller.show_frame("SimilarityFunctionsWindow")
 
     def stop_model_process(self):
-        # to do
-        pass
+        self.back_button.configure(state='active')
+        self.stop_button.configure(state='disabled')
+        try:
+            self.model_process_thread.join()
+        except:
+            pass
 
     def reinitialize(self):
+        self.model_process_thread = threading.Thread(name='model_process', target=self.loading_process)
+        self.model_process_thread.start()
         self.start_time = timer()
         self.update_clock()
 
@@ -93,6 +101,10 @@ class LoadingWindow(tk.Frame):
         duration = timedelta(seconds=now - self.start_time)
         self.clock_label.configure(text=strfdelta(duration, '%H:%M:%S'))
         self.controller.after(200, self.update_clock)
+
+    def loading_process(self):
+        self.controller.run_models()
+        self.controller.show_frame("ResultsWindow")
 
 
 class DeltaTemplate(Template):

@@ -110,6 +110,12 @@ class AnomalyDetectionGUI(tk.Tk):
     def set_users_selected_features(self, features_list):
         self.model_controller.set_users_selected_features(features_list)
 
+    def add_new_thread(self, new_thread):
+        self.model_controller.add_new_thread(new_thread)
+
+    def get_existing_thread(self):
+        return self.model_controller.get_existing_thread()
+
 
 if __name__ == "__main__":
     app = AnomalyDetectionGUI()

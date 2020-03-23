@@ -29,10 +29,11 @@ class ModelsExecution:
 
     @staticmethod
     def run_models():
+        print('------------------------------------------------------------------run_models')
         similarity_score, test_data_path, results_path, new_model_running = ModelsExecution.get_parameters()
 
         if new_model_running:
-            training_data_path, save_model, algorithms, threshold ,features_list = ModelsExecution.get_new_model_parameters()
+            training_data_path, save_model, algorithms, threshold, features_list = ModelsExecution.get_new_model_parameters()
         else:
             training_data_path, save_model, algorithms, threshold = ModelsExecution.get_load_model_parameters()
 

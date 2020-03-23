@@ -17,7 +17,8 @@ class InputSettings:
     LOAD_MODEL_THRESHOLD = None
     EXISTING_ALGORITHMS = dict()
     FEATURES_COLUMNS_OPTIONS = []
-    USERS_SELECTED_FEATURES =[]
+    USERS_SELECTED_FEATURES = []
+    THREADS = []
 
     @staticmethod
     def set_training_data_path(path):
@@ -138,3 +139,13 @@ class InputSettings:
     @staticmethod
     def set_users_selected_features(features_list):
         InputSettings.USERS_SELECTED_FEATURES = features_list
+
+    @staticmethod
+    def add_new_thread(new_thread):
+        InputSettings.THREADS.append(new_thread)
+
+    @staticmethod
+    def get_existing_thread():
+        current_thread = InputSettings.THREADS[0]
+        InputSettings.THREADS = []
+        return current_thread
