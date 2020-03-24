@@ -4,17 +4,16 @@ except ImportError:
     import tkinter as tk
 from tkinter import font as tkfont
 
-from gui.algorithms_window import AlgorithmsWindow
-from gui.DEPRECATED_feature_selection_window import FeatureSelectionWindow
-from gui.existing_algorithms_window import ExistingAlgorithmsWindow
-from gui.load_model_window import LoadModel
-from gui.loading_window import LoadingWindow
-from gui.lstm_window import LSTMWindow
-from gui.main_window import MainWindow
-from gui.model_controller import ModelController
-from gui.new_model_window import NewModel
-from gui.results_window import ResultsWindow
-from gui.similarity_functions_window import SimilarityFunctionsWindow
+from gui.windows.algorithms_window import AlgorithmsWindow
+from gui.windows.existing_algorithms_window import ExistingAlgorithmsWindow
+from gui.windows.load_model_window import LoadModel
+from gui.windows.loading_window import LoadingWindow
+from gui.windows.parameters_options_window import ParametersOptionsWindow
+from gui.windows.main_window import MainWindow
+from utils.model_controller import ModelController
+from gui.windows.new_model_window import NewModel
+from gui.windows.results_window import ResultsWindow
+from gui.windows.similarity_functions_window import SimilarityFunctionsWindow
 
 
 class AnomalyDetectionGUI(tk.Tk):
@@ -35,17 +34,18 @@ class AnomalyDetectionGUI(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         # container.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        self.current_algorithm_to_edit = "LSTM"
+
         self.frames = {}
         for F in (MainWindow,
                   NewModel,
                   LoadModel,
                   AlgorithmsWindow,
-                  FeatureSelectionWindow,
                   SimilarityFunctionsWindow,
                   ExistingAlgorithmsWindow,
                   LoadingWindow,
                   ResultsWindow,
-                  LSTMWindow):
+                  ParametersOptionsWindow):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -118,6 +118,12 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def get_new_model_running(self):
         return self.model_controller.get_new_model_running()
+
+    def set_current_algorithm_to_edit(self, algorithm_name):
+        self.current_algorithm_to_edit = algorithm_name
+
+    def get_current_algorithm_to_edit(self):
+        return self.current_algorithm_to_edit
 
 
 if __name__ == "__main__":

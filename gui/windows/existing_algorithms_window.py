@@ -5,7 +5,7 @@ import win32api
 
 from tkinter import END
 from tkinter.ttk import Combobox
-from gui.menubar import Menubar
+from gui.widgets.menubar import Menubar
 from gui.utils.helper_methods import CROSS_WINDOWS_SETTINGS, set_path
 from gui.utils.inputs_validation_helper import is_valid_model_paths
 from gui.widgets_configurations.helper_methods import set_widget_to_left, set_logo_configuration, \

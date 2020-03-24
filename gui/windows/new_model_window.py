@@ -2,7 +2,7 @@
 #  -*- coding: utf-8 -*-
 import os
 
-from gui.menubar import Menubar
+from gui.widgets.menubar import Menubar
 from gui.utils.helper_methods import set_path, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_copyright_configuration, set_logo_configuration, \
     set_button_configuration, set_widget_to_left

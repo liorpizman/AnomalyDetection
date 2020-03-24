@@ -3,12 +3,12 @@
 import os
 import win32api
 
-from gui.checkbox import Checkbar
-from gui.menubar import Menubar
+from gui.widgets.checkbox import Checkbar
+from gui.widgets.menubar import Menubar
 from gui.utils.helper_methods import load_anomaly_detection_list, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_copyright_configuration, \
     set_button_configuration, set_menu_button_configuration, set_widget_to_left
-from utils.shared.input_settings import InputSettings
+from utils.input_settings import InputSettings
 
 try:
     import Tkinter as tk
@@ -49,8 +49,7 @@ class AlgorithmsWindow(tk.Frame):
         set_widget_to_left(self.instructions)
 
         self.anomaly_detection_methods = Checkbar(self,
-                                                  load_anomaly_detection_list(),
-                                                  buttonCallback=self.show_algorithms_options,
+                                                  picks=load_anomaly_detection_list(),
                                                   editButtons=True)
         self.anomaly_detection_methods.place(relx=0.1, rely=0.35, height=400, width=700)
         self.features_columns_options = {}
@@ -72,13 +71,9 @@ class AlgorithmsWindow(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
-    def show_algorithms_options(self):
-        for check, var in zip(self.anomaly_detection_methods.get_checks(),
-                              self.anomaly_detection_methods.get_vars()):
-            algorithm_name = check.cget("text")
-            if algorithm_name != "LSTM":
-                continue
-            self.controller.show_frame("LSTMWindow")
+    def show_algorithms_options(self, algorithm_name):
+        self.controller.set_current_algorithm_to_edit(algorithm_name)
+        self.controller.reinitialize_frame("ParametersOptionsWindow")
 
     def set_algorithm_parameters(self, algorithm_name, algorithm_parameters):
         self.controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)

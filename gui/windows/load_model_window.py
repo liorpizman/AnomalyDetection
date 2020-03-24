@@ -2,7 +2,7 @@
 #  -*- coding: utf-8 -*-
 import os
 
-from gui.menubar import Menubar
+from gui.widgets.menubar import Menubar
 from gui.utils.helper_methods import set_path, CROSS_WINDOWS_SETTINGS
 from tkinter import END
 from gui.utils.inputs_validation_helper import load_model_paths_validation

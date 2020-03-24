@@ -1,6 +1,6 @@
 from gui.utils.helper_methods import read_json_file, get_model_path
-from lstm_execution import run_model
-from utils.shared.input_settings import InputSettings
+from models.lstm.lstm_execution import run_model
+from utils.input_settings import InputSettings
 
 
 class ModelsExecution:

@@ -1,12 +1,14 @@
 from tkinter import *
 
+from gui.utils.helper_methods import load_anomaly_detection_list
 from gui.widgets_configurations.helper_methods import set_widget_to_left
 
 
 class Checkbar(Frame):
 
-    def __init__(self, parent=None, picks=[], editButtons=False, checkCallback=None, buttonCallback=None):
+    def __init__(self, parent=None, picks=[], editButtons=False, checkCallback=None):
         Frame.__init__(self, parent)
+        self.parent = parent
         self.vars = []
         self.checks = []
         self.buttons = []
@@ -15,9 +17,10 @@ class Checkbar(Frame):
         enable_functionality = 'active'
         for pick in picks:
             var = IntVar()
-            if pick != "LSTM" and pick != "Cosine similarity":
-                enable_functionality = 'disabled'
+            # if pick != "LSTM" and pick != "Cosine similarity":
+            #     enable_functionality = 'disabled'
 
+            algorithm_show_function = self.get_algorithm_show_function(str(pick))
             check_button = Checkbutton(self,
                                        text=pick,
                                        variable=var,
@@ -31,7 +34,7 @@ class Checkbar(Frame):
                 edit_button = Button(self,
                                      text=pick + " configuration",
                                      state='disabled',
-                                     command=buttonCallback)
+                                     command=algorithm_show_function)
 
                 edit_button.place(relx=relX + 0.35, rely=relY, height=30, width=220)
                 self.buttons.append(edit_button)
@@ -59,3 +62,25 @@ class Checkbar(Frame):
                 button['state'] = 'disabled'
         if checkCallback is not None:
             checkCallback()
+
+    def show_LSTM_options(self):
+        self.parent.show_algorithms_options(load_anomaly_detection_list()[0])
+
+    def show_OCSVM_options(self):
+        self.parent.show_algorithms_options(load_anomaly_detection_list()[1])
+
+    def show_KNN_options(self):
+        self.parent.show_algorithms_options(load_anomaly_detection_list()[2])
+
+    def show_Isolation_Forest_options(self):
+        self.parent.show_algorithms_options(load_anomaly_detection_list()[3])
+
+    def get_algorithm_show_function(self, algorithm_name):
+        algorithms = load_anomaly_detection_list()
+        switcher = {
+            algorithms[0]: self.show_LSTM_options,
+            algorithms[1]: self.show_OCSVM_options,
+            algorithms[2]: self.show_KNN_options,
+            algorithms[3]: self.show_Isolation_Forest_options
+        }
+        return switcher.get(algorithm_name, None)

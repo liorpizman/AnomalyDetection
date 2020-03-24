@@ -1,16 +1,14 @@
 import os
-
+import shutil
 import numpy as np
-from numpy import dot
-from numpy.linalg import norm
 import pandas as pd
 import yaml
 import matplotlib.pyplot as plt
 
-from utils.shared.lstm_hyper_parameters import lstm_hyper_parameters
-
-import shutil
+from numpy import dot
+from numpy.linalg import norm
 from datetime import datetime
+from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 
 
 def is_valid_directory(path):

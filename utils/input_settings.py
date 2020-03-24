@@ -2,9 +2,8 @@ import os
 
 import pandas as pd
 
-from utils.shared.helper_methods import get_subdirectories
-from utils.shared.lstm_hyper_parameters import lstm_hyper_parameters
-
+from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
+from utils.helper_methods import get_subdirectories
 
 class InputSettings:
     TRAINING_DATA_PATH = ""

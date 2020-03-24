@@ -1,9 +1,10 @@
 import os
 import yaml
 import tkinter
+import json
+
 from tkinter.filedialog import askdirectory, askopenfilename
 from gui.utils.constants import *
-import json
 
 
 def set_path():
@@ -46,36 +47,8 @@ def load_anomaly_detection_list():
     return load_classification_methods(ANOMALY_DETECTION_METHODS)
 
 
-def load_feature_selection_list():
-    return load_classification_methods(FEATURE_SELECTION_METHODS)
-
-
 def load_similarity_list():
     return load_classification_methods(SIMILARITY_FUNCTIONS)
-
-
-def load_lstm_activation_list():
-    return load_classification_methods(LSTM_ACTIVATION)
-
-
-def load_lstm_loss_list():
-    return load_classification_methods(LSTM_LOSS)
-
-
-def load_lstm_optimizer_list():
-    return load_classification_methods(LSTM_OPTIMIZER)
-
-
-def load_lstm_window_size_list():
-    return load_classification_methods(LSTM_WINDOW)
-
-
-def load_lstm_encoder_dimension_list():
-    return load_classification_methods(LSTM_ENCODER_DIMENSION)
-
-
-def load_lstm_threshold_list():
-    return load_classification_methods(LSTM_THRESHOLD_FROM_TRAINING_PERCENT)
 
 
 def read_json_file(path):

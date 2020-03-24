@@ -1,5 +1,5 @@
-from utils.shared.input_settings import InputSettings
-from utils.shared.models_execution import ModelsExecution
+from utils.input_settings import InputSettings
+from utils.models_execution import ModelsExecution
 
 
 class ModelController:
