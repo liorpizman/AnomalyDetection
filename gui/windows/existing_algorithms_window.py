@@ -6,8 +6,8 @@ import win32api
 from tkinter import END
 from tkinter.ttk import Combobox
 from gui.widgets.menubar import Menubar
-from gui.utils.helper_methods import CROSS_WINDOWS_SETTINGS, set_path
-from gui.utils.inputs_validation_helper import is_valid_model_paths
+from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, set_path
+from gui.shared.inputs_validation_helper import is_valid_model_paths
 from gui.widgets_configurations.helper_methods import set_widget_to_left, set_logo_configuration, \
     set_button_configuration, set_copyright_configuration
 
@@ -46,7 +46,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please insert paths of existing models.''')
+            text='''Please insert paths of existing models_1.''')
         set_widget_to_left(self.instructions)
 
         self.algorithms = dict()

@@ -3,9 +3,9 @@
 import os
 
 from gui.widgets.menubar import Menubar
-from gui.utils.helper_methods import set_path, CROSS_WINDOWS_SETTINGS
+from gui.shared.helper_methods import set_path, CROSS_WINDOWS_SETTINGS
 from tkinter import END
-from gui.utils.inputs_validation_helper import load_model_paths_validation
+from gui.shared.inputs_validation_helper import load_model_paths_validation
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
     set_copyright_configuration, set_button_configuration
 

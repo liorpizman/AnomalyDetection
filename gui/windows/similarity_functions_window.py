@@ -5,7 +5,7 @@ import os
 
 from gui.widgets.checkbox import Checkbar
 from gui.widgets.menubar import Menubar
-from gui.utils.helper_methods import load_similarity_list, CROSS_WINDOWS_SETTINGS
+from gui.shared.helper_methods import load_similarity_list, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_widget_to_left, set_logo_configuration, \
     set_copyright_configuration, set_button_configuration
 

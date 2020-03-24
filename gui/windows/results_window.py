@@ -3,7 +3,7 @@
 import os
 
 from gui.widgets.menubar import Menubar
-from gui.utils.constants import CROSS_WINDOWS_SETTINGS
+from gui.shared.constants import CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
     set_copyright_configuration, set_button_configuration
 

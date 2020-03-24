@@ -3,10 +3,10 @@
 import os
 
 from gui.widgets.menubar import Menubar
-from gui.utils.helper_methods import set_path, CROSS_WINDOWS_SETTINGS
+from gui.shared.helper_methods import set_path, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_copyright_configuration, set_logo_configuration, \
     set_button_configuration, set_widget_to_left
-from gui.utils.inputs_validation_helper import new_model_paths_validation
+from gui.shared.inputs_validation_helper import new_model_paths_validation
 from tkinter import END
 
 try:

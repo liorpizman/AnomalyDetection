@@ -1,6 +1,6 @@
 from tkinter import *
 
-from gui.utils.helper_methods import load_anomaly_detection_list
+from gui.shared.helper_methods import load_anomaly_detection_list
 from gui.widgets_configurations.helper_methods import set_widget_to_left
 
 

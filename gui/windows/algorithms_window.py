@@ -5,7 +5,7 @@ import win32api
 
 from gui.widgets.checkbox import Checkbar
 from gui.widgets.menubar import Menubar
-from gui.utils.helper_methods import load_anomaly_detection_list, CROSS_WINDOWS_SETTINGS
+from gui.shared.helper_methods import load_anomaly_detection_list, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_copyright_configuration, \
     set_button_configuration, set_menu_button_configuration, set_widget_to_left
 from utils.input_settings import InputSettings
@@ -45,7 +45,7 @@ class AlgorithmsWindow(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please select the algorithms for which you want to build anomaly detection models.''')
+            text='''Please select the algorithms for which you want to build anomaly detection models_1.''')
         set_widget_to_left(self.instructions)
 
         self.anomaly_detection_methods = Checkbar(self,
@@ -84,7 +84,7 @@ class AlgorithmsWindow(tk.Frame):
     def validate_next_step(self):
         features_list = self.get_selected_features()
         if not features_list:
-            win32api.MessageBox(0, 'Please select feature for the models before the next step.', 'Invalid Feature',
+            win32api.MessageBox(0, 'Please select feature for the models_1 before the next step.', 'Invalid Feature',
                                 0x00001000)
         elif InputSettings.get_algorithms() != set():
             self.controller.set_users_selected_features(features_list)

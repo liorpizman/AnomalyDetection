@@ -10,7 +10,7 @@ from datetime import timedelta
 from timeit import default_timer as timer
 from string import Template
 from gui.widgets.menubar import Menubar
-from gui.utils.constants import LOADING_WINDOW_SETTINGS, CROSS_WINDOWS_SETTINGS
+from gui.shared.constants import LOADING_WINDOW_SETTINGS, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_copyright_configuration, \
     set_widget_to_left, set_button_configuration
 

@@ -4,8 +4,8 @@ import os
 
 from gui.algorithm_frame_options.algorithm_frame_options import AlgorithmFrameOptions
 from gui.widgets.menubar import Menubar
-from gui.utils.constants import CROSS_WINDOWS_SETTINGS
-from gui.utils.helper_methods import load_anomaly_detection_list
+from gui.shared.constants import CROSS_WINDOWS_SETTINGS
+from gui.shared.helper_methods import load_anomaly_detection_list
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
     set_button_configuration, set_copyright_configuration
 

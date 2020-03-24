@@ -4,7 +4,7 @@ import tkinter
 import json
 
 from tkinter.filedialog import askdirectory, askopenfilename
-from gui.utils.constants import *
+from gui.shared.constants import *
 
 
 def set_path():
