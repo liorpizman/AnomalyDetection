@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
 
-import multiprocessing
 import os
 
 from gui.checkbox import Checkbar
@@ -63,7 +62,7 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')
 
-        self.back_button = tk.Button(self, command=lambda: controller.show_frame("AlgorithmsWindow"))
+        self.back_button = tk.Button(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
 
@@ -75,12 +74,19 @@ class SimilarityFunctionsWindow(tk.Frame):
         similarity_list = set()
         for check, var in zip(self.similarity_functions.get_checks(),
                               self.similarity_functions.get_vars()):
-            if var.get():  # show the algorithms options
+            if var.get():  # show algorithms' options
                 similarity_list.add(check.cget("text"))
         self.controller.set_similarity_score(similarity_list)
 
     def next_window(self):
         self.controller.reinitialize_frame("LoadingWindow")
+
+    def back_window(self):
+        is_new_model_flow = self.controller.get_new_model_running()
+        if is_new_model_flow:
+            self.controller.show_frame("AlgorithmsWindow")
+        else:
+            self.controller.show_frame("ExistingAlgorithmsWindow")
 
     def set_saving_model(self):
         self.controller.set_saving_model(self.save_model_var.get() == 1)

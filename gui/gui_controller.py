@@ -116,6 +116,9 @@ class AnomalyDetectionGUI(tk.Tk):
     def get_existing_thread(self):
         return self.model_controller.get_existing_thread()
 
+    def get_new_model_running(self):
+        return self.model_controller.get_new_model_running()
+
 
 if __name__ == "__main__":
     app = AnomalyDetectionGUI()
