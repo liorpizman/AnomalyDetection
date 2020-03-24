@@ -63,3 +63,6 @@ class ModelController:
 
     def get_existing_thread(self):
         return InputSettings.get_existing_thread()
+
+    def get_new_model_running(self):
+        return InputSettings.get_new_model_running()

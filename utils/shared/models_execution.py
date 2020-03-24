@@ -29,7 +29,6 @@ class ModelsExecution:
 
     @staticmethod
     def run_models():
-        print('------------------------------------------------------------------run_models')
         similarity_score, test_data_path, results_path, new_model_running = ModelsExecution.get_parameters()
 
         if new_model_running:

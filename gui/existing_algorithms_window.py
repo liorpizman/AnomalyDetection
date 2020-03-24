@@ -6,7 +6,7 @@ import win32api
 from tkinter import END
 from tkinter.ttk import Combobox
 from gui.menubar import Menubar
-from gui.utils.helper_methods import set_file_path, CROSS_WINDOWS_SETTINGS
+from gui.utils.helper_methods import CROSS_WINDOWS_SETTINGS, set_path
 from gui.utils.inputs_validation_helper import is_valid_model_paths
 from gui.widgets_configurations.helper_methods import set_widget_to_left, set_logo_configuration, \
     set_button_configuration, set_copyright_configuration
@@ -180,7 +180,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
 
     def set_algorithm_path(self, algorithm):
         self.input_entries[algorithm].delete(0, END)
-        path = set_file_path()
+        path = set_path()
         self.input_entries[algorithm].insert(0, path)
 
     def next_window(self):
