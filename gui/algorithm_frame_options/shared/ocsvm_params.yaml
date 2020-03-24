@@ -1,0 +1,19 @@
+# The values are the text params for each label in OCSVM frame options
+# Must be: 1st list in current yaml file
+widget_names:
+  - "test1"
+
+# The values are the keys of the parameters in the helper method file
+# For example: 'frame.parameters[param_key] = frame.algorithm_param_combo'  (param_key is each value in the list)
+# Moreover, the amount of values here should be same as the amount of values in the list above
+# Must be: 2nd list in current yaml file
+widget_param_keys:
+  - "test1"
+
+# All the lists in the bottoms represent the values in each combobox which will be displayed.
+# Should be: It is better that the keys of the lists will be informative but they can be every string you want
+test1_template:
+  - "test1"
+  - "test1"
+  - "test1"
+  - "test1"
