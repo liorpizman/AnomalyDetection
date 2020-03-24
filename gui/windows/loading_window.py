@@ -80,7 +80,7 @@ class LoadingWindow(tk.Frame):
         self.loading_gif.start()
 
     def back_window(self):
-        self.controller.show_frame("SimilarityFunctionsWindow")
+        self.controller.reinitialize_frame("SimilarityFunctionsWindow")
 
     def stop_model_process(self):
         self.back_button.configure(state='active')

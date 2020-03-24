@@ -1,9 +1,7 @@
-try:
-    import Tkinter as tk
-except ImportError:
-    import tkinter as tk
-from tkinter import font as tkfont
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
 
+from tkinter import font as tkfont
 from gui.windows.algorithms_window import AlgorithmsWindow
 from gui.windows.existing_algorithms_window import ExistingAlgorithmsWindow
 from gui.windows.load_model_window import LoadModel
@@ -14,6 +12,20 @@ from utils.model_controller import ModelController
 from gui.windows.new_model_window import NewModel
 from gui.windows.results_window import ResultsWindow
 from gui.windows.similarity_functions_window import SimilarityFunctionsWindow
+
+try:
+    import Tkinter as tk
+except ImportError:
+    import tkinter as tk
+
+try:
+    import ttk
+
+    py3 = False
+except ImportError:
+    import tkinter.ttk as ttk
+
+    py3 = True
 
 
 class AnomalyDetectionGUI(tk.Tk):

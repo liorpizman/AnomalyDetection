@@ -209,4 +209,4 @@ class ExistingAlgorithmsWindow(tk.Frame):
     def set_load_model_parameters(self):
         self.controller.set_existing_algorithms(self.algorithms)
         self.controller.set_existing_algorithms_threshold(float(self.threshold_combo.get()))
-        self.controller.show_frame("SimilarityFunctionsWindow")
+        self.controller.reinitialize_frame("SimilarityFunctionsWindow")
