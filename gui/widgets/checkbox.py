@@ -17,8 +17,6 @@ class Checkbar(Frame):
         enable_functionality = 'active'
         for pick in picks:
             var = IntVar()
-            # if pick != "LSTM" and pick != "Cosine similarity":
-            #     enable_functionality = 'disabled'
 
             algorithm_show_function = self.get_algorithm_show_function(str(pick))
             check_button = Checkbutton(self,
