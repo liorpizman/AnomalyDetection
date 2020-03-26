@@ -60,8 +60,6 @@ class InputSettings:
     def set_algorithm_parameters(algorithm_name, algorithm_parameters):
         set_function = InputSettings.get_algorithm_set_function(algorithm_name)
         set_function(algorithm_parameters)
-        # algorithm_setting_function = getattr(InputSettings, "set_" + algorithm_name)
-        # algorithm_setting_function(algorithm_parameters)
 
     @staticmethod
     def set_LSTM(algorithm_parameters):
