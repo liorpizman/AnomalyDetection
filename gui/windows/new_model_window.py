@@ -100,7 +100,7 @@ class NewModel(tk.Frame):
         set_copyright_configuration(self.copyright)
 
         # -------------------------------should be replaced at final submission  -------------------------------------
-        self.set_inputs_first_permutation()
+        self.set_inputs_second_permutation()
         # ------------------------------- end ------------------------------------------------------------------------
 
     def set_input_path(self):
@@ -125,7 +125,7 @@ class NewModel(tk.Frame):
     def next_window(self):
         if new_model_paths_validation(self.training_input.get(), self.test_input.get(), self.results_input.get()):
             self.set_new_model_parameters()
-            self.controller.reinitialize_frame("AlgorithmsWindow")
+            self.controller.show_frame("AlgorithmsWindow")
 
     def set_new_model_parameters(self):
         self.controller.set_new_model_training_input_path(self.training_input.get())
@@ -145,9 +145,9 @@ class NewModel(tk.Frame):
 
     def set_inputs_second_permutation(self):
         self.set_permutations(
-            training_path="C:\\Users\\Yehuda Pashay\\Desktop\\check\\flights_data\\check_data\\input_for_training",
-            test_path="C:\\Users\\Yehuda Pashay\\Desktop\\check\\flights_data\\check_data\\input_for_testing",
-            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\check\\flights_data\\check_data\\results"
+            training_path="C:\\Users\\Yehuda Pashay\\Desktop\\fligth_data\\data_set\\train",
+            test_path="C:\\Users\\Yehuda Pashay\\Desktop\\fligth_data\\data_set\\test",
+            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\fligth_data\\data_set\\results"
         )
 
     def set_permutations(self, training_path, test_path, results_path):

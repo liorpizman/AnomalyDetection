@@ -2,6 +2,10 @@ import os
 
 import pandas as pd
 
+from gui.shared.helper_methods import load_anomaly_detection_list
+from models.isolation_forest.isolation_forest_hyper_parameters import isolation_forest_hyper_parameters
+from models.knn.knn_hyper_parameters import knn_hyper_parameters
+from models.ocsvm.ocsvm_hyper_parameters import ocsvm_hyper_parameters
 from utils.helper_methods import get_subdirectories
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 
@@ -17,7 +21,7 @@ class InputSettings:
     LOAD_MODEL_THRESHOLD = None
     EXISTING_ALGORITHMS = dict()
     FEATURES_COLUMNS_OPTIONS = []
-    USERS_SELECTED_FEATURES = []
+    USERS_SELECTED_FEATURES = dict()
     THREADS = []
 
     @staticmethod
@@ -54,8 +58,10 @@ class InputSettings:
 
     @staticmethod
     def set_algorithm_parameters(algorithm_name, algorithm_parameters):
-        algorithm_setting_function = getattr(InputSettings, "set_" + algorithm_name)
-        algorithm_setting_function(algorithm_parameters)
+        set_function = InputSettings.get_algorithm_set_function(algorithm_name)
+        set_function(algorithm_parameters)
+        # algorithm_setting_function = getattr(InputSettings, "set_" + algorithm_name)
+        # algorithm_setting_function(algorithm_parameters)
 
     @staticmethod
     def set_LSTM(algorithm_parameters):
@@ -137,8 +143,8 @@ class InputSettings:
         return InputSettings.USERS_SELECTED_FEATURES
 
     @staticmethod
-    def set_users_selected_features(features_list):
-        InputSettings.USERS_SELECTED_FEATURES = features_list
+    def set_users_selected_features(algorithm_name, features_list):
+        InputSettings.USERS_SELECTED_FEATURES[algorithm_name] = features_list
 
     @staticmethod
     def add_new_thread(new_thread):
@@ -149,3 +155,40 @@ class InputSettings:
         current_thread = InputSettings.THREADS[0]
         InputSettings.THREADS = []
         return current_thread
+
+    @staticmethod
+    def remove_algorithm(algorithm_name):
+        if algorithm_name in InputSettings.ALGORITHMS:
+            InputSettings.ALGORITHMS.remove(algorithm_name)
+
+    @staticmethod
+    def set_Isolation_Forest(algorithm_parameters):
+        InputSettings.ALGORITHMS.add("Isolation Forest")
+        for param in algorithm_parameters:
+            Isolation_Forest_setting_function = getattr(isolation_forest_hyper_parameters, "set_" + param)
+            Isolation_Forest_setting_function(algorithm_parameters[param])
+
+    @staticmethod
+    def set_OCSVM(algorithm_parameters):
+        InputSettings.ALGORITHMS.add("One Class SVM (OCSVM)")
+        for param in algorithm_parameters:
+            ocsvm_setting_function = getattr(ocsvm_hyper_parameters, "set_" + param)
+            ocsvm_setting_function(algorithm_parameters[param])
+
+    @staticmethod
+    def set_KNN(algorithm_parameters):
+        InputSettings.ALGORITHMS.add("KNN")
+        for param in algorithm_parameters:
+            knn_setting_function = getattr(knn_hyper_parameters, "set_" + param)
+            knn_setting_function(algorithm_parameters[param])
+
+    @staticmethod
+    def get_algorithm_set_function(algorithm_name):
+        algorithms = load_anomaly_detection_list()
+        switcher = {
+            algorithms[0]: InputSettings.set_LSTM,
+            algorithms[1]: InputSettings.set_OCSVM,
+            algorithms[2]: InputSettings.set_KNN,
+            algorithms[3]: InputSettings.set_Isolation_Forest
+        }
+        return switcher.get(algorithm_name, None)

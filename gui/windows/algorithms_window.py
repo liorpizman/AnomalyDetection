@@ -50,16 +50,12 @@ class AlgorithmsWindow(tk.Frame):
 
         self.anomaly_detection_methods = Checkbar(self,
                                                   picks=load_anomaly_detection_list(),
-                                                  editButtons=True)
+                                                  editButtons=True,
+                                                  checkCallback=self.set_algorithm_checked)
         self.anomaly_detection_methods.place(relx=0.1, rely=0.35, height=400, width=700)
-        self.features_columns_options = {}
-
-        self.menubutton = tk.Menubutton(self)
-        self.menubutton.place(relx=0.1, rely=0.65, height=25, width=81)
-        set_menu_button_configuration(self.menubutton)
 
         # Page footer
-        self.next_button = tk.Button(self, command=self.validate_next_step)
+        self.next_button = tk.Button(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')
 
@@ -81,34 +77,38 @@ class AlgorithmsWindow(tk.Frame):
     def remove_algorithm_parameters(self, algorithm_name, algorithm_parameters):
         self.controller.remove_algorithm_parameters(algorithm_name, algorithm_parameters)
 
-    def validate_next_step(self):
-        features_list = self.get_selected_features()
-        if not features_list:
-            win32api.MessageBox(0, 'Please select feature for the models_1 before the next step.', 'Invalid Feature',
-                                0x00001000)
-        elif InputSettings.get_algorithms() != set():
-            self.controller.set_users_selected_features(features_list)
-            self.controller.show_frame("SimilarityFunctionsWindow")
-        else:
-            win32api.MessageBox(0, 'Please edit LSTM parameters before the next step.', 'Invalid Parameters',
-                                0x00001000)
-
-    def get_features_columns_options(self):
-        return self.controller.get_features_columns_options()
-
-    def reinitialize(self):
-        # initialize features columns options
-        self.features_columns_options = {}
-        self.menu = tk.Menu(self.menubutton, tearoff=False)
-        self.menubutton.configure(menu=self.menu)
-        for feature in self.get_features_columns_options():
-            self.features_columns_options[feature] = tk.IntVar(value=0)
-            self.menu.add_checkbutton(label=feature, variable=self.features_columns_options[feature],
-                                      onvalue=1, offvalue=0)
-
-    def get_selected_features(self):
-        features = []
-        for name, var in self.features_columns_options.items():
+    def check_algorithm_selected(self):
+        for check, var in zip(self.anomaly_detection_methods.get_checks(),
+                              self.anomaly_detection_methods.get_vars()):
             if var.get():
-                features.append(name)
-        return features
+                return True
+        win32api.MessageBox(0, 'Please select algorithm before the next step.', 'Invalid Algorithm',
+                            0x00001000)
+        return False
+
+    def check_algorithm_parameters_edited(self):
+        selected_algorithms = self.controller.get_algorithms()
+        for check, var in zip(self.anomaly_detection_methods.get_checks(),
+                              self.anomaly_detection_methods.get_vars()):
+            current_algorithm = check.cget("text")
+            algoritm_selected = var.get()
+            if algoritm_selected and current_algorithm not in selected_algorithms:
+                win32api.MessageBox(0, 'Please edit algorithm parameters before the next step.', 'Invalid Parameters',
+                                    0x00001000)
+                return False
+        return True
+
+    def validate_next_step(self):
+        if self.check_algorithm_selected() and self.check_algorithm_parameters_edited():
+            return True
+        return False
+
+    def next_window(self):
+        if self.validate_next_step():
+            self.controller.show_frame("SimilarityFunctionsWindow")
+
+    def set_algorithm_checked(self):
+        for check, var in zip(self.anomaly_detection_methods.get_checks(),
+                              self.anomaly_detection_methods.get_vars()):
+            if not var.get():
+                self.controller.remove_algorithm(check.cget("text"))

@@ -74,7 +74,7 @@ class SimilarityFunctionsWindow(tk.Frame):
         similarity_list = set()
         for check, var in zip(self.similarity_functions.get_checks(),
                               self.similarity_functions.get_vars()):
-            if var.get():  # show algorithms' options
+            if var.get():
                 similarity_list.add(check.cget("text"))
         self.controller.set_similarity_score(similarity_list)
 

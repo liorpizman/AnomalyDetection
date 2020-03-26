@@ -30,9 +30,16 @@ def test_path_validation(test_path, input_routes):
         elif level == 2:  # third level in path
             if dirs or not files:  # if there are subdirectories , or there is no attack route file in the second level
                 return False
-            for f in files:
-                if not f.endswith('.csv') or not f[:-4].isdigit():
-                    return False  # if there are files other than "csv" type , or their name are not represents numbers
+            try:
+                for f in files:
+                    splited_file = f.split("_")
+                    sensors = splited_file.__getitem__(0)
+                    flight_index = splited_file.__getitem__(1)
+                    if sensors != "sensors" or not flight_index or not flight_index.endswith(
+                            '.csv') or not flight_index[:-4].isdigit():
+                        return False  # if there are files other than "csv" type , or their name are not in "sensors_[index]" format
+            except:
+                return False
         elif level > 2:  # level > 2
             return False
     return True

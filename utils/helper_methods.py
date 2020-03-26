@@ -161,10 +161,6 @@ def get_method_scores(prediction, run_new_model):
 
     detection_delay = -1
 
-    # for window in windows:
-    # upper = window["upper"]
-    # lower = window["lower"]
-
     if run_new_model:
         lower = 180 - lstm_hyper_parameters.get_window_size() + 1
     else:

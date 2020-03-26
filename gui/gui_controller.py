@@ -107,8 +107,8 @@ class AnomalyDetectionGUI(tk.Tk):
     def get_features_columns_options(self):
         return self.model_controller.get_features_columns_options()
 
-    def set_users_selected_features(self, features_list):
-        self.model_controller.set_users_selected_features(features_list)
+    def set_users_selected_features(self, algorithm_name, features_list):
+        self.model_controller.set_users_selected_features(algorithm_name, features_list)
 
     def add_new_thread(self, new_thread):
         self.model_controller.add_new_thread(new_thread)
@@ -124,6 +124,15 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def get_current_algorithm_to_edit(self):
         return self.current_algorithm_to_edit
+
+    def get_algorithms(self):
+        return self.model_controller.get_algorithms()
+
+    def remove_algorithm(self, algorithm_name):
+        self.model_controller.remove_algorithm(algorithm_name)
+
+    def remove_algorithms(self, algorithm_name):
+        self.model_controller.remove_algorithms(algorithm_name)
 
 
 if __name__ == "__main__":
