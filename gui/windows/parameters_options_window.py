@@ -8,7 +8,7 @@ from gui.widgets.menubar import Menubar
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
 from gui.shared.helper_methods import load_anomaly_detection_list
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
-    set_button_configuration, set_copyright_configuration, set_menu_button_configuration
+    set_button_configuration, set_copyright_configuration
 
 try:
     import Tkinter as tk
@@ -53,22 +53,30 @@ class ParametersOptionsWindow(tk.Frame):
         self.current_algorithm = self.controller.get_current_algorithm_to_edit()
         self.current_yaml = self.set_suitable_yaml_file(self.current_algorithm)
 
+        self.height_options_frame = 268
+        self.width_options_frame = 300
+
         self.options_to_show = AlgorithmFrameOptions(self, yaml_filename=self.current_yaml)
-        self.options_to_show.place(relx=0.1, rely=0.35, height=400, width=650)
+        self.options_to_show.place(relx=0.1,
+                                   rely=0.35,
+                                   height=self.height_options_frame,
+                                   width=self.width_options_frame)
 
         # initialize features columns options
         self.features_columns_options = {}
-        self.menubutton = tk.Menubutton(self)
-        self.menu = tk.Menu(self.menubutton, tearoff=False)
-        self.menubutton.configure(menu=self.menu)
+        self.features_columns_options = self.get_features_columns_options()
+        self.csv_features = tk.StringVar()
+        self.csv_features.set(self.features_columns_options)
 
-        self.menubutton.place(relx=0.813, rely=0.35, height=25, width=81)
-        set_menu_button_configuration(self.menubutton)
+        self.features_listbox = tk.Listbox(self,
+                                           listvariable=self.csv_features,
+                                           selectmode=tk.MULTIPLE,
+                                           width=120,
+                                           height=200)
+        self.features_listbox.place(relx=0.6, rely=0.4, height=200, width=120)
 
         # Page footer
-        self.next_button = tk.Button(self, command=lambda: self.save_algorithm_parameters(
-            self.options_to_show.get_algorithm_parameters(),
-            self.get_selected_features()))
+        self.next_button = tk.Button(self, command=self.handle_next_button)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Save''')
 
@@ -80,7 +88,11 @@ class ParametersOptionsWindow(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
-    # should be changed to get algorithm name and then send it forward
+    def handle_next_button(self):
+        algorithm_parameters = self.options_to_show.get_algorithm_parameters()
+        selected_features = self.get_selected_features()
+        self.save_algorithm_parameters(algorithm_parameters, selected_features)
+
     def set_algorithm_parameters(self, algorithm_name, algorithm_parameters):
         self.controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
 
@@ -113,17 +125,27 @@ class ParametersOptionsWindow(tk.Frame):
         return switcher.get(algorithm_name, None)
 
     def reinitialize(self):
-        self.reinitialize_features_columns_options()
         self.reinitialize_current_algorithm_options()
+        self.reinitialize_features_columns_options()
 
     def reinitialize_features_columns_options(self):
+        self.features_label = tk.Label(self)
+        self.features_label.place(relx=0.6, rely=0.35, height=32, width=100)
+        self.features_label.configure(text='''Select features:''')
+        set_widget_to_left(self.features_label)
+
         self.features_columns_options = {}
-        self.menu = tk.Menu(self.menubutton, tearoff=False)
-        self.menubutton.configure(menu=self.menu)
-        for feature in self.get_features_columns_options():
-            self.features_columns_options[feature] = tk.IntVar(value=0)
-            self.menu.add_checkbutton(label=feature, variable=self.features_columns_options[feature],
-                                      onvalue=1, offvalue=0)
+        self.features_columns_options = self.get_features_columns_options()
+
+        self.csv_features = tk.StringVar()
+        self.csv_features.set(self.features_columns_options)
+
+        self.features_listbox = tk.Listbox(self,
+                                           listvariable=self.csv_features,
+                                           selectmode=tk.MULTIPLE,
+                                           width=120,
+                                           height=150)
+        self.features_listbox.place(relx=0.6, rely=0.4, height=200, width=120)
 
     def reinitialize_current_algorithm_options(self):
         self.current_algorithm = self.controller.get_current_algorithm_to_edit()
@@ -136,9 +158,10 @@ class ParametersOptionsWindow(tk.Frame):
 
     def get_selected_features(self):
         features = []
-        for name, var in self.features_columns_options.items():
-            if var.get():
-                features.append(name)
+        selection = self.features_listbox.curselection()
+        for i in selection:
+            selected = self.features_listbox.get(i)
+            features.append(selected)
         return features
 
     def get_features_columns_options(self):
