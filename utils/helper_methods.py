@@ -9,6 +9,7 @@ from numpy import dot
 from numpy.linalg import norm
 from datetime import datetime
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
+from utils.constants import NON_ATTACK_VALUE, ATTACK_VALUE
 
 
 def is_valid_directory(path):
@@ -147,7 +148,7 @@ def get_thresholds(list_scores, percent):
     return [get_threshold(scores, percent) for scores in list_scores]
 
 
-def get_method_scores(prediction, run_new_model):
+def get_method_scores(prediction, run_new_model, attack_start, attack_end):
     """
     get previous method scores (TPR, FPR, delay)
     :param prediction: predictions
@@ -160,13 +161,15 @@ def get_method_scores(prediction, run_new_model):
     tn = 0
 
     detection_delay = -1
+    start_attack_record = attack_start  # ADS-B by default  = 180
+    end_attack_record = attack_end  # ADS-B by default  = 249
 
     if run_new_model:
-        lower = 180 - lstm_hyper_parameters.get_window_size() + 1
+        lower = start_attack_record - lstm_hyper_parameters.get_window_size() + 1
     else:
-        lower = 180 - 15 + 1
+        lower = start_attack_record - 15 + 1
 
-    upper = 249
+    upper = end_attack_record
     assert len(prediction) >= upper
     assert upper > lower
 
@@ -200,6 +203,13 @@ def get_method_scores(prediction, run_new_model):
     fpr = fp / (fp + tn)
 
     return tpr, fpr, detection_delay
+
+
+def get_attack_boundaries(df_label):
+    attack_start = df_label[df_label != NON_ATTACK_VALUE].first_valid_index()
+    partial_df = df_label.truncate(before=attack_start)
+    attack_end = partial_df[partial_df != ATTACK_VALUE].first_valid_index() - 1
+    return attack_start, attack_end
 
 
 def get_subdirectories(path):

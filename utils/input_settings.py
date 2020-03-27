@@ -6,6 +6,7 @@ from gui.shared.helper_methods import load_anomaly_detection_list
 from models.isolation_forest.isolation_forest_hyper_parameters import isolation_forest_hyper_parameters
 from models.knn.knn_hyper_parameters import knn_hyper_parameters
 from models.ocsvm.ocsvm_hyper_parameters import ocsvm_hyper_parameters
+from utils.constants import ATTACK_COLUMN
 from utils.helper_methods import get_subdirectories
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 
@@ -134,7 +135,9 @@ class InputSettings:
         attack = get_subdirectories(flight_dir).__getitem__(0)
         flight_csv = os.listdir(f'{test_data_path}/{flight_route}/{attack}').__getitem__(0)
         df_test = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
-        InputSettings.FEATURES_COLUMNS_OPTIONS = list(df_test.columns)
+        test_columns = list(df_test.columns)
+        test_columns.remove(ATTACK_COLUMN)
+        InputSettings.FEATURES_COLUMNS_OPTIONS = test_columns
 
     @staticmethod
     def get_users_selected_features():

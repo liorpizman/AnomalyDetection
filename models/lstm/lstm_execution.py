@@ -1,11 +1,12 @@
 import pandas as pd
 
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
+from utils.constants import ATTACK_COLUMN
 from utils.routes import *
 from models.lstm.lstm_autoencoder import get_lstm_autoencoder_model
 from utils.helper_methods import get_training_data_lstm, get_testing_data_lstm, anomaly_score_multi, \
     get_threshold, report_results, get_method_scores, get_subdirectories, create_directories, get_current_time, plot, \
-    plot_reconstruction_error_scatter
+    plot_reconstruction_error_scatter, get_attack_boundaries
 
 from tensorflow.python.keras.models import load_model
 from sklearn.preprocessing import MaxAbsScaler
@@ -107,7 +108,7 @@ def execute_train(flight_route,
 
     lstm = get_lstm_autoencoder_model(window_size, df_train.shape[1],
                                       encoding_dimension, activation, loss, optimizer)
-    history = lstm.fit(X_train, X_train, epochs=10, verbose=1).history
+    history = lstm.fit(X_train, X_train, epochs=1, verbose=1).history
     if save_model:
         data = {}
         data['features'] = features_list
@@ -156,9 +157,9 @@ def execute_predict(flight_route,
     for attack in ATTACKS:
         for flight_csv in os.listdir(f'{test_data_path}/{flight_route}/{attack}'):
 
-            df_test = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
-            df_test_labels = df_test[['label']].values
-            df_test = df_test[features_list]
+            df_test_source = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
+            df_test_labels = df_test_source[[ATTACK_COLUMN]].values
+            df_test = df_test_source[features_list]
 
             if not run_new_model:
                 scalar = MaxAbsScaler()
@@ -181,7 +182,10 @@ def execute_predict(flight_route,
 
             predictions = [1 if x >= threshold else 0 for x in scores_test]
 
-            method_scores = get_method_scores(predictions, run_new_model)
+            attack_start, attack_end = get_attack_boundaries(df_test_source[ATTACK_COLUMN])
+            print('------------------------------------' + str(attack_start) + ' - ' + str(attack_end))
+
+            method_scores = get_method_scores(predictions, run_new_model, attack_start, attack_end)
 
             tpr_scores[attack].append(method_scores[0])
             fpr_scores[attack].append(method_scores[1])
