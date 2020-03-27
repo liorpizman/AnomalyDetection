@@ -43,4 +43,19 @@ def load_algorithm_constants(filename):
     path = os.path.join(dirname(abspath(__file__)), filename)
     with open(path) as file:
         algoritms_params = yaml.load(file, Loader=yaml.FullLoader)
-        return algoritms_params
+        return convert_string_to_boolean(algoritms_params)
+
+
+def convert_string_to_boolean(source_dict):
+    """
+    This function converts string values of dictionary to booleans,
+    where boolean is present in string
+    :param source_dict:
+    :return:
+    """
+    changes = {"True": True,
+               "False": False
+               }
+    for key in source_dict.keys():
+        source_dict[key] = [changes.get(x, x) for x in source_dict[key]]
+    return source_dict

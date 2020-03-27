@@ -52,7 +52,7 @@ class ModelsExecution:
                                      new_model_running,
                                      algorithm_model_path,
                                      threshold,
-                                     features_list)
+                                     features_list[algorithm])
 
     @staticmethod
     def LSTM_execution(test_data_path,

@@ -1,19 +1,42 @@
 # The values are the text params for each label in KNN frame options
 # Must be: 1st list in current yaml file
 widget_names:
-  - "test2"
+  - "Neighbors number"
+  - "Weights function"
+  - "Algorithm"
+  - "Threshold"
 
 # The values are the keys of the parameters in the helper method file
 # For example: 'frame.parameters[param_key] = frame.algorithm_param_combo'  (param_key is each value in the list)
 # Moreover, the amount of values here should be same as the amount of values in the list above
 # Must be: 2nd list in current yaml file
 widget_param_keys:
-  - "test2"
+  - "n_neighbors"
+  - "weights"
+  - "algorithm"
+  - "threshold"
 
 # All the lists in the bottoms represent the values in each combobox which will be displayed.
 # Should be: It is better that the keys of the lists will be informative but they can be every string you want
-test2_template:
-  - "test2"
-  - "test2"
-  - "test2"
-  - "test2"
+knn_n_neighbors:
+  - 5
+  - 10
+  - 15
+  - 20
+
+knn_weights:
+  - "uniform"
+  - "distance"
+
+knn_algorithm:
+  - "auto"
+  - "ball_tree"
+  - "kd_tree"
+  - "brute"
+
+knn_threshold:
+  - 0.99
+  - 0.98
+  - 0.97
+  - 0.96
+  - 0.95

@@ -55,8 +55,8 @@ class ModelController:
     def get_features_columns_options(self):
         return InputSettings.get_features_columns_options()
 
-    def set_users_selected_features(self, features_list):
-        InputSettings.set_users_selected_features(features_list)
+    def set_users_selected_features(self, algorithm_name, features_list):
+        InputSettings.set_users_selected_features(algorithm_name, features_list)
 
     def add_new_thread(self, new_thread):
         InputSettings.add_new_thread(new_thread)
@@ -66,3 +66,12 @@ class ModelController:
 
     def get_new_model_running(self):
         return InputSettings.get_new_model_running()
+
+    def get_algorithms(self):
+        return InputSettings.get_algorithms()
+
+    def remove_algorithm(self, algorithm_name):
+        InputSettings.remove_algorithm(algorithm_name)
+
+    def remove_algorithms(self, algorithm_name):
+        InputSettings.remove_algorithms(algorithm_name)
