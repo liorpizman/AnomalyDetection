@@ -23,14 +23,15 @@ except ImportError:
 
 
 def set_widget_for_param(frame, text, combobox_values, param_key, y_coordinate):
+    relative_x = 0
     try:
         frame.algorithm_param = tk.Label(frame)
-        frame.algorithm_param.place(relx=0.015, rely=y_coordinate, height=25, width=150)
+        frame.algorithm_param.place(relx=relative_x, rely=y_coordinate, height=25, width=150)
         frame.algorithm_param.configure(text=text)
         set_widget_to_left(frame.algorithm_param)
 
         frame.algorithm_param_combo = Combobox(frame, state="readonly", values=combobox_values)
-        frame.algorithm_param_combo.place(relx=0.285, rely=y_coordinate, height=25, width=150)
+        frame.algorithm_param_combo.place(relx=relative_x + 0.35, rely=y_coordinate, height=25, width=150)
         frame.algorithm_param_combo.current(0)
         frame.parameters[param_key] = frame.algorithm_param_combo
     except Exception as e:
