@@ -2,6 +2,7 @@ class ocsvm_hyper_parameters:
     KERNEL = None
     GAMMA = None
     SHRINKING = None
+    THRESHOLD = None
 
     @staticmethod
     def set_kernel(kernel):
@@ -38,3 +39,15 @@ class ocsvm_hyper_parameters:
     @staticmethod
     def get_shrinking():
         return ocsvm_hyper_parameters.SHRINKING
+
+    @staticmethod
+    def set_threshold(threshold):
+        ocsvm_hyper_parameters.THRESHOLD = float(threshold)
+
+    @staticmethod
+    def remove_threshold():
+        ocsvm_hyper_parameters.THRESHOLD = None
+
+    @staticmethod
+    def get_threshold():
+        return ocsvm_hyper_parameters.THRESHOLD

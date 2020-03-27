@@ -4,6 +4,7 @@ widget_names:
   - "Estimators number"
   - "Bootstrap"
   - "Max features"
+  - "Threshold"
 
 # The values are the keys of the parameters in the helper method file
 # For example: 'frame.parameters[param_key] = frame.algorithm_param_combo'  (param_key is each value in the list)
@@ -13,6 +14,7 @@ widget_param_keys:
   - "n_estimators"
   - "bootstrap"
   - "max_features"
+  - "threshold"
 
 # All the lists in the bottoms represent the values in each combobox which will be displayed.
 # Should be: It is better that the keys of the lists will be informative but they can be every string you want
@@ -34,3 +36,10 @@ isolation_forest_max_features:
   - 5
   - 6
   - 7
+
+isolation_forest_threshold:
+  - 0.99
+  - 0.98
+  - 0.97
+  - 0.96
+  - 0.95

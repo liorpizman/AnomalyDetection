@@ -2,6 +2,7 @@ class isolation_forest_hyper_parameters:
     N_ESTIMATORS = None
     BOOTSTRAP = None
     MAX_FEATURES = None
+    THRESHOLD = None
 
     @staticmethod
     def set_n_estimators(n_estimators):
@@ -38,3 +39,15 @@ class isolation_forest_hyper_parameters:
     @staticmethod
     def get_max_features():
         return isolation_forest_hyper_parameters.MAX_FEATURES
+
+    @staticmethod
+    def set_threshold(threshold):
+        isolation_forest_hyper_parameters.THRESHOLD = float(threshold)
+
+    @staticmethod
+    def remove_threshold():
+        isolation_forest_hyper_parameters.THRESHOLD = None
+
+    @staticmethod
+    def get_threshold():
+        return isolation_forest_hyper_parameters.THRESHOLD
