@@ -55,7 +55,6 @@ class SimilarityFunctionsWindow(tk.Frame):
                                                       text="Save model",
                                                       variable=self.save_model_var,
                                                       command=self.set_saving_model)
-        self.save_model_check_button.place(relx=0.65, rely=0.75, height=25, width=100)
 
         # Page footer
         self.next_button = tk.Button(self, command=self.next_window)
@@ -87,6 +86,19 @@ class SimilarityFunctionsWindow(tk.Frame):
             self.controller.show_frame("AlgorithmsWindow")
         else:
             self.controller.show_frame("ExistingAlgorithmsWindow")
+
+    def reinitialize(self):
+        if self.controller.get_new_model_running():
+            if not self.save_model_var:
+                self.save_model_var = tk.IntVar()
+            if not self.save_model_check_button:
+                self.save_model_check_button = tk.Checkbutton(self,
+                                                              text="Save model",
+                                                              variable=self.save_model_var,
+                                                              command=self.set_saving_model)
+            self.save_model_check_button.place(relx=0.65, rely=0.75, height=25, width=100)
+        else:
+            self.save_model_check_button.destroy()
 
     def set_saving_model(self):
         self.controller.set_saving_model(self.save_model_var.get() == 1)
