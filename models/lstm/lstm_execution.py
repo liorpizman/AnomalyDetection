@@ -108,7 +108,7 @@ def execute_train(flight_route,
 
     lstm = get_lstm_autoencoder_model(window_size, df_train.shape[1],
                                       encoding_dimension, activation, loss, optimizer)
-    history = lstm.fit(X_train, X_train, epochs=1, verbose=1).history
+    history = lstm.fit(X_train, X_train, epochs=10, verbose=1).history
     if save_model:
         data = {}
         data['features'] = features_list
@@ -183,7 +183,6 @@ def execute_predict(flight_route,
             predictions = [1 if x >= threshold else 0 for x in scores_test]
 
             attack_start, attack_end = get_attack_boundaries(df_test_source[ATTACK_COLUMN])
-            print('------------------------------------' + str(attack_start) + ' - ' + str(attack_end))
 
             method_scores = get_method_scores(predictions, run_new_model, attack_start, attack_end)
 
