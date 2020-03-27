@@ -100,7 +100,7 @@ class NewModel(tk.Frame):
         set_copyright_configuration(self.copyright)
 
         # -------------------------------should be replaced at final submission  -------------------------------------
-        self.set_inputs_second_permutation()
+        self.set_inputs_first_permutation()
         # ------------------------------- end ------------------------------------------------------------------------
 
     def set_input_path(self):
@@ -131,15 +131,14 @@ class NewModel(tk.Frame):
         self.controller.set_new_model_training_input_path(self.training_input.get())
         self.controller.set_new_model_test_input_path(self.test_input.get())
         self.controller.set_new_model_results_input_path(self.results_input.get())
-        self.controller.set_new_model_running(True)
         self.controller.set_features_columns_options()
 
     # -------------------------------should be replaced at final submission  -------------------------------------
 
     def set_inputs_first_permutation(self):
         self.set_permutations(
-            training_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\input_for_training",
-            test_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\input_for_testing",
+            training_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\train",
+            test_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\test",
             results_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\results"
         )
 

@@ -39,6 +39,7 @@ class ModelsExecution:
         for algorithm in algorithms:
             if new_model_running:
                 algorithm_model_path = None
+                features_list = features_list[algorithm]
             else:
                 algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
                 features_list = read_json_file(f'{algorithm_path}/model_data.json')['features']
@@ -52,7 +53,7 @@ class ModelsExecution:
                                      new_model_running,
                                      algorithm_model_path,
                                      threshold,
-                                     features_list[algorithm])
+                                     features_list)
 
     @staticmethod
     def LSTM_execution(test_data_path,

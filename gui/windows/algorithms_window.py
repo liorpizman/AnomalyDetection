@@ -45,7 +45,7 @@ class AlgorithmsWindow(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please select the algorithms for which you want to build anomaly detection models_1.''')
+            text='''Please select the algorithms for which you want to build anomaly detection models.''')
         set_widget_to_left(self.instructions)
 
         self.anomaly_detection_methods = Checkbar(self,
@@ -105,7 +105,7 @@ class AlgorithmsWindow(tk.Frame):
 
     def next_window(self):
         if self.validate_next_step():
-            self.controller.show_frame("SimilarityFunctionsWindow")
+            self.controller.reinitialize_frame("SimilarityFunctionsWindow")
 
     def set_algorithm_checked(self):
         for check, var in zip(self.anomaly_detection_methods.get_checks(),

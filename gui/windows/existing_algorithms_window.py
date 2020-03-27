@@ -46,7 +46,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please insert paths of existing models_1.''')
+            text='''Please insert paths of existing models.''')
         set_widget_to_left(self.instructions)
 
         self.algorithms = dict()
