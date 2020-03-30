@@ -13,7 +13,7 @@ class ocsvm_hyper_parameters:
         ocsvm_hyper_parameters.KERNEL = None
 
     @staticmethod
-    def get_neighbors_number():
+    def get_kernel():
         return ocsvm_hyper_parameters.KERNEL
 
     @staticmethod

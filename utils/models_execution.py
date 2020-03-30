@@ -1,5 +1,6 @@
 from gui.shared.helper_methods import read_json_file, get_model_path
-from models.lstm.lstm_execution import run_model
+from models.knn.knn_execution import run_model as run_knn_model
+from models.lstm.lstm_execution import run_model as run_lstm_model
 from utils.input_settings import InputSettings
 
 
@@ -65,12 +66,32 @@ class ModelsExecution:
                        algorithm_path,
                        threshold,
                        features_list):
-        run_model(training_data_path,
-                  test_data_path,
-                  results_path,
-                  similarity_score,
-                  save_model,
-                  new_model_running,
-                  algorithm_path,
-                  threshold,
-                  features_list)
+        run_lstm_model(training_data_path,
+                       test_data_path,
+                       results_path,
+                       similarity_score,
+                       save_model,
+                       new_model_running,
+                       algorithm_path,
+                       threshold,
+                       features_list)
+
+    @staticmethod
+    def KNN_execution(test_data_path,
+                      results_path,
+                      similarity_score,
+                      training_data_path,
+                      save_model,
+                      new_model_running,
+                      algorithm_path,
+                      threshold,
+                      features_list):
+        run_knn_model(training_data_path,
+                      test_data_path,
+                      results_path,
+                      similarity_score,
+                      save_model,
+                      new_model_running,
+                      algorithm_path,
+                      threshold,
+                      features_list)
