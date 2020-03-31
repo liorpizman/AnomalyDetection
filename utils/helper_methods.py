@@ -240,8 +240,8 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, verbose=1):
     :return:
     """
     for flight_route in FLIGHT_ROUTES:
-        fligth_dir = os.path.join(test_data_path, flight_route)
-        ATTACKS = get_subdirectories(fligth_dir)
+        flight_dir = os.path.join(test_data_path, flight_route)
+        ATTACKS = get_subdirectories(flight_dir)
 
     for result in ["fpr", "tpr", "delay"]:
         results = pd.DataFrame(columns=ATTACKS)

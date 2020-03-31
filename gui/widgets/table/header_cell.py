@@ -1,0 +1,51 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+
+from gui.widgets.table.cell import Cell
+
+try:
+    from Tkinter import Frame, Label, Message, StringVar
+    from Tkconstants import *
+except ImportError:
+    from tkinter import Frame, Label, Message, StringVar
+    from tkinter.constants import *
+
+try:
+    import ttk
+
+    py3 = False
+except ImportError:
+    import tkinter.ttk as ttk
+
+    py3 = True
+
+
+class Header_Cell(Cell):
+    def __init__(self, master, text, bordercolor=None, borderwidth=1, padx=None, pady=None, background=None,
+                 foreground=None, font=None, anchor=CENTER):
+        Cell.__init__(self,
+                      master,
+                      background=background,
+                      highlightbackground=bordercolor,
+                      highlightcolor=bordercolor,
+                      highlightthickness=borderwidth,
+                      bd=0)
+
+        self._header_label = Label(self,
+                                   text=text,
+                                   background=background,
+                                   foreground=foreground,
+                                   font=font)
+        self._header_label.pack(padx=padx,
+                                pady=pady,
+                                expand=True)
+
+        if bordercolor is not None:
+            separator = Frame(self,
+                              height=2,
+                              background=bordercolor,
+                              bd=0,
+                              highlightthickness=0,
+                              class_="Separator")
+
+            separator.pack(fill=X, anchor=anchor)

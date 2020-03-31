@@ -4,13 +4,16 @@ import os
 
 from gui.widgets.menubar import Menubar
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
+from gui.widgets.table.table import Table
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
     set_copyright_configuration, set_button_configuration
 
 try:
     import Tkinter as tk
+    from Tkconstants import *
 except ImportError:
     import tkinter as tk
+    from tkinter.constants import *
 
 try:
     import ttk
@@ -44,7 +47,13 @@ class ResultsWindow(tk.Frame):
         self.instructions.configure(text='''Results''')
         set_widget_to_left(self.instructions)
 
-        # ------------------------------------ Results will be added here ------------------------------------
+        self.metrics_table = Table(self,
+                                   ["Down attack", "Up attack", "Fore attack", "Random attack"],
+                                   column_minwidths=[None, None, None])
+        self.metrics_table.pack(expand=True, fill=X, padx=10, pady=10)
+
+        self.metrics_table.set_data([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+        self.metrics_table.cell(0, 0, "This is a test cell")
 
         # Page footer
         self.back_button = tk.Button(self, command=lambda: controller.show_frame("MainWindow"))
