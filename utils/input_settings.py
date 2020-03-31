@@ -5,7 +5,7 @@ import pandas as pd
 from gui.shared.helper_methods import load_anomaly_detection_list
 from models.isolation_forest.isolation_forest_hyper_parameters import isolation_forest_hyper_parameters
 from models.knn.knn_hyper_parameters import knn_hyper_parameters
-from models.ocsvm.ocsvm_hyper_parameters import ocsvm_hyper_parameters
+from models.svr.svr_hyper_parameters import svr_hyper_parameters
 from utils.constants import ATTACK_COLUMN
 from utils.helper_methods import get_subdirectories
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
@@ -170,11 +170,11 @@ class InputSettings:
             Isolation_Forest_setting_function(algorithm_parameters[param])
 
     @staticmethod
-    def set_OCSVM(algorithm_parameters):
-        InputSettings.ALGORITHMS.add("One Class SVM (OCSVM)")
+    def set_SVR(algorithm_parameters):
+        InputSettings.ALGORITHMS.add("SVR")
         for param in algorithm_parameters:
-            ocsvm_setting_function = getattr(ocsvm_hyper_parameters, "set_" + param)
-            ocsvm_setting_function(algorithm_parameters[param])
+            svr_setting_function = getattr(svr_hyper_parameters, "set_" + param)
+            svr_setting_function(algorithm_parameters[param])
 
     @staticmethod
     def set_KNN(algorithm_parameters):
@@ -188,7 +188,7 @@ class InputSettings:
         algorithms = load_anomaly_detection_list()
         switcher = {
             algorithms[0]: InputSettings.set_LSTM,
-            algorithms[1]: InputSettings.set_OCSVM,
+            algorithms[1]: InputSettings.set_SVR,
             algorithms[2]: InputSettings.set_KNN,
             algorithms[3]: InputSettings.set_Isolation_Forest
         }
