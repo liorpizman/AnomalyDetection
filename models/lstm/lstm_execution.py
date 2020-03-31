@@ -20,13 +20,14 @@ def get_lstm_new_model_parameters():
             lstm_hyper_parameters.get_activation(),
             lstm_hyper_parameters.get_loss(),
             lstm_hyper_parameters.get_optimizer(),
-            lstm_hyper_parameters.get_threshold(),)
+            lstm_hyper_parameters.get_threshold(),
+            lstm_hyper_parameters.get_epochs())
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
               algorithm_path, threshold, features_list):
     if new_model_running:
-        window_size, encoding_dimension, activation, loss, optimizer, threshold = get_lstm_new_model_parameters()
+        window_size, encoding_dimension, activation, loss, optimizer, threshold, epochs = get_lstm_new_model_parameters()
     else:
         lstm = load_model(algorithm_path)
         window_size = 15
@@ -54,7 +55,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                   optimizer=optimizer,
                                                   save_model=save_model,
                                                   add_plots=True,
-                                                  features_list=features_list)
+                                                  features_list=features_list,
+                                                  epochs=epochs)
 
         for similarity in similarity_score:
             tpr_scores, fpr_scores, delay_scores = execute_predict(flight_route,
@@ -96,7 +98,8 @@ def execute_train(flight_route,
                   optimizer=None,
                   save_model=False,
                   add_plots=True,
-                  features_list=None):
+                  features_list=None,
+                  epochs=10):
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
 
     df_train = df_train[features_list]
@@ -108,7 +111,7 @@ def execute_train(flight_route,
 
     lstm = get_lstm_autoencoder_model(window_size, df_train.shape[1],
                                       encoding_dimension, activation, loss, optimizer)
-    history = lstm.fit(X_train, X_train, epochs=10, verbose=1).history
+    history = lstm.fit(X_train, X_train, epochs=epochs, verbose=1).history
     if save_model:
         data = {}
         data['features'] = features_list

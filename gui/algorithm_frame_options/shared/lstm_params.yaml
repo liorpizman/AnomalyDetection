@@ -1,6 +1,7 @@
 # The values are the text params for each label in LSTM frame options
 # Must be: 1st list in current yaml file
 widget_names:
+  - "Epochs"
   - "Activation function"
   - "Loss function"
   - "Optimizer"
@@ -13,6 +14,7 @@ widget_names:
 # Moreover, the amount of values here should be same as the amount of values in the list above
 # Must be: 2nd list in current yaml file
 widget_param_keys:
+  - "epochs"
   - "activation"
   - "loss"
   - "optimizer"
@@ -20,8 +22,110 @@ widget_param_keys:
   - "encoding_dimension"
   - "threshold"
 
-# All the lists in the bottoms represent the values in each combobox which will be displayed.
+# All the lists in the bottom represent the values in each combobox which will be displayed.
 # Should be: It is better that the keys of the lists will be informative but they can be every string you want
+epochs:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+  - 18
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+  - 27
+  - 28
+  - 29
+  - 30
+  - 31
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+  - 43
+  - 44
+  - 45
+  - 46
+  - 47
+  - 48
+  - 49
+  - 50
+  - 51
+  - 52
+  - 53
+  - 54
+  - 55
+  - 56
+  - 57
+  - 58
+  - 59
+  - 60
+  - 61
+  - 62
+  - 63
+  - 64
+  - 65
+  - 66
+  - 67
+  - 68
+  - 69
+  - 70
+  - 71
+  - 72
+  - 73
+  - 74
+  - 75
+  - 76
+  - 77
+  - 78
+  - 79
+  - 80
+  - 81
+  - 82
+  - 83
+  - 84
+  - 85
+  - 86
+  - 87
+  - 88
+  - 89
+  - 90
+  - 91
+  - 92
+  - 93
+  - 94
+  - 95
+  - 96
+  - 97
+  - 98
+  - 99
+  - 100
+
 lstm_activation:
   - "relu"
   - "softmax"
@@ -46,7 +150,11 @@ lstm_window:
   - 15
 
 lstm_encoder_dimension:
+  - 8
+  - 9
   - 10
+  - 11
+  - 12
 
 lstm_threshold_from_training_percent:
   - 0.99

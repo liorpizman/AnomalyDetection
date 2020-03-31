@@ -16,7 +16,7 @@ widget_param_keys:
   - "epsilon"
   - "threshold"
 
-# All the lists in the bottoms represent the values in each combobox which will be displayed.
+# All the lists in the bottom represent the values in each combobox which will be displayed.
 # Should be: It is better that the keys of the lists will be informative but they can be every string you want
 svr_kernel:
   - "linear"
