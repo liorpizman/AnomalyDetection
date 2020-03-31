@@ -1,6 +1,6 @@
 anomaly_detection_methods:
   - LSTM
-  - One Class SVM (OCSVM)
+  - SVR
   - KNN
   - Isolation Forest
 
@@ -13,3 +13,4 @@ similarity_functions:
   - Cosine similarity
   - Mahalanubis distance
   - MSE
+  - Euclidean distance
