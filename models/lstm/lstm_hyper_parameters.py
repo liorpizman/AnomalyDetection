@@ -15,6 +15,8 @@ class lstm_hyper_parameters:
 
     LSTM_OPTIMIZER = None
 
+    LSTM_EPOCHS = None
+
     @staticmethod
     def set_window_size(window_size):
         lstm_hyper_parameters.LSTM_WINDOW_SIZE = int(window_size)
@@ -58,6 +60,14 @@ class lstm_hyper_parameters:
     @staticmethod
     def remove_loss(loss):
         lstm_hyper_parameters.LSTM_LOSS = None
+
+    @staticmethod
+    def set_epochs(epochs):
+        lstm_hyper_parameters.LSTM_EPOCHS = int(epochs)
+
+    @staticmethod
+    def get_epochs():
+        return lstm_hyper_parameters.LSTM_EPOCHS
 
     @staticmethod
     def get_loss():
