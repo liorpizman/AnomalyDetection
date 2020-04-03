@@ -2,7 +2,7 @@ from gui.shared.helper_methods import read_json_file, get_model_path, load_anoma
 from models.lstm.lstm_execution import run_model as run_lstm_model
 from models.svr.svr_execution import run_model as run_svr_model
 from utils.input_settings import InputSettings
-
+from utils.helper_methods import get_subdirectories
 
 class ModelsExecution:
 
@@ -37,14 +37,30 @@ class ModelsExecution:
         else:
             training_data_path, save_model, algorithms, threshold = ModelsExecution.get_load_model_parameters()
 
+        # Init evaluation metrics data which will be presented in the results table
+        InputSettings.init_results_metrics_data()
+
+        # Set test data - flight routes
+        flight_routes = get_subdirectories(test_data_path)
+        InputSettings.set_flight_routes(flight_routes)
+
         for algorithm in algorithms:
+
+            # Set new nested dictionary for a chosen algorithm
+            results_data = InputSettings.get_results_metrics_data()
+            results_data[algorithm] = dict()
+            InputSettings.update_results_metrics_data(results_data)
+
+            # Checks whether the current flow in the system is new model creation or loading an existing model
             if new_model_running:
                 algorithm_model_path = None
-                features_list = features_list[algorithm]
+                algorithm_features_list = features_list[algorithm]
             else:
                 algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
-                features_list = read_json_file(f'{algorithm_path}/model_data.json')['features']
+                algorithm_features_list = read_json_file(f'{algorithm_path}/model_data.json')['features']
                 algorithm_model_path = get_model_path(algorithm_path)
+
+            # Dynamic execution for each chosen model
             model_execution_function = ModelsExecution.get_algorithm_execution_function(algorithm)
             model_execution_function(test_data_path,
                                      results_path,
@@ -54,7 +70,7 @@ class ModelsExecution:
                                      new_model_running,
                                      algorithm_model_path,
                                      threshold,
-                                     features_list)
+                                     algorithm_features_list)
 
     @staticmethod
     def LSTM_execution(test_data_path,
