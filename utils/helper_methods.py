@@ -232,32 +232,49 @@ def get_current_time():
     return now.strftime("%b-%d-%Y-%H-%M-%S")
 
 
-def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, verbose=1):
+def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_name, verbose=1):
     """
-
     :param results_dir_path:
     :param verbose:
     :return:
     """
+    # Set new nested dictionary for a flight route from all the existing flights routes
+    from utils.input_settings import InputSettings
+    results_data = InputSettings.get_results_metrics_data()
+
     for flight_route in FLIGHT_ROUTES:
         flight_dir = os.path.join(test_data_path, flight_route)
         ATTACKS = get_subdirectories(flight_dir)
+        results_data[algorithm_name][flight_route] = dict()
 
-    for result in ["fpr", "tpr", "delay"]:
+    metrics_list = ['fpr', 'tpr', 'delay']
+
+    for metric in metrics_list:
+
         results = pd.DataFrame(columns=ATTACKS)
+
         for i, flight_route in enumerate(FLIGHT_ROUTES):
-            df = pd.read_csv(f'{results_dir_path}/{flight_route}/{flight_route}_{result}.csv')
+            df = pd.read_csv(f'{results_dir_path}/{flight_route}/{flight_route}_{metric}.csv')
             mean = df.mean(axis=0).values
             std = df.std(axis=0).values
             output = [f'{round(x, 2)}±{round(y, 2)}%' for x, y in zip(mean, std)]
             results.loc[i] = output
+
+            results_data[algorithm_name][flight_route][metric] = dict()
+
+            for j, attack in enumerate(ATTACKS):
+                results_data[algorithm_name][flight_route][metric][attack] = dict()
+                results_data[algorithm_name][flight_route][metric][attack] = output[j]
 
         results.index = FLIGHT_ROUTES
 
         if verbose:
             print(results)
 
-        results.to_csv(f'{results_dir_path}/final_{result}.csv')
+        # Update evaluated evaluation metric for each attack according to the current algorithm and metric
+        InputSettings.update_results_metrics_data(results_data)
+
+        results.to_csv(f'{results_dir_path}/final_{metric}.csv')
 
 
 def is_excluded_flight(route, csv):

@@ -24,6 +24,8 @@ class InputSettings:
     FEATURES_COLUMNS_OPTIONS = []
     USERS_SELECTED_FEATURES = dict()
     THREADS = []
+    RESULTS_METRICS_DATA = dict()
+    FLIGHT_ROUTES = []
 
     @staticmethod
     def set_training_data_path(path):
@@ -124,6 +126,18 @@ class InputSettings:
         InputSettings.LOAD_MODEL_THRESHOLD = threshold
 
     @staticmethod
+    def init_results_metrics_data():
+        InputSettings.RESULTS_METRICS_DATA = dict()
+
+    @staticmethod
+    def update_results_metrics_data(updated_dic):
+        InputSettings.RESULTS_METRICS_DATA = updated_dic
+
+    @staticmethod
+    def get_results_metrics_data():
+        return InputSettings.RESULTS_METRICS_DATA
+
+    @staticmethod
     def get_features_columns_options():
         return InputSettings.FEATURES_COLUMNS_OPTIONS
 
@@ -193,3 +207,11 @@ class InputSettings:
             algorithms[3]: InputSettings.set_Isolation_Forest
         }
         return switcher.get(algorithm_name, None)
+
+    @staticmethod
+    def set_flight_routes(flight_routes):
+        InputSettings.FLIGHT_ROUTES = flight_routes
+
+    @staticmethod
+    def get_flight_routes():
+        return InputSettings.FLIGHT_ROUTES

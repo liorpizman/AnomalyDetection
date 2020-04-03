@@ -84,8 +84,13 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
             df = pd.DataFrame(delay_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_delay.csv', index=False)
 
+    algorithm_name = "LSTM"
+
     for similarity in similarity_score:
-        report_results(f'{results_path}/lstm/{current_time}/{similarity}', test_data_path, FLIGHT_ROUTES)
+        report_results(f'{results_path}/lstm/{current_time}/{similarity}',
+                       test_data_path,
+                       FLIGHT_ROUTES,
+                       algorithm_name)
 
 
 def execute_train(flight_route,

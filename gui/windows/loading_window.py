@@ -104,7 +104,7 @@ class LoadingWindow(tk.Frame):
 
     def loading_process(self):
         self.controller.run_models()
-        self.controller.show_frame("ResultsWindow")
+        self.controller.reinitialize_frame("ResultsWindow")
 
 
 class DeltaTemplate(Template):
