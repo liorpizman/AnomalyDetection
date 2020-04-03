@@ -36,31 +36,57 @@ def euclidean_distance(x, y):
     return np.linalg.norm(x - y)
 
 
-def anomaly_score(input_vector, output_vector, similarity_score='Cosine similarity'):
+def mahalanubis_distance(x, y):
+    """
+    calculate the mahalanubis distance between 2 given vectors
+    :param x: vector
+    :param y: vector
+    :return: euclidean distance
+    """
+    pass
+
+
+def mse_distance(x, y):
+    """
+    calculate the mse distance between 2 given vectors
+    :param x: vector
+    :param y: vector
+    :return: euclidean distance
+    """
+    pass
+
+
+def anomaly_score(input_vector, output_vector, similarity_function):
     """
     calculate the anomaly of single output decoder
-    :param x: input vector
-    :param y: output vector
-    :return: anomaly score based on cosine similarity
+    :param input_vector: input vector
+    :param output_vector: output vector
+    :param similarity_function: similarity function method
+    :return: anomaly score based on chosen similarity function
     """
     assert len(input_vector) == len(output_vector)
     assert len(input_vector) > 0
-    assert similarity_score == 'Cosine similarity' or similarity_score == 'euclidean'
+    assert similarity_function == 'Cosine similarity' \
+           or similarity_function == 'Euclidean distance' \
+           or similarity_function == 'Mahalanubis distance' \
+           or similarity_function == 'MSE'
 
     switcher = {
         "Cosine similarity": 1 - cosine_similarity(input_vector, output_vector),
-        "euclidean_distance": euclidean_distance(input_vector, output_vector)
+        "Euclidean distance": euclidean_distance(input_vector, output_vector),
+        "Mahalanubis distance": mahalanubis_distance(input_vector, output_vector),
+        "MSE": mse_distance(input_vector, output_vector)
     }
 
-    return switcher.get(similarity_score, euclidean_distance(input_vector, output_vector))
+    return switcher.get(similarity_function, euclidean_distance(input_vector, output_vector))
 
 
-def anomaly_score_multi(input_vectors, output_vectors, similarity_score):
+def anomaly_score_multi(input_vectors, output_vectors, similarity_function):
     """
-    calculate the anomaly of a multiple output decoder
+    calculate the anomaly of a multiple output prediction
     :param input_vectors: list of input vectors
     :param output_vectors: list of output vectors
-    :param similarity_score: name of similarity score function
+    :param similarity_function: name of similarity score function
     :return: anomaly score based on cosine similarity
     """
     sum = 0
@@ -70,7 +96,7 @@ def anomaly_score_multi(input_vectors, output_vectors, similarity_score):
     assert input_length > 0
 
     for i in range(input_length):
-        sum += anomaly_score(input_vectors[i], output_vectors[i], similarity_score)
+        sum += anomaly_score(input_vectors[i], output_vectors[i], similarity_function)
 
     return sum / input_length
 
@@ -148,7 +174,7 @@ def get_thresholds(list_scores, percent):
     return [get_threshold(scores, percent) for scores in list_scores]
 
 
-def get_method_scores(prediction, run_new_model, attack_start, attack_end):
+def get_method_scores(prediction, run_new_model, attack_start, attack_end, add_window_size=False):
     """
     get previous method scores (TPR, FPR, delay)
     :param prediction: predictions
@@ -161,15 +187,12 @@ def get_method_scores(prediction, run_new_model, attack_start, attack_end):
     tn = 0
 
     detection_delay = -1
-    start_attack_record = attack_start  # ADS-B by default  = 180
-    end_attack_record = attack_end  # ADS-B by default  = 249
+    lower = attack_start
 
-    if run_new_model:
-        lower = start_attack_record - lstm_hyper_parameters.get_window_size() + 1
-    else:
-        lower = start_attack_record - 15 + 1
+    if run_new_model and add_window_size:
+        lower = attack_start - lstm_hyper_parameters.get_window_size() + 1
 
-    upper = end_attack_record
+    upper = attack_end
     assert len(prediction) >= upper
     assert upper > lower
 

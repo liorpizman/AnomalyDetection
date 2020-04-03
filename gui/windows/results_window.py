@@ -55,7 +55,7 @@ class ResultsWindow(tk.Frame):
         self.metrics_table.pack(expand=True, fill=X, padx=10, pady=10)
 
         # Page footer
-        self.back_button = tk.Button(self, command=lambda: controller.show_frame("MainWindow"))
+        self.back_button = tk.Button(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
 
@@ -63,13 +63,16 @@ class ResultsWindow(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
+    def back_window(self):
+        self.controller.show_frame("MainWindow")
+
     def reinitialize(self):
         try:
             results_data = InputSettings.get_results_metrics_data()
             chosen_algorithms = InputSettings.get_existing_algorithms()
             flight_routes = InputSettings.get_flight_routes()
 
-            data = results_data["LSTM"]["mexico_las_veags"]  # should be changed to dynamic table
+            data = results_data["SVR"]["mexico_las_veags"]  # should be changed to dynamic table
 
             attacks_columns = list(data.values())[0]
 

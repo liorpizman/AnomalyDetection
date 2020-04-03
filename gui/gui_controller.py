@@ -40,15 +40,17 @@ class AnomalyDetectionGUI(tk.Tk):
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
         # will be raised above the others
-        container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        self.container = tk.Frame(self)
+        self.container.pack(side="top", fill="both", expand=True)
+        self.container.grid_rowconfigure(0, weight=1)
+        self.container.grid_columnconfigure(0, weight=1)
 
         # container.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
         self.current_algorithm_to_edit = "LSTM"
-
         self.frames = {}
+        self.init_main_controller()
+
+    def init_main_controller(self):
         for F in (MainWindow,
                   NewModel,
                   LoadModel,
@@ -59,7 +61,7 @@ class AnomalyDetectionGUI(tk.Tk):
                   ResultsWindow,
                   ParametersOptionsWindow):
             page_name = F.__name__
-            frame = F(parent=container, controller=self)
+            frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
 
             # put all of the pages in the same location;

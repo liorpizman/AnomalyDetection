@@ -1,9 +1,9 @@
-# The values are the text params for each label in OCSVM frame options
+# The values are the text params for each label in SVR frame options
 # Must be: 1st list in current yaml file
 widget_names:
   - "Kernel"
   - "Gamma"
-  - "Shrinking"
+  - "Epsilon"
   - "Threshold"
 
 # The values are the keys of the parameters in the helper method file
@@ -13,27 +13,30 @@ widget_names:
 widget_param_keys:
   - "kernel"
   - "gamma"
-  - "shrinking"
+  - "epsilon"
   - "threshold"
 
 # All the lists in the bottom represent the values in each combobox which will be displayed.
 # Should be: It is better that the keys of the lists will be informative but they can be every string you want
-ocsvm_kernel:
+svr_kernel:
   - "linear"
   - "poly"
   - "rbf"
   - "sigmoid"
   - "precomputed"
 
-ocsvm_gamma:
+svr_gamma:
   - "auto"
   - "scale"
 
-ocsvm_shrinking:
-  - "True"
-  - "False"
+svr_epsilon:
+  - 0.01
+  - 0.05
+  - 0.1
+  - 0.15
+  - 0.2
 
-ocsvm_threshold:
+svr_threshold:
   - 0.99
   - 0.98
   - 0.97

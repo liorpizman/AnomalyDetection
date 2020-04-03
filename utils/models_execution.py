@@ -1,8 +1,8 @@
-from gui.shared.helper_methods import read_json_file, get_model_path
-from models.lstm.lstm_execution import run_model
-from utils.helper_methods import get_subdirectories
+from gui.shared.helper_methods import read_json_file, get_model_path, load_anomaly_detection_list
+from models.lstm.lstm_execution import run_model as run_lstm_model
+from models.svr.svr_execution import run_model as run_svr_model
 from utils.input_settings import InputSettings
-
+from utils.helper_methods import get_subdirectories
 
 class ModelsExecution:
 
@@ -54,14 +54,14 @@ class ModelsExecution:
             # Checks whether the current flow in the system is new model creation or loading an existing model
             if new_model_running:
                 algorithm_model_path = None
-                features_list = features_list[algorithm]
+                algorithm_features_list = features_list[algorithm]
             else:
                 algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
-                features_list = read_json_file(f'{algorithm_path}/model_data.json')['features']
+                algorithm_features_list = read_json_file(f'{algorithm_path}/model_data.json')['features']
                 algorithm_model_path = get_model_path(algorithm_path)
 
             # Dynamic execution for each chosen model
-            model_execution_function = getattr(ModelsExecution, algorithm + "_execution")
+            model_execution_function = ModelsExecution.get_algorithm_execution_function(algorithm)
             model_execution_function(test_data_path,
                                      results_path,
                                      similarity_score,
@@ -70,7 +70,7 @@ class ModelsExecution:
                                      new_model_running,
                                      algorithm_model_path,
                                      threshold,
-                                     features_list)
+                                     algorithm_features_list)
 
     @staticmethod
     def LSTM_execution(test_data_path,
@@ -82,12 +82,43 @@ class ModelsExecution:
                        algorithm_path,
                        threshold,
                        features_list):
-        run_model(training_data_path,
-                  test_data_path,
-                  results_path,
-                  similarity_score,
-                  save_model,
-                  new_model_running,
-                  algorithm_path,
-                  threshold,
-                  features_list)
+        run_lstm_model(training_data_path,
+                       test_data_path,
+                       results_path,
+                       similarity_score,
+                       save_model,
+                       new_model_running,
+                       algorithm_path,
+                       threshold,
+                       features_list)
+
+    @staticmethod
+    def SVR_execution(test_data_path,
+                        results_path,
+                        similarity_score,
+                        training_data_path,
+                        save_model,
+                        new_model_running,
+                        algorithm_path,
+                        threshold,
+                        features_list):
+        run_svr_model(training_data_path,
+                        test_data_path,
+                        results_path,
+                        similarity_score,
+                        save_model,
+                        new_model_running,
+                        algorithm_path,
+                        threshold,
+                        features_list)
+
+    @staticmethod
+    def get_algorithm_execution_function(algorithm_name):
+        algorithms = load_anomaly_detection_list()
+        switcher = {
+            algorithms[0]: ModelsExecution.LSTM_execution,
+            algorithms[1]: ModelsExecution.SVR_execution,
+            # algorithms[2]: ModelsExecution.show_KNN_options,
+            # algorithms[3]: ModelsExecution.show_Isolation_Forest_options
+        }
+        return switcher.get(algorithm_name, None)

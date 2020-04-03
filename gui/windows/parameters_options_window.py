@@ -118,7 +118,7 @@ class ParametersOptionsWindow(tk.Frame):
     def set_suitable_yaml_file(self, algorithm_name):
         switcher = {
             self.algorithms_files[0]: "lstm_params.yaml",
-            self.algorithms_files[1]: "ocsvm_params.yaml",
+            self.algorithms_files[1]: "svr_params.yaml",
             self.algorithms_files[2]: "knn_params.yaml",
             self.algorithms_files[3]: "isolation_forest_params.yaml",
         }
