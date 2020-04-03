@@ -1,9 +1,10 @@
-# The values are the text params for each label in Isolation Forest frame options
+# The values are the text params for each label in Random Forest frame options
 # Must be: 1st list in current yaml file
 widget_names:
-  - "Estimators number"
-  - "Bootstrap"
+  - "N estimators"
+  - "Criterion"
   - "Max features"
+  - "Random state"
   - "Threshold"
 
 # The values are the keys of the parameters in the helper method file
@@ -12,32 +13,58 @@ widget_names:
 # Must be: 2nd list in current yaml file
 widget_param_keys:
   - "n_estimators"
-  - "bootstrap"
+  - "criterion"
   - "max_features"
+  - "random_state"
   - "threshold"
 
 # All the lists in the bottom represent the values in each combobox which will be displayed.
 # Should be: It is better that the keys of the lists will be informative but they can be every string you want
-isolation_forest_n_estimators:
+random_forest_n_estimators:
   - 100
   - 120
   - 140
   - 160
+  - 180
+  - 200
+  - 250
+  - 300
+  - 350
+  - 400
+  - 450
+  - 500
+  - 550
+  - 600
+  - 650
+  - 700
+  - 750
+  - 800
+  - 850
+  - 900
+  - 950
+  - 1000
 
-isolation_forest_bootstrap:
-  - "False"
-  - "True"
+random_forest_criterion:
+  - "mse"
+  - "mae"
 
-isolation_forest_max_features:
+random_forest_max_features:
+  - "auto"
+  - "sqrt"
+  - "log2"
+
+random_forest_random_state:
+  - 0
   - 1
   - 2
   - 3
   - 4
   - 5
-  - 6
-  - 7
+  - 10
+  - 15
+  - 20
 
-isolation_forest_threshold:
+random_forest_threshold:
   - 0.99
   - 0.98
   - 0.97

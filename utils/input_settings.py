@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 from gui.shared.helper_methods import load_anomaly_detection_list
-from models.isolation_forest.isolation_forest_hyper_parameters import isolation_forest_hyper_parameters
+from models.random_forest.random_forest_hyper_parameters import random_forest_hyper_parameters
 from models.knn.knn_hyper_parameters import knn_hyper_parameters
 from models.svr.svr_hyper_parameters import svr_hyper_parameters
 from utils.constants import ATTACK_COLUMN
@@ -177,11 +177,11 @@ class InputSettings:
             InputSettings.ALGORITHMS.remove(algorithm_name)
 
     @staticmethod
-    def set_Isolation_Forest(algorithm_parameters):
-        InputSettings.ALGORITHMS.add("Isolation Forest")
+    def set_Random_Forest(algorithm_parameters):
+        InputSettings.ALGORITHMS.add("Random Forest")
         for param in algorithm_parameters:
-            Isolation_Forest_setting_function = getattr(isolation_forest_hyper_parameters, "set_" + param)
-            Isolation_Forest_setting_function(algorithm_parameters[param])
+            Random_Forest_setting_function = getattr(random_forest_hyper_parameters, "set_" + param)
+            Random_Forest_setting_function(algorithm_parameters[param])
 
     @staticmethod
     def set_SVR(algorithm_parameters):
@@ -204,7 +204,7 @@ class InputSettings:
             algorithms[0]: InputSettings.set_LSTM,
             algorithms[1]: InputSettings.set_SVR,
             algorithms[2]: InputSettings.set_KNN,
-            algorithms[3]: InputSettings.set_Isolation_Forest
+            algorithms[3]: InputSettings.set_Random_Forest
         }
         return switcher.get(algorithm_name, None)
 

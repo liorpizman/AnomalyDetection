@@ -70,7 +70,7 @@ class Checkbar(Frame):
     def show_KNN_options(self):
         self.parent.show_algorithms_options(load_anomaly_detection_list()[2])
 
-    def show_Isolation_Forest_options(self):
+    def show_Random_Forest_options(self):
         self.parent.show_algorithms_options(load_anomaly_detection_list()[3])
 
     def get_algorithm_show_function(self, algorithm_name):
@@ -79,6 +79,6 @@ class Checkbar(Frame):
             algorithms[0]: self.show_LSTM_options,
             algorithms[1]: self.show_SVR_options,
             algorithms[2]: self.show_KNN_options,
-            algorithms[3]: self.show_Isolation_Forest_options
+            algorithms[3]: self.show_Random_Forest_options
         }
         return switcher.get(algorithm_name, None)
