@@ -2,7 +2,7 @@ anomaly_detection_methods:
   - LSTM
   - SVR
   - KNN
-  - Isolation Forest
+  - Random Forest
 
 feature_selection_methods:
   - Information gain

@@ -1,8 +1,10 @@
 from gui.shared.helper_methods import read_json_file, get_model_path, load_anomaly_detection_list
 from models.lstm.lstm_execution import run_model as run_lstm_model
 from models.svr.svr_execution import run_model as run_svr_model
+from models.random_forest.random_forest_execution import run_model as run_random_forest_model
 from utils.input_settings import InputSettings
 from utils.helper_methods import get_subdirectories
+
 
 class ModelsExecution:
 
@@ -94,23 +96,43 @@ class ModelsExecution:
 
     @staticmethod
     def SVR_execution(test_data_path,
-                        results_path,
-                        similarity_score,
-                        training_data_path,
-                        save_model,
-                        new_model_running,
-                        algorithm_path,
-                        threshold,
-                        features_list):
+                      results_path,
+                      similarity_score,
+                      training_data_path,
+                      save_model,
+                      new_model_running,
+                      algorithm_path,
+                      threshold,
+                      features_list):
         run_svr_model(training_data_path,
-                        test_data_path,
-                        results_path,
-                        similarity_score,
-                        save_model,
-                        new_model_running,
-                        algorithm_path,
-                        threshold,
-                        features_list)
+                      test_data_path,
+                      results_path,
+                      similarity_score,
+                      save_model,
+                      new_model_running,
+                      algorithm_path,
+                      threshold,
+                      features_list)
+
+    @staticmethod
+    def Random_Forest_execution(test_data_path,
+                                results_path,
+                                similarity_score,
+                                training_data_path,
+                                save_model,
+                                new_model_running,
+                                algorithm_path,
+                                threshold,
+                                features_list):
+        run_random_forest_model(training_data_path,
+                      test_data_path,
+                      results_path,
+                      similarity_score,
+                      save_model,
+                      new_model_running,
+                      algorithm_path,
+                      threshold,
+                      features_list)
 
     @staticmethod
     def get_algorithm_execution_function(algorithm_name):
@@ -118,7 +140,7 @@ class ModelsExecution:
         switcher = {
             algorithms[0]: ModelsExecution.LSTM_execution,
             algorithms[1]: ModelsExecution.SVR_execution,
-            # algorithms[2]: ModelsExecution.show_KNN_options,
-            # algorithms[3]: ModelsExecution.show_Isolation_Forest_options
+            # algorithms[2]: ModelsExecution.KNN_execution,
+            algorithms[3]: ModelsExecution.Random_Forest_execution
         }
         return switcher.get(algorithm_name, None)

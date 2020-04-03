@@ -1,6 +1,4 @@
 import pandas as pd
-from sklearn import preprocessing
-from sklearn.ensemble import RandomForestClassifier, IsolationForest
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.preprocessing import MaxAbsScaler
 from sklearn.linear_model import LogisticRegression
@@ -18,7 +16,7 @@ def run_isolation_forest(file_path):
     X_train = scalar.fit_transform(df_train)
 
     random_model = MultiOutputRegressor(
-        RandomForestRegressor(max_depth=2,max_features="sqrt")
+        RandomForestRegressor(max_depth=2, max_features="sqrt")
     )
 
     # lab_enc = preprocessing.LabelEncoder()
@@ -55,9 +53,12 @@ def run_logistic_regression(file_path):
     logistic_model.fit(X_train, X_train)
     predict = logistic_model.predict(X_train)
 
-def run_linear_regression(file_path):
 
-path = "C:\\Users\\Yehuda Pashay\\Desktop\\fligth_data\\data_set\\train\chicago_to_guadalajara"
+def run_linear_regression(file_path):
+    pass
+
+
+path = "C:\\Users\\Yehuda Pashay\\Desktop\\fligth_data\\data_set\\train\\chicago_to_guadalajara"
 
 # run_logistic_regression(path)
 run_isolation_forest(path)
