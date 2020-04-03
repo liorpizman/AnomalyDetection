@@ -81,7 +81,7 @@ class ResultsWindow(tk.Frame):
 
             for i, metric in enumerate(data.keys()):
                 attacks_data = data[metric]
-                self.metrics_table.cell(i, 0, metric)
+                self.metrics_table.cell(i, 0, metric.upper())
                 for j, attack in enumerate(attacks_data.keys()):
                     self.metrics_table.cell(i, j + 1, attacks_data[attack])
         except Exception:
