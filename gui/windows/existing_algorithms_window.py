@@ -80,7 +80,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.svr_check_button.place(relx=0.015, rely=0.47, height=32, width=146)
         self.svr_check_button.configure(text="SVR",
                                         variable=self.svr_var,
-                                        command=lambda: self.set_input_entry("SVR", self.lstm_var.get()))
+                                        command=lambda: self.set_input_entry("SVR", self.svr_var.get()))
         set_widget_to_left(self.svr_check_button)
 
         self.svr_input = tk.Entry(self)
