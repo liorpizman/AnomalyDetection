@@ -35,7 +35,7 @@ def set_widget_for_param(frame, text, combobox_values, param_key, y_coordinate):
         frame.algorithm_param_combo.current(0)
         frame.parameters[param_key] = frame.algorithm_param_combo
     except Exception as e:
-        print("Source: gui_1/algorithm_frame_options/shared/helper_methods.py")
+        print("Source: gui/algorithm_frame_options/shared/helper_methods.py")
         print("Function: set_widget_for_param")
         print("error: " + str(e))
 
