@@ -27,6 +27,9 @@ class InputSettings:
     RESULTS_METRICS_DATA = dict()
     FLIGHT_ROUTES = []
 
+    RESULTS_TABLE_ALGORITHM = ""
+    RESULTS_TABLE_FLIGHT_ROUTE = ""
+
     @staticmethod
     def set_training_data_path(path):
         InputSettings.TRAINING_DATA_PATH = path
@@ -215,3 +218,19 @@ class InputSettings:
     @staticmethod
     def get_flight_routes():
         return InputSettings.FLIGHT_ROUTES
+
+    @staticmethod
+    def set_results_selected_algorithm(selected_algorithm):
+        InputSettings.RESULTS_TABLE_ALGORITHM = selected_algorithm
+
+    @staticmethod
+    def set_results_selected_flight_route(selected_flight_route):
+        InputSettings.RESULTS_TABLE_FLIGHT_ROUTE = selected_flight_route
+
+    @staticmethod
+    def get_results_selected_algorithm():
+        return InputSettings.RESULTS_TABLE_ALGORITHM
+
+    @staticmethod
+    def get_results_selected_flight_route():
+        return InputSettings.RESULTS_TABLE_FLIGHT_ROUTE

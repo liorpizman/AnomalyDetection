@@ -104,3 +104,13 @@ def trim_unnecessary_chars(text):
     removed_apostrophe = text.replace("'", "")
     removed_underscore = removed_apostrophe.replace("_", " ")
     return removed_underscore.capitalize()
+
+
+def transform_list(source_list):
+    transformed_list = []
+
+    for element in source_list:
+        transformed_element = trim_unnecessary_chars(element)
+        transformed_list.append(transformed_element)
+
+    return transformed_list
