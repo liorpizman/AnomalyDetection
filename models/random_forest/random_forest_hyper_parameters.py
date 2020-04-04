@@ -47,7 +47,7 @@ class random_forest_hyper_parameters:
     # Random state parameter
     @staticmethod
     def set_random_state(random_state):
-        random_forest_hyper_parameters.RANDOM_STATE = float(random_state)
+        random_forest_hyper_parameters.RANDOM_STATE = int(random_state)
 
     @staticmethod
     def remove_random_state():

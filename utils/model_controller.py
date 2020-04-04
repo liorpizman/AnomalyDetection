@@ -75,3 +75,15 @@ class ModelController:
 
     def remove_algorithms(self, algorithm_name):
         InputSettings.remove_algorithms(algorithm_name)
+
+    def set_results_selected_algorithm(self, selected_algorithm):
+        InputSettings.set_results_selected_algorithm(selected_algorithm)
+
+    def set_results_selected_flight_route(self, selected_flight_route):
+        InputSettings.set_results_selected_flight_route(selected_flight_route)
+
+    def get_results_selected_algorithm(self):
+        return InputSettings.get_results_selected_algorithm()
+
+    def get_results_selected_flight_route(self):
+        return InputSettings.get_results_selected_flight_route()

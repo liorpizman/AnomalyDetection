@@ -5,6 +5,23 @@ import json
 
 from tkinter.filedialog import askdirectory, askopenfilename
 from gui.shared.constants import *
+from gui.widgets_configurations.helper_methods import set_widget_to_left
+
+try:
+    import Tkinter as tk
+    from Tkconstants import *
+except ImportError:
+    import tkinter as tk
+    from tkinter.constants import *
+
+try:
+    import ttk
+
+    py3 = False
+except ImportError:
+    import tkinter.ttk as ttk
+
+    py3 = True
 
 
 def set_path():
@@ -64,3 +81,36 @@ def get_model_path(path):
         if file.endswith('.h5'):
             return os.path.join(path, file)
     return ""
+
+
+def set_widget_for_param(frame, text, combobox_values, param_key, relative_x, y_coordinate):
+    try:
+        frame.algorithm_param = tk.Label(frame)
+        frame.algorithm_param.place(relx=relative_x, rely=y_coordinate, height=25, width=100)
+        frame.algorithm_param.configure(text=text)
+        set_widget_to_left(frame.algorithm_param)
+
+        frame.algorithm_param_combo = ttk.Combobox(frame, state="readonly", values=combobox_values)
+        frame.algorithm_param_combo.place(relx=relative_x + 0.1, rely=y_coordinate, height=25, width=170)
+        frame.algorithm_param_combo.current(0)
+        frame.parameters[param_key] = frame.algorithm_param_combo
+    except Exception as e:
+        print("Source: gui/shared/helper_methods.py")
+        print("Function: set_widget_for_param")
+        print("error: " + str(e))
+
+
+def trim_unnecessary_chars(text):
+    removed_apostrophe = text.replace("'", "")
+    removed_underscore = removed_apostrophe.replace("_", " ")
+    return removed_underscore.capitalize()
+
+
+def transform_list(source_list):
+    transformed_list = []
+
+    for element in source_list:
+        transformed_element = trim_unnecessary_chars(element)
+        transformed_list.append(transformed_element)
+
+    return transformed_list
