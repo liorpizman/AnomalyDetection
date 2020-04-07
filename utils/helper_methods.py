@@ -344,7 +344,6 @@ def plot(data, xlabel, ylabel, title, plot_dir):
     plt.ylabel(ylabel)
     plt.title(title)
     plt.savefig(f'{plot_dir}/{title}.png')
-
     # plt.show()
 
 

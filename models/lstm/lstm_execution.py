@@ -58,6 +58,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                   epochs=epochs)
 
         for similarity in similarity_score:
+            current_results_path = f'{results_path}/lstm/{current_time}/{similarity}/{flight_route}'
+            create_directories(current_results_path)
             tpr_scores, fpr_scores, delay_scores = execute_predict(flight_route,
                                                                    test_data_path=test_data_path,
                                                                    similarity_score=similarity,
@@ -65,15 +67,12 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                    threshold=threshold,
                                                                    lstm=lstm,
                                                                    scalar=scalar,
-                                                                   results_path=f'{results_path}/lstm/{current_time}',
+                                                                   results_path=current_results_path,
                                                                    add_plots=True,
                                                                    run_new_model=new_model_running,
                                                                    X_train=X_train,
                                                                    features_list=features_list,
                                                                    save_model=save_model)
-
-            current_results_path = f'{results_path}/lstm/{current_time}/{similarity}/{flight_route}'
-            create_directories(current_results_path)
 
             df = pd.DataFrame(tpr_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_tpr.csv', index=False)
@@ -141,26 +140,15 @@ def execute_predict(flight_route,
     delay_scores = defaultdict(list)
 
     if run_new_model:
-        X_pred = lstm.predict(X_train, verbose=1)
-        scores_train = []
-        for i, pred in enumerate(X_pred):
-            scores_train.append(anomaly_score_multi(X_train[i], pred, similarity_score))
-
-        # choose threshold for which <LSTM_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
-        threshold = get_threshold(scores_train, threshold)
-
-        if save_model:
-            data = {}
-            data['features'] = features_list
-            data['threshold'] = threshold
-            with open(f'{results_path}/model_data.json', 'w') as outfile:
-                json.dump(data, outfile)
-            lstm.save(f'{results_path}/{flight_route}.h5')
-
-        if add_plots:
-            plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
-                                              plot_dir=results_path,
-                                              title=f'Outlier Score Training for {flight_route})')
+        threshold = predict_train_set(lstm,
+                                      X_train,
+                                      save_model,
+                                      add_plots,
+                                      threshold,
+                                      features_list,
+                                      results_path,
+                                      flight_route,
+                                      similarity_score)
 
     flight_dir = os.path.join(test_data_path, flight_route)
     ATTACKS = get_subdirectories(flight_dir)
@@ -202,3 +190,36 @@ def execute_predict(flight_route,
             delay_scores[attack].append(method_scores[2])
 
     return tpr_scores, fpr_scores, delay_scores
+
+
+def predict_train_set(lstm,
+                      X_train,
+                      save_model,
+                      add_plots,
+                      threshold,
+                      features_list,
+                      results_path,
+                      flight_route,
+                      similarity_score):
+    X_pred = lstm.predict(X_train, verbose=1)
+    scores_train = []
+    for i, pred in enumerate(X_pred):
+        scores_train.append(anomaly_score_multi(X_train[i], pred, similarity_score))
+
+    # choose threshold for which <LSTM_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
+    threshold = get_threshold(scores_train, threshold)
+
+    if save_model:
+        data = {}
+        data['features'] = features_list
+        data['threshold'] = threshold
+        with open(f'{results_path}/model_data.json', 'w') as outfile:
+            json.dump(data, outfile)
+        lstm.save(f'{results_path}/{flight_route}.h5')
+
+    if add_plots:
+        plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
+                                          plot_dir=results_path,
+                                          title=f'Outlier Score Training for {flight_route})')
+
+    return threshold
