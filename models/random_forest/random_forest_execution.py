@@ -2,9 +2,9 @@ import pickle
 import json
 import pandas as pd
 
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.multioutput import MultiOutputRegressor
-from sklearn.svm import SVR
-from models.svr.svr_hyper_parameters import svr_hyper_parameters
+from models.random_forest.random_forest_hyper_parameters import random_forest_hyper_parameters
 from utils.constants import ATTACK_COLUMN
 from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
@@ -14,71 +14,75 @@ from sklearn.preprocessing import MaxAbsScaler
 from collections import defaultdict
 
 
-def get_svr_new_model_parameters():
+def get_random_forest_new_model_parameters():
     """
-    get svr hyper parameters
+    get random forest hyper parameters
     :return:
     """
-    return (svr_hyper_parameters.get_kernel(),
-            svr_hyper_parameters.get_gamma(),
-            svr_hyper_parameters.get_epsilon(),
-            svr_hyper_parameters.get_threshold())
+    return (random_forest_hyper_parameters.get_n_estimators(),
+            random_forest_hyper_parameters.get_criterion(),
+            random_forest_hyper_parameters.get_max_features(),
+            random_forest_hyper_parameters.get_random_state(),
+            random_forest_hyper_parameters.get_threshold())
 
 
-def get_svr_model(kernel, gamma, epsilon):
+def get_random_forest_model(n_estimators, criterion, max_features, random_state):
     """
-    get svr model
-    :return: svr model
+    get random forest model
+    :return: random forest model
     """
-    return MultiOutputRegressor(SVR(kernel=kernel,
-                                    gamma=gamma,
-                                    epsilon=epsilon))
+    return MultiOutputRegressor(RandomForestRegressor(n_estimators=n_estimators,
+                                                      criterion=criterion,
+                                                      max_features=max_features,
+                                                      random_state=random_state))
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
               algorithm_path, threshold, features_list):
     if new_model_running:
-        kernel, gamma, epsilon, threshold = get_svr_new_model_parameters()
+        n_estimators, criterion, max_features, random_state, threshold = get_random_forest_new_model_parameters()
     else:
-        svr_model = pickle.load(open(algorithm_path, 'rb'))
+        # To Do - Load model process
+        # random_forest_model = load_model(algorithm_path)
         scalar, X_train = None, None
 
     FLIGHT_ROUTES = get_subdirectories(test_data_path)
 
     current_time = get_current_time()
 
-    create_directories(f'{results_path}/svr/{current_time}')
+    create_directories(f'{results_path}/random_forest/{current_time}')
 
     for similarity in similarity_score:
-        create_directories(f'{results_path}/svr/{current_time}/{similarity}')
+        create_directories(f'{results_path}/random_forest/{current_time}/{similarity}')
 
     for flight_route in FLIGHT_ROUTES:
 
         if new_model_running:
-            svr_model, scalar, X_train = execute_train(flight_route,
-                                                       training_data_path=training_data_path,
-                                                       results_path=f'{results_path}/svr/{current_time}',
-                                                       kernel=kernel,
-                                                       gamma=gamma,
-                                                       epsilon=epsilon,
-                                                       add_plots=True,
-                                                       features_list=features_list)
+            random_forest_model, scalar, X_train = execute_train(flight_route,
+                                                                 training_data_path=training_data_path,
+                                                                 results_path=f'{results_path}/random_forest/{current_time}',
+                                                                 n_estimators=n_estimators,
+                                                                 criterion=criterion,
+                                                                 max_features=max_features,
+                                                                 random_state=random_state,
+                                                                 save_model=save_model,
+                                                                 add_plots=True,
+                                                                 features_list=features_list)
 
         for similarity in similarity_score:
             tpr_scores, fpr_scores, delay_scores = execute_predict(flight_route,
                                                                    test_data_path=test_data_path,
                                                                    similarity_score=similarity,
                                                                    threshold=threshold,
-                                                                   svr_model=svr_model,
+                                                                   random_forest_model=random_forest_model,
                                                                    scalar=scalar,
-                                                                   results_path=f'{results_path}/svr/{current_time}',
+                                                                   results_path=f'{results_path}/random_forest/{current_time}',
                                                                    add_plots=True,
                                                                    run_new_model=new_model_running,
                                                                    X_train=X_train,
-                                                                   features_list=features_list,
-                                                                   save_model=save_model)
+                                                                   features_list=features_list)
 
-            current_results_path = f'{results_path}/svr/{current_time}/{similarity}/{flight_route}'
+            current_results_path = f'{results_path}/random_forest/{current_time}/{similarity}/{flight_route}'
             create_directories(current_results_path)
 
             df = pd.DataFrame(tpr_scores)
@@ -90,10 +94,10 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
             df = pd.DataFrame(delay_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_delay.csv', index=False)
 
-    algorithm_name = "SVR"
+    algorithm_name = "Random Forest"
 
     for similarity in similarity_score:
-        report_results(f'{results_path}/svr/{current_time}/{similarity}',
+        report_results(f'{results_path}/random_forest/{current_time}/{similarity}',
                        test_data_path,
                        FLIGHT_ROUTES,
                        algorithm_name)
@@ -102,9 +106,11 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 def execute_train(flight_route,
                   training_data_path=None,
                   results_path=None,
-                  kernel=None,
-                  gamma=None,
-                  epsilon=None,
+                  n_estimators=None,
+                  criterion=None,
+                  max_features=None,
+                  random_state=None,
+                  save_model=False,
                   add_plots=True,
                   features_list=None):
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
@@ -115,48 +121,47 @@ def execute_train(flight_route,
 
     X_train = scalar.fit_transform(df_train)
 
-    svr_model = get_svr_model(kernel=kernel,
-                              gamma=gamma,
-                              epsilon=epsilon)
-    svr_model.fit(X_train, X_train)
+    random_forest_model = get_random_forest_model(n_estimators=n_estimators,
+                                                  criterion=criterion,
+                                                  max_features=max_features,
+                                                  random_state=random_state)
+    random_forest_model.fit(X_train, X_train)
 
-    return svr_model, scalar, X_train
+    if save_model:
+        data = {}
+        data['features'] = features_list
+        with open(f'{results_path}/model_data.json', 'w') as outfile:
+            json.dump(data, outfile)
+        save_file_path = os.path.join(results_path, flight_route + ".pkl")
+        with open(save_file_path, 'wb') as file:
+            pickle.dump(random_forest_model, file)
+
+    return random_forest_model, scalar, X_train
 
 
 def execute_predict(flight_route,
                     test_data_path=None,
                     similarity_score=None,
                     threshold=None,
-                    svr_model=None,
+                    random_forest_model=None,
                     scalar=None,
                     results_path=None,
                     add_plots=True,
                     run_new_model=False,
                     X_train=None,
-                    features_list=None,
-                    save_model=False):
+                    features_list=None):
     tpr_scores = defaultdict(list)
     fpr_scores = defaultdict(list)
     delay_scores = defaultdict(list)
 
     if run_new_model:
-        X_pred = svr_model.predict(X_train)
+        X_pred = random_forest_model.predict(X_train)
         scores_train = []
         for i, pred in enumerate(X_pred):
             scores_train.append(anomaly_score(X_train[i], pred, similarity_score))
 
         # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
         threshold = get_threshold(scores_train, threshold)
-
-        if save_model:
-            data = {}
-            data['features'] = features_list
-            data['threshold'] = threshold
-            with open(f'{results_path}/model_data.json', 'w') as outfile:
-                json.dump(data, outfile)
-            save_file_path = os.path.join(results_path, flight_route + ".pkl")
-            with open(save_file_path, 'wb') as file:
-                pickle.dump(svr_model, file)
 
         if add_plots:
             plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
@@ -179,7 +184,7 @@ def execute_predict(flight_route,
 
             X_test = scalar.transform(df_test)
 
-            X_pred = svr_model.predict(X_test)
+            X_pred = random_forest_model.predict(X_test)
 
             scores_test = []
             for i, pred in enumerate(X_pred):

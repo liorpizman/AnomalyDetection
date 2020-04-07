@@ -74,26 +74,26 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.browse_buttons["LSTM"] = self.lstm_btn
         self.input_entries["LSTM"] = self.lstm_input
 
-        # One Class SVM existing algorithm
-        self.ocsvm_var = tk.IntVar()
-        self.ocsvm_check_button = tk.Checkbutton(self)
-        self.ocsvm_check_button.place(relx=0.015, rely=0.47, height=32, width=146)
-        self.ocsvm_check_button.configure(text="One Class SVM",
-                                          variable=self.ocsvm_var,
-                                          command=lambda: self.set_input_entry("OCSVM", self.lstm_var.get()))
-        set_widget_to_left(self.ocsvm_check_button)
+        # SVR existing algorithm
+        self.svr_var = tk.IntVar()
+        self.svr_check_button = tk.Checkbutton(self)
+        self.svr_check_button.place(relx=0.015, rely=0.47, height=32, width=146)
+        self.svr_check_button.configure(text="SVR",
+                                        variable=self.svr_var,
+                                        command=lambda: self.set_input_entry("SVR", self.svr_var.get()))
+        set_widget_to_left(self.svr_check_button)
 
-        self.ocsvm_input = tk.Entry(self)
-        self.ocsvm_input.place(relx=0.195, rely=0.47, height=25, relwidth=0.624)
-        self.ocsvm_input.configure(state='disabled')
+        self.svr_input = tk.Entry(self)
+        self.svr_input.place(relx=0.195, rely=0.47, height=25, relwidth=0.624)
+        self.svr_input.configure(state='disabled')
 
-        self.ocsvm_btn = tk.Button(self, command=lambda: self.set_algorithm_path("OCSVM"))
-        self.ocsvm_btn.place(relx=0.833, rely=0.47, height=25, width=60)
-        self.ocsvm_btn.configure(state='disabled')
-        set_button_configuration(self.ocsvm_btn, text='''Browse''')
+        self.svr_btn = tk.Button(self, command=lambda: self.set_algorithm_path("SVR"))
+        self.svr_btn.place(relx=0.833, rely=0.47, height=25, width=60)
+        self.svr_btn.configure(state='disabled')
+        set_button_configuration(self.svr_btn, text='''Browse''')
 
-        self.browse_buttons["OCSVM"] = self.ocsvm_btn
-        self.input_entries["OCSVM"] = self.ocsvm_input
+        self.browse_buttons["SVR"] = self.svr_btn
+        self.input_entries["SVR"] = self.svr_input
 
         # KNN existing algorithm
         self.knn_var = tk.IntVar()
@@ -116,27 +116,27 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.browse_buttons["KNN"] = self.knn_btn
         self.input_entries["KNN"] = self.knn_input
 
-        # Isolation Forest existing algorithm
-        self.isolation_forest_var = tk.IntVar()
-        self.isolation_forest_check_button = tk.Checkbutton(self)
-        self.isolation_forest_check_button.place(relx=0.015, rely=0.65, height=32, width=146)
-        self.isolation_forest_check_button.configure(text="Isolation forest",
-                                                     variable=self.isolation_forest_var,
-                                                     command=lambda: self.set_input_entry("isolation_forest",
-                                                                                          self.isolation_forest_var.get()))
-        set_widget_to_left(self.isolation_forest_check_button)
+        # Random Forest existing algorithm
+        self.random_forest_var = tk.IntVar()
+        self.random_forest_check_button = tk.Checkbutton(self)
+        self.random_forest_check_button.place(relx=0.015, rely=0.65, height=32, width=146)
+        self.random_forest_check_button.configure(text="Random forest",
+                                                  variable=self.random_forest_var,
+                                                  command=lambda: self.set_input_entry("random_forest",
+                                                                                       self.random_forest_var.get()))
+        set_widget_to_left(self.random_forest_check_button)
 
-        self.isolation_forest_input = tk.Entry(self)
-        self.isolation_forest_input.place(relx=0.195, rely=0.65, height=25, relwidth=0.624)
-        self.isolation_forest_input.configure(state='disabled')
+        self.random_forest_input = tk.Entry(self)
+        self.random_forest_input.place(relx=0.195, rely=0.65, height=25, relwidth=0.624)
+        self.random_forest_input.configure(state='disabled')
 
-        self.isolation_forest_btn = tk.Button(self, command=lambda: self.set_algorithm_path("isolation_forest"))
-        self.isolation_forest_btn.place(relx=0.833, rely=0.65, height=25, width=60)
-        self.isolation_forest_btn.configure(state='disabled')
-        set_button_configuration(self.isolation_forest_btn, text='''Browse''')
+        self.random_forest_btn = tk.Button(self, command=lambda: self.set_algorithm_path("random_forest"))
+        self.random_forest_btn.place(relx=0.833, rely=0.65, height=25, width=60)
+        self.random_forest_btn.configure(state='disabled')
+        set_button_configuration(self.random_forest_btn, text='''Browse''')
 
-        self.browse_buttons["isolation_forest"] = self.isolation_forest_btn
-        self.input_entries["isolation_forest"] = self.isolation_forest_input
+        self.browse_buttons["random_forest"] = self.random_forest_btn
+        self.input_entries["random_forest"] = self.random_forest_input
 
         # Page footer
         self.next_button = tk.Button(self, command=self.next_window)

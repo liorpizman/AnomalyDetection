@@ -120,7 +120,7 @@ class ParametersOptionsWindow(tk.Frame):
             self.algorithms_files[0]: "lstm_params.yaml",
             self.algorithms_files[1]: "svr_params.yaml",
             self.algorithms_files[2]: "knn_params.yaml",
-            self.algorithms_files[3]: "isolation_forest_params.yaml",
+            self.algorithms_files[3]: "random_forest_params.yaml",
         }
         return switcher.get(algorithm_name, None)
 

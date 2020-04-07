@@ -8,6 +8,7 @@ from gui.windows.load_model_window import LoadModel
 from gui.windows.loading_window import LoadingWindow
 from gui.windows.parameters_options_window import ParametersOptionsWindow
 from gui.windows.main_window import MainWindow
+from gui.windows.results_table_window import ResultsTableWindow
 from utils.model_controller import ModelController
 from gui.windows.new_model_window import NewModel
 from gui.windows.results_window import ResultsWindow
@@ -59,7 +60,8 @@ class AnomalyDetectionGUI(tk.Tk):
                   ExistingAlgorithmsWindow,
                   LoadingWindow,
                   ResultsWindow,
-                  ParametersOptionsWindow):
+                  ParametersOptionsWindow,
+                  ResultsTableWindow):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
@@ -144,6 +146,18 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def remove_algorithms(self, algorithm_name):
         self.model_controller.remove_algorithms(algorithm_name)
+
+    def set_results_selected_algorithm(self, selected_algorithm):
+        self.model_controller.set_results_selected_algorithm(selected_algorithm)
+
+    def set_results_selected_flight_route(self, selected_flight_route):
+        self.model_controller.set_results_selected_flight_route(selected_flight_route)
+
+    def get_results_selected_algorithm(self):
+        return self.model_controller.get_results_selected_algorithm()
+
+    def get_results_selected_flight_route(self):
+        return self.model_controller.get_results_selected_flight_route()
 
 
 if __name__ == "__main__":

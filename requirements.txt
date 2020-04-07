@@ -6,3 +6,4 @@ pandas==0.23.4
 scikit_learn==0.21.2
 PyYAML==5.2
 pywin32==227
+ipython_genutils==0.2.0
