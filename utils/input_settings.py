@@ -6,7 +6,7 @@ from gui.shared.helper_methods import load_anomaly_detection_list
 from models.random_forest.random_forest_hyper_parameters import random_forest_hyper_parameters
 from models.knn.knn_hyper_parameters import knn_hyper_parameters
 from models.svr.svr_hyper_parameters import svr_hyper_parameters
-from utils.constants import ATTACK_COLUMN
+from utils.constants import COLUMNS_TO_REMOVE
 from utils.helper_methods import get_subdirectories
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 
@@ -144,7 +144,9 @@ class InputSettings:
         flight_csv = os.listdir(f'{test_data_path}/{flight_route}/{attack}').__getitem__(0)
         df_test = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
         test_columns = list(df_test.columns)
-        test_columns.remove(ATTACK_COLUMN)
+        for column in COLUMNS_TO_REMOVE:
+            if column in test_columns:
+                test_columns.remove(column)
         InputSettings.FEATURES_COLUMNS_OPTIONS = test_columns
 
     @staticmethod

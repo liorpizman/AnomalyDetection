@@ -1,3 +1,4 @@
 ATTACK_COLUMN = 'label'
+COLUMNS_TO_REMOVE = ['label', 'flight_id']
 NON_ATTACK_VALUE = 0
 ATTACK_VALUE = 1
