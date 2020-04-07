@@ -3,7 +3,7 @@
 import os
 
 from gui.widgets.menubar import Menubar
-from gui.shared.helper_methods import set_path, CROSS_WINDOWS_SETTINGS
+from gui.shared.helper_methods import set_path, CROSS_WINDOWS_SETTINGS, clear_text
 from gui.widgets_configurations.helper_methods import set_copyright_configuration, set_logo_configuration, \
     set_button_configuration, set_widget_to_left
 from gui.shared.inputs_validation_helper import new_model_paths_validation
@@ -102,6 +102,16 @@ class NewModel(tk.Frame):
         # -------------------------------should be replaced at final submission  -------------------------------------
         self.set_inputs_second_permutation()
         # ------------------------------- end ------------------------------------------------------------------------
+
+    def reset_widgets(self):
+        widgets = [
+            self.training_input,
+            self.test_input,
+            self.results_input
+        ]
+
+        for widget in widgets:
+            clear_text(widget)
 
     def set_input_path(self):
         self.training_input.delete(0, END)

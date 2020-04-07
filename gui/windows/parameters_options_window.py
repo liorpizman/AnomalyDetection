@@ -88,6 +88,9 @@ class ParametersOptionsWindow(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
+    def reset_widgets(self):
+        pass
+
     def handle_next_button(self):
         algorithm_parameters = self.options_to_show.get_algorithm_parameters()
         selected_features = self.get_selected_features()

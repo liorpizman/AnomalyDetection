@@ -79,6 +79,9 @@ class LoadingWindow(tk.Frame):
         # Page logic
         self.loading_gif.start()
 
+    def reset_widgets(self):
+        pass
+
     def back_window(self):
         self.controller.reinitialize_frame("SimilarityFunctionsWindow")
 

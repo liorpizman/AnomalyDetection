@@ -3,7 +3,7 @@
 import os
 
 from gui.widgets.menubar import Menubar
-from gui.shared.helper_methods import set_path, CROSS_WINDOWS_SETTINGS
+from gui.shared.helper_methods import set_path, CROSS_WINDOWS_SETTINGS, clear_text
 from tkinter import END
 from gui.shared.inputs_validation_helper import load_model_paths_validation
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
@@ -85,6 +85,15 @@ class LoadModel(tk.Frame):
         self.copyright = tk.Label(self)
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
+
+    def reset_widgets(self):
+        widgets = [
+            self.test_input,
+            self.results_input
+        ]
+
+        for widget in widgets:
+            clear_text(widget)
 
     def back_window(self):
         self.controller.set_new_model_running(False)

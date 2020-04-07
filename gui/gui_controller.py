@@ -74,15 +74,20 @@ class AnomalyDetectionGUI(tk.Tk):
         self.show_frame("MainWindow")
 
     def show_frame(self, page_name):
-        '''Show a frame for the given page name'''
+        '''Show the frame for a given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
 
     def reinitialize_frame(self, page_name):
-        '''Reinitialize_frame a frame for the given page name'''
+        '''Reinitialize a frame for a given page name'''
         frame = self.frames[page_name]
         frame.reinitialize()
         frame.tkraise()
+
+    def reset_frame(self):
+        '''Reset all existing frames'''
+        for frame in self.frames.values():
+            frame.reset_widgets()
 
     def set_new_model_training_input_path(self, input):
         self.model_controller.set_training_data_path(input)
@@ -158,6 +163,9 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def get_results_selected_flight_route(self):
         return self.model_controller.get_results_selected_flight_route()
+
+    def reset_input_settings_params(self):
+        self.model_controller.reset_input_settings_params()
 
     def get_flight_routes(self):
         return self.model_controller.get_flight_routes()
