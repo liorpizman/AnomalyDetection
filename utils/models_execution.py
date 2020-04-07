@@ -4,6 +4,7 @@ from models.svr.svr_execution import run_model as run_svr_model
 from utils.input_settings import InputSettings
 from utils.helper_methods import get_subdirectories
 
+
 class ModelsExecution:
 
     @classmethod
@@ -19,7 +20,7 @@ class ModelsExecution:
         return (None,
                 False,
                 InputSettings.get_existing_algorithms(),
-                InputSettings.get_existing_algorithms_threshold(),)
+                None,)
 
     @classmethod
     def get_parameters(cls):
@@ -57,7 +58,9 @@ class ModelsExecution:
                 algorithm_features_list = features_list[algorithm]
             else:
                 algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
-                algorithm_features_list = read_json_file(f'{algorithm_path}/model_data.json')['features']
+                algorithm_json_file = read_json_file(f'{algorithm_path}/model_data.json')
+                algorithm_features_list = algorithm_json_file['features']
+                threshold = algorithm_json_file['threshold']
                 algorithm_model_path = get_model_path(algorithm_path)
 
             # Dynamic execution for each chosen model
@@ -94,23 +97,23 @@ class ModelsExecution:
 
     @staticmethod
     def SVR_execution(test_data_path,
-                        results_path,
-                        similarity_score,
-                        training_data_path,
-                        save_model,
-                        new_model_running,
-                        algorithm_path,
-                        threshold,
-                        features_list):
+                      results_path,
+                      similarity_score,
+                      training_data_path,
+                      save_model,
+                      new_model_running,
+                      algorithm_path,
+                      threshold,
+                      features_list):
         run_svr_model(training_data_path,
-                        test_data_path,
-                        results_path,
-                        similarity_score,
-                        save_model,
-                        new_model_running,
-                        algorithm_path,
-                        threshold,
-                        features_list)
+                      test_data_path,
+                      results_path,
+                      similarity_score,
+                      save_model,
+                      new_model_running,
+                      algorithm_path,
+                      threshold,
+                      features_list)
 
     @staticmethod
     def get_algorithm_execution_function(algorithm_name):

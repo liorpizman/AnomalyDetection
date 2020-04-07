@@ -46,9 +46,6 @@ class ModelController:
     def set_existing_algorithms(self, algorithms_dict):
         InputSettings.set_existing_algorithms(algorithms_dict)
 
-    def set_existing_algorithms_threshold(self, threshold):
-        InputSettings.set_existing_algorithms_threshold(threshold)
-
     def set_features_columns_options(self):
         InputSettings.set_features_columns_options()
 

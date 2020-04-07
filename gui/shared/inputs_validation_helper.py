@@ -2,6 +2,8 @@ import os
 
 import win32api
 
+from gui.shared.helper_methods import read_json_file
+
 
 def new_model_train_path_validation(train_path):
     routs = list()
@@ -116,7 +118,7 @@ def is_valid_directories(paths):
 
 def is_valid_model_paths(paths):
     """
-    validats that each path is an h5 valid model file
+    validats that each path is a valid model file
     :param paths:list of paths
     :return:
     """
@@ -126,6 +128,38 @@ def is_valid_model_paths(paths):
         files = os.listdir(path)
         for file in files:
             fullPath = os.path.join(path, file)
-            if not os.path.isfile(fullPath) or not (file.endswith('.h5') or (file == "model_data.json")):
+            if not os.path.isfile(fullPath) or not (
+                    file.endswith('.h5')
+                    or file.endswith('.pkl')
+                    or (file == "model_data.json")
+            ):
                 return False
         return True
+
+
+def is_valid_model_data_file(paths):
+    """
+    validats that each path is contains json file with features and threshold data
+    :param paths:
+    :return:
+    """
+    for path in paths:
+        if not os.path.exists(os.path.dirname(path)):
+            return False
+        files = os.listdir(path)
+        for file in files:
+            if file != "model_data.json":
+                continue
+            full_file_Path = os.path.join(path, file)
+            if not os.path.isfile(full_file_Path):
+                return False
+            required_fields = get_json_required_fields()
+            algorithm_json_file = read_json_file(full_file_Path)
+            for field in algorithm_json_file:
+                if field not in required_fields or not algorithm_json_file[field]:
+                    return False
+    return True
+
+
+def get_json_required_fields():
+    return ['features', 'threshold']

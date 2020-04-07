@@ -72,7 +72,7 @@ class ResultsWindow(tk.Frame):
             chosen_algorithms = InputSettings.get_existing_algorithms()
             flight_routes = InputSettings.get_flight_routes()
 
-            data = results_data["SVR"]["mexico_las_veags"]  # should be changed to dynamic table
+            data = results_data["LSTM"]["mexico_las_veags"]  # should be changed to dynamic table
 
             attacks_columns = list(data.values())[0]
 

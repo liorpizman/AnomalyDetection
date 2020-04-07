@@ -19,7 +19,6 @@ class InputSettings:
     SIMILARITY_SCORES = set()
     SAVE_MODEL = False
     NEW_MODEL_RUNNING = False
-    LOAD_MODEL_THRESHOLD = None
     EXISTING_ALGORITHMS = dict()
     FEATURES_COLUMNS_OPTIONS = []
     USERS_SELECTED_FEATURES = dict()
@@ -116,14 +115,6 @@ class InputSettings:
     @staticmethod
     def get_existing_algorithm_path(algorithm_name):
         return InputSettings.EXISTING_ALGORITHMS[algorithm_name]
-
-    @staticmethod
-    def get_existing_algorithms_threshold():
-        return InputSettings.LOAD_MODEL_THRESHOLD
-
-    @staticmethod
-    def set_existing_algorithms_threshold(threshold):
-        InputSettings.LOAD_MODEL_THRESHOLD = threshold
 
     @staticmethod
     def init_results_metrics_data():
