@@ -57,29 +57,26 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         if new_model_running:
             svr_model, scalar, X_train = execute_train(flight_route,
                                                        training_data_path=training_data_path,
-                                                       results_path=f'{results_path}/svr/{current_time}',
                                                        kernel=kernel,
                                                        gamma=gamma,
                                                        epsilon=epsilon,
-                                                       add_plots=True,
                                                        features_list=features_list)
 
         for similarity in similarity_score:
+            current_results_path = f'{results_path}/svr/{current_time}/{similarity}/{flight_route}'
+            create_directories(current_results_path)
             tpr_scores, fpr_scores, delay_scores = execute_predict(flight_route,
                                                                    test_data_path=test_data_path,
                                                                    similarity_score=similarity,
                                                                    threshold=threshold,
                                                                    svr_model=svr_model,
                                                                    scalar=scalar,
-                                                                   results_path=f'{results_path}/svr/{current_time}',
+                                                                   results_path=current_results_path,
                                                                    add_plots=True,
                                                                    run_new_model=new_model_running,
                                                                    X_train=X_train,
                                                                    features_list=features_list,
                                                                    save_model=save_model)
-
-            current_results_path = f'{results_path}/svr/{current_time}/{similarity}/{flight_route}'
-            create_directories(current_results_path)
 
             df = pd.DataFrame(tpr_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_tpr.csv', index=False)
@@ -101,11 +98,9 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
 def execute_train(flight_route,
                   training_data_path=None,
-                  results_path=None,
                   kernel=None,
                   gamma=None,
                   epsilon=None,
-                  add_plots=True,
                   features_list=None):
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
 
@@ -140,28 +135,15 @@ def execute_predict(flight_route,
     delay_scores = defaultdict(list)
 
     if run_new_model:
-        X_pred = svr_model.predict(X_train)
-        scores_train = []
-        for i, pred in enumerate(X_pred):
-            scores_train.append(anomaly_score(X_train[i], pred, similarity_score))
-
-        # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
-        threshold = get_threshold(scores_train, threshold)
-
-        if save_model:
-            data = {}
-            data['features'] = features_list
-            data['threshold'] = threshold
-            with open(f'{results_path}/model_data.json', 'w') as outfile:
-                json.dump(data, outfile)
-            save_file_path = os.path.join(results_path, flight_route + ".pkl")
-            with open(save_file_path, 'wb') as file:
-                pickle.dump(svr_model, file)
-
-        if add_plots:
-            plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
-                                              plot_dir=results_path,
-                                              title=f'Outlier Score Training for {flight_route})')
+        threshold = predict_train_set(svr_model,
+                                      X_train,
+                                      save_model,
+                                      add_plots,
+                                      threshold,
+                                      features_list,
+                                      results_path,
+                                      flight_route,
+                                      similarity_score)
 
     flight_dir = os.path.join(test_data_path, flight_route)
     ATTACKS = get_subdirectories(flight_dir)
@@ -202,3 +184,38 @@ def execute_predict(flight_route,
             delay_scores[attack].append(method_scores[2])
 
     return tpr_scores, fpr_scores, delay_scores
+
+
+def predict_train_set(svr_model,
+                      X_train,
+                      save_model,
+                      add_plots,
+                      threshold,
+                      features_list,
+                      results_path,
+                      flight_route,
+                      similarity_score):
+    X_pred = svr_model.predict(X_train)
+    scores_train = []
+    for i, pred in enumerate(X_pred):
+        scores_train.append(anomaly_score(X_train[i], pred, similarity_score))
+
+    # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
+    threshold = get_threshold(scores_train, threshold)
+
+    if save_model:
+        data = {}
+        data['features'] = features_list
+        data['threshold'] = threshold
+        with open(f'{results_path}/model_data.json', 'w') as outfile:
+            json.dump(data, outfile)
+        save_file_path = os.path.join(results_path, flight_route + ".pkl")
+        with open(save_file_path, 'wb') as file:
+            pickle.dump(svr_model, file)
+
+    if add_plots:
+        plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
+                                          plot_dir=results_path,
+                                          title=f'Outlier Score Training for {flight_route})')
+
+    return threshold

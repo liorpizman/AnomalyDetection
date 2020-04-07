@@ -60,30 +60,27 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         if new_model_running:
             random_forest_model, scalar, X_train = execute_train(flight_route,
                                                                  training_data_path=training_data_path,
-                                                                 results_path=f'{results_path}/random_forest/{current_time}',
                                                                  n_estimators=n_estimators,
                                                                  criterion=criterion,
                                                                  max_features=max_features,
                                                                  random_state=random_state,
-                                                                 save_model=save_model,
-                                                                 add_plots=True,
                                                                  features_list=features_list)
 
         for similarity in similarity_score:
+            current_results_path = f'{results_path}/random_forest/{current_time}/{similarity}/{flight_route}'
+            create_directories(current_results_path)
             tpr_scores, fpr_scores, delay_scores = execute_predict(flight_route,
                                                                    test_data_path=test_data_path,
                                                                    similarity_score=similarity,
                                                                    threshold=threshold,
                                                                    random_forest_model=random_forest_model,
                                                                    scalar=scalar,
-                                                                   results_path=f'{results_path}/random_forest/{current_time}',
+                                                                   results_path=current_results_path,
                                                                    add_plots=True,
                                                                    run_new_model=new_model_running,
                                                                    X_train=X_train,
-                                                                   features_list=features_list)
-
-            current_results_path = f'{results_path}/random_forest/{current_time}/{similarity}/{flight_route}'
-            create_directories(current_results_path)
+                                                                   features_list=features_list,
+                                                                   save_model=save_model)
 
             df = pd.DataFrame(tpr_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_tpr.csv', index=False)
@@ -105,13 +102,10 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
 def execute_train(flight_route,
                   training_data_path=None,
-                  results_path=None,
                   n_estimators=None,
                   criterion=None,
                   max_features=None,
                   random_state=None,
-                  save_model=False,
-                  add_plots=True,
                   features_list=None):
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
 
@@ -127,15 +121,6 @@ def execute_train(flight_route,
                                                   random_state=random_state)
     random_forest_model.fit(X_train, X_train)
 
-    if save_model:
-        data = {}
-        data['features'] = features_list
-        with open(f'{results_path}/model_data.json', 'w') as outfile:
-            json.dump(data, outfile)
-        save_file_path = os.path.join(results_path, flight_route + ".pkl")
-        with open(save_file_path, 'wb') as file:
-            pickle.dump(random_forest_model, file)
-
     return random_forest_model, scalar, X_train
 
 
@@ -149,24 +134,22 @@ def execute_predict(flight_route,
                     add_plots=True,
                     run_new_model=False,
                     X_train=None,
-                    features_list=None):
+                    features_list=None,
+                    save_model=False):
     tpr_scores = defaultdict(list)
     fpr_scores = defaultdict(list)
     delay_scores = defaultdict(list)
 
     if run_new_model:
-        X_pred = random_forest_model.predict(X_train)
-        scores_train = []
-        for i, pred in enumerate(X_pred):
-            scores_train.append(anomaly_score(X_train[i], pred, similarity_score))
-
-        # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
-        threshold = get_threshold(scores_train, threshold)
-
-        if add_plots:
-            plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
-                                              plot_dir=results_path,
-                                              title=f'Outlier Score Training for {flight_route})')
+        threshold = predict_train_set(random_forest_model,
+                                      X_train,
+                                      save_model,
+                                      add_plots,
+                                      threshold,
+                                      features_list,
+                                      results_path,
+                                      flight_route,
+                                      similarity_score)
 
     flight_dir = os.path.join(test_data_path, flight_route)
     ATTACKS = get_subdirectories(flight_dir)
@@ -207,3 +190,38 @@ def execute_predict(flight_route,
             delay_scores[attack].append(method_scores[2])
 
     return tpr_scores, fpr_scores, delay_scores
+
+
+def predict_train_set(random_forest_model,
+                      X_train,
+                      save_model,
+                      add_plots,
+                      threshold,
+                      features_list,
+                      results_path,
+                      flight_route,
+                      similarity_score):
+    X_pred = random_forest_model.predict(X_train)
+    scores_train = []
+    for i, pred in enumerate(X_pred):
+        scores_train.append(anomaly_score(X_train[i], pred, similarity_score))
+
+    # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
+    threshold = get_threshold(scores_train, threshold)
+
+    if add_plots:
+        plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
+                                          plot_dir=results_path,
+                                          title=f'Outlier Score Training for {flight_route})')
+
+    if save_model:
+        data = {}
+        data['features'] = features_list
+        data['threshold'] = threshold
+        with open(f'{results_path}/model_data.json', 'w') as outfile:
+            json.dump(data, outfile)
+        save_file_path = os.path.join(results_path, flight_route + ".pkl")
+        with open(save_file_path, 'wb') as file:
+            pickle.dump(random_forest_model, file)
+
+    return threshold
