@@ -41,9 +41,6 @@ class ResultsPermutationFrame(tk.Frame):
             chosen_algorithms = list(InputSettings.get_algorithms())
             flight_routes = list(InputSettings.get_flight_routes())
 
-            transformed_chosen_algorithms = transform_list(chosen_algorithms)
-            transformed_flight_routes = transform_list(flight_routes)
-
             selected_algorithm = self.parent.controller.get_results_selected_algorithm()
             selected_flight_route = self.parent.controller.get_results_selected_flight_route()
 
@@ -59,11 +56,8 @@ class ResultsPermutationFrame(tk.Frame):
                 if trim_unnecessary_chars(route).lower() == selected_flight_route.lower():
                     original_flight_route = route
 
-            displayed_algorithm = transformed_chosen_algorithms[0]
-            displayed_flight_route = transformed_flight_routes[0]
-
-            current_title = 'Results for algorithm: [{0}] and flight route: [{1}]'.format(displayed_algorithm,
-                                                                                          displayed_flight_route)
+            current_title = 'Results for algorithm: [{0}] and flight route: [{1}]'.format(selected_algorithm,
+                                                                                          selected_flight_route)
 
             self.instructions = tk.Label(self)
             self.instructions.place(relx=0, rely=0, height=32, width=635)
