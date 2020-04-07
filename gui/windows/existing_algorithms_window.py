@@ -6,7 +6,7 @@ import win32api
 from tkinter import END
 from tkinter.ttk import Combobox
 from gui.widgets.menubar import Menubar
-from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, set_path
+from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, set_path, clear_text
 from gui.shared.inputs_validation_helper import is_valid_model_paths, is_valid_model_data_file
 from gui.widgets_configurations.helper_methods import set_widget_to_left, set_logo_configuration, \
     set_button_configuration, set_copyright_configuration
@@ -46,7 +46,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please insert paths of existing models.''')
+            text='''Please insert paths for existing models.''')
         set_widget_to_left(self.instructions)
 
         self.algorithms = dict()
@@ -150,6 +150,36 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.copyright = tk.Label(self)
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
+
+    def reset_widgets(self):
+        widgets = [
+            self.lstm_input,
+            self.svr_input,
+            self.knn_input,
+            self.random_forest_input
+        ]
+
+        variables = [
+            self.lstm_var,
+            self.svr_var,
+            self.knn_var,
+            self.random_forest_var
+        ]
+
+        check_buttons = [
+            self.lstm_check_button,
+            self.svr_check_button,
+            self.knn_check_button,
+            self.random_forest_check_button
+        ]
+
+        for widget in widgets:
+            clear_text(widget)
+            widget['state'] = 'disabled'
+
+        for var, check_button in zip(variables, check_buttons):
+            var.set(0)
+            check_button['variable'] = var
 
     def back_window(self):
         self.controller.set_new_model_running(False)

@@ -114,3 +114,7 @@ def transform_list(source_list):
         transformed_list.append(transformed_element)
 
     return transformed_list
+
+
+def clear_text(widget):
+    widget.delete(0, 'end')

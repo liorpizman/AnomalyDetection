@@ -66,6 +66,15 @@ class AlgorithmsWindow(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
+    def reset_widgets(self):
+        for check, button, var in zip(self.anomaly_detection_methods.get_checks(),
+                                      self.anomaly_detection_methods.get_buttons(),
+                                      self.anomaly_detection_methods.get_vars()):
+            button['state'] = 'disabled'
+            var.set(0)
+            check['variable'] = var
+            check['state'] = 'active'
+
     def show_algorithms_options(self, algorithm_name):
         self.controller.set_current_algorithm_to_edit(algorithm_name)
         self.controller.reinitialize_frame("ParametersOptionsWindow")
