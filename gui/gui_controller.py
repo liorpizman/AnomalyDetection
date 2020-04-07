@@ -167,6 +167,12 @@ class AnomalyDetectionGUI(tk.Tk):
     def reset_input_settings_params(self):
         self.model_controller.reset_input_settings_params()
 
+    def get_flight_routes(self):
+        return self.model_controller.get_flight_routes()
+
+    def get_existing_algorithms(self):
+        return self.model_controller.get_existing_algorithms()
+
 
 if __name__ == "__main__":
     app = AnomalyDetectionGUI()

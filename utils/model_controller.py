@@ -87,3 +87,9 @@ class ModelController:
 
     def reset_input_settings_params(self):
         InputSettings.reset_input_settings_params()
+
+    def get_flight_routes(self):
+        return InputSettings.get_flight_routes()
+
+    def get_existing_algorithms(self):
+        return InputSettings.get_existing_algorithms()
