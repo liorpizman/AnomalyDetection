@@ -59,7 +59,7 @@ class SimilarityFunctionsWindow(tk.Frame):
         # Page footer
         self.next_button = tk.Button(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
-        set_button_configuration(self.next_button, text='''Next''')
+        set_button_configuration(self.next_button, text='''Run''')
 
         self.back_button = tk.Button(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
@@ -68,6 +68,19 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.copyright = tk.Label(self)
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
+
+    def reset_widgets(self):
+        for check, var in zip(self.similarity_functions.get_checks(),
+                              self.similarity_functions.get_vars()):
+            var.set(0)
+            check['variable'] = var
+            check['state'] = 'active'
+
+        # In case the check button was not destroyed - should be in new model flow
+        is_new_model_flow = self.controller.get_new_model_running()
+        if is_new_model_flow:
+            self.save_model_var.set(0)
+            self.save_model_check_button['variable'] = self.save_model_var
 
     def set_similarity_score(self):
         similarity_list = set()
@@ -98,7 +111,7 @@ class SimilarityFunctionsWindow(tk.Frame):
                                                               command=self.set_saving_model)
             self.save_model_check_button.place(relx=0.65, rely=0.75, height=25, width=100)
         else:
-            self.save_model_check_button.destroy()
+            self.save_model_check_button.place_forget()
 
     def set_saving_model(self):
         self.controller.set_saving_model(self.save_model_var.get() == 1)

@@ -84,3 +84,6 @@ class ModelController:
 
     def get_results_selected_flight_route(self):
         return InputSettings.get_results_selected_flight_route()
+
+    def reset_input_settings_params(self):
+        InputSettings.reset_input_settings_params()

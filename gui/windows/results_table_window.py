@@ -59,6 +59,9 @@ class ResultsTableWindow(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
+    def reset_widgets(self):
+        pass
+
     def back_window(self):
         self.controller.reinitialize_frame("ResultsWindow")
 

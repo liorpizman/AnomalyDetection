@@ -51,13 +51,18 @@ class ResultsWindow(tk.Frame):
         # Page footer
         self.back_button = tk.Button(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
-        set_button_configuration(self.back_button, text='''Back''')
+        set_button_configuration(self.back_button, text='''Home page''')
 
         self.copyright = tk.Label(self)
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
+    def reset_widgets(self):
+        pass
+
     def back_window(self):
+        self.controller.reset_frame()
+        self.controller.reset_input_settings_params()
         self.controller.show_frame("MainWindow")
 
     def toggle_results(self):

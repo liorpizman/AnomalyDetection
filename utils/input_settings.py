@@ -227,3 +227,22 @@ class InputSettings:
     @staticmethod
     def get_results_selected_flight_route():
         return InputSettings.RESULTS_TABLE_FLIGHT_ROUTE
+
+    @staticmethod
+    def reset_input_settings_params():
+        InputSettings.TRAINING_DATA_PATH = ""
+        InputSettings.TEST_DATA_PATH = ""
+        InputSettings.RESULTS_DATA_PATH = ""
+        InputSettings.ALGORITHMS = set()
+        InputSettings.SIMILARITY_SCORES = set()
+        InputSettings.SAVE_MODEL = False
+        InputSettings.NEW_MODEL_RUNNING = False
+        InputSettings.EXISTING_ALGORITHMS = dict()
+        InputSettings.FEATURES_COLUMNS_OPTIONS = []
+        InputSettings.USERS_SELECTED_FEATURES = dict()
+        InputSettings.THREADS = []
+        InputSettings.RESULTS_METRICS_DATA = dict()
+        InputSettings.FLIGHT_ROUTES = []
+
+        InputSettings.RESULTS_TABLE_ALGORITHM = ""
+        InputSettings.RESULTS_TABLE_FLIGHT_ROUTE = ""

@@ -60,6 +60,9 @@ class MainWindow(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
+    def reset_widgets(self):
+        pass
+
     def load_flow(self):
         self.controller.set_new_model_running(False)
         self.controller.show_frame("LoadModel")

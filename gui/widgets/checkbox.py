@@ -52,6 +52,9 @@ class Checkbar(Frame):
     def get_vars(self):
         return self.vars
 
+    def get_buttons(self):
+        return self.buttons
+
     def set_button_state(self, checkCallback):
         for button, var in zip(self.buttons, self.vars):
             if var.get():
