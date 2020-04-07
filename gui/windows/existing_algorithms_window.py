@@ -7,7 +7,7 @@ from tkinter import END
 from tkinter.ttk import Combobox
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, set_path
-from gui.shared.inputs_validation_helper import is_valid_model_paths
+from gui.shared.inputs_validation_helper import is_valid_model_paths, is_valid_model_data_file
 from gui.widgets_configurations.helper_methods import set_widget_to_left, set_logo_configuration, \
     set_button_configuration, set_copyright_configuration
 
@@ -138,18 +138,6 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.browse_buttons["random_forest"] = self.random_forest_btn
         self.input_entries["random_forest"] = self.random_forest_input
 
-        # Threshold
-        self.threshold_list = [0.9, 0.8, 0.7]
-
-        self.threshold = tk.Label(self)
-        self.threshold.place(relx=0.015, rely=0.74, height=32, width=150)
-        self.threshold.configure(text='''Threshold''')
-        set_widget_to_left(self.threshold)
-
-        self.threshold_combo = Combobox(self, values=self.threshold_list)
-        self.threshold_combo.place(relx=0.195, rely=0.74, height=25, relwidth=0.154)
-        self.threshold_combo.current(0)
-
         # Page footer
         self.next_button = tk.Button(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
@@ -195,8 +183,12 @@ class ExistingAlgorithmsWindow(tk.Frame):
             return False
 
         if not is_valid_model_paths(self.algorithms.values()):
-            win32api.MessageBox(0, 'At least one of your inputs is invalid or not in type of .h5 file!',
+            win32api.MessageBox(0, 'At least one of your algorithms paths invalid or not include the required files!',
                                 'Invalid inputs', 0x00001000)
+        if not is_valid_model_data_file(self.algorithms.values()):
+            win32api.MessageBox(0,
+                                'At least one of the required data is missing in model_data json file!',
+                                'Missing data', 0x00001000)
             return False
         return True
 
@@ -208,5 +200,4 @@ class ExistingAlgorithmsWindow(tk.Frame):
 
     def set_load_model_parameters(self):
         self.controller.set_existing_algorithms(self.algorithms)
-        self.controller.set_existing_algorithms_threshold(float(self.threshold_combo.get()))
         self.controller.reinitialize_frame("SimilarityFunctionsWindow")

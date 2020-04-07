@@ -40,8 +40,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     if new_model_running:
         kernel, gamma, epsilon, threshold = get_svr_new_model_parameters()
     else:
-        # To Do - Load model process
-        # svr_model = load_model(algorithm_path)
+        svr_model = pickle.load(open(algorithm_path, 'rb'))
         scalar, X_train = None, None
 
     FLIGHT_ROUTES = get_subdirectories(test_data_path)
@@ -62,7 +61,6 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                        kernel=kernel,
                                                        gamma=gamma,
                                                        epsilon=epsilon,
-                                                       save_model=save_model,
                                                        add_plots=True,
                                                        features_list=features_list)
 
@@ -77,7 +75,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                    add_plots=True,
                                                                    run_new_model=new_model_running,
                                                                    X_train=X_train,
-                                                                   features_list=features_list)
+                                                                   features_list=features_list,
+                                                                   save_model=save_model)
 
             current_results_path = f'{results_path}/svr/{current_time}/{similarity}/{flight_route}'
             create_directories(current_results_path)
@@ -106,7 +105,6 @@ def execute_train(flight_route,
                   kernel=None,
                   gamma=None,
                   epsilon=None,
-                  save_model=False,
                   add_plots=True,
                   features_list=None):
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
@@ -122,15 +120,6 @@ def execute_train(flight_route,
                               epsilon=epsilon)
     svr_model.fit(X_train, X_train)
 
-    if save_model:
-        data = {}
-        data['features'] = features_list
-        with open(f'{results_path}/model_data.json', 'w') as outfile:
-            json.dump(data, outfile)
-        save_file_path = os.path.join(results_path, flight_route + ".pkl")
-        with open(save_file_path, 'wb') as file:
-            pickle.dump(svr_model, file)
-
     return svr_model, scalar, X_train
 
 
@@ -144,7 +133,8 @@ def execute_predict(flight_route,
                     add_plots=True,
                     run_new_model=False,
                     X_train=None,
-                    features_list=None):
+                    features_list=None,
+                    save_model=False):
     tpr_scores = defaultdict(list)
     fpr_scores = defaultdict(list)
     delay_scores = defaultdict(list)
@@ -157,6 +147,16 @@ def execute_predict(flight_route,
 
         # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
         threshold = get_threshold(scores_train, threshold)
+
+        if save_model:
+            data = {}
+            data['features'] = features_list
+            data['threshold'] = threshold
+            with open(f'{results_path}/model_data.json', 'w') as outfile:
+                json.dump(data, outfile)
+            save_file_path = os.path.join(results_path, flight_route + ".pkl")
+            with open(save_file_path, 'wb') as file:
+                pickle.dump(svr_model, file)
 
         if add_plots:
             plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,

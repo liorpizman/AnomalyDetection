@@ -78,7 +78,7 @@ def read_json_file(path):
 def get_model_path(path):
     files = os.listdir(path)
     for file in files:
-        if file.endswith('.h5'):
+        if file.endswith('.h5') or file.endswith('.pkl'):
             return os.path.join(path, file)
     return ""
 

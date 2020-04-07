@@ -114,9 +114,6 @@ class AnomalyDetectionGUI(tk.Tk):
     def set_existing_algorithms(self, algorithms_dict):
         self.model_controller.set_existing_algorithms(algorithms_dict)
 
-    def set_existing_algorithms_threshold(self, threshold):
-        self.model_controller.set_existing_algorithms_threshold(threshold)
-
     def set_features_columns_options(self):
         self.model_controller.set_features_columns_options()
 

@@ -21,7 +21,7 @@ class ModelsExecution:
         return (None,
                 False,
                 InputSettings.get_existing_algorithms(),
-                InputSettings.get_existing_algorithms_threshold(),)
+                None)
 
     @classmethod
     def get_parameters(cls):
@@ -59,7 +59,9 @@ class ModelsExecution:
                 algorithm_features_list = features_list[algorithm]
             else:
                 algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
-                algorithm_features_list = read_json_file(f'{algorithm_path}/model_data.json')['features']
+                algorithm_json_file = read_json_file(f'{algorithm_path}/model_data.json')
+                algorithm_features_list = algorithm_json_file['features']
+                threshold = algorithm_json_file['threshold']
                 algorithm_model_path = get_model_path(algorithm_path)
 
             # Dynamic execution for each chosen model
