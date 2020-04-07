@@ -84,3 +84,9 @@ class ModelController:
 
     def get_results_selected_flight_route(self):
         return InputSettings.get_results_selected_flight_route()
+
+    def get_flight_routes(self):
+        return InputSettings.get_flight_routes()
+
+    def get_existing_algorithms(self):
+        return InputSettings.get_existing_algorithms()

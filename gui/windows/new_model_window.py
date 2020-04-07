@@ -100,7 +100,7 @@ class NewModel(tk.Frame):
         set_copyright_configuration(self.copyright)
 
         # -------------------------------should be replaced at final submission  -------------------------------------
-        self.set_inputs_first_permutation()
+        self.set_inputs_second_permutation()
         # ------------------------------- end ------------------------------------------------------------------------
 
     def set_input_path(self):

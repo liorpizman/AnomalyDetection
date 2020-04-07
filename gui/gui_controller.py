@@ -159,6 +159,12 @@ class AnomalyDetectionGUI(tk.Tk):
     def get_results_selected_flight_route(self):
         return self.model_controller.get_results_selected_flight_route()
 
+    def get_flight_routes(self):
+        return self.model_controller.get_flight_routes()
+
+    def get_existing_algorithms(self):
+        return self.model_controller.get_existing_algorithms()
+
 
 if __name__ == "__main__":
     app = AnomalyDetectionGUI()

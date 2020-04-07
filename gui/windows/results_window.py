@@ -70,8 +70,13 @@ class ResultsWindow(tk.Frame):
         self.controller.reinitialize_frame("ResultsTableWindow")
 
     def reinitialize(self):
-        chosen_algorithms = list(InputSettings.get_algorithms())
-        flight_routes = list(InputSettings.get_flight_routes())
+        new_model_running = self.controller.get_new_model_running()
+        if new_model_running:
+            chosen_algorithms = list(self.controller.get_algorithms())
+        else:
+            chosen_algorithms = list(self.controller.get_existing_algorithms().keys())
+
+        flight_routes = list(self.controller.get_flight_routes())
 
         transformed_chosen_algorithms = transform_list(chosen_algorithms)
         transformed_flight_routes = transform_list(flight_routes)
