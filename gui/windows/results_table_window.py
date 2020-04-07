@@ -2,16 +2,21 @@
 #  -*- coding: utf-8 -*-
 import os
 
-from gui.results_permutation_frame.results_permutation_frame import ResultsPermutationFrame
+from ipython_genutils.py3compat import xrange
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
+from gui.shared.helper_methods import trim_unnecessary_chars
 from gui.widgets.menubar import Menubar
+from gui.widgets.table.table import Table
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_button_configuration, \
-    set_copyright_configuration
+    set_copyright_configuration, set_widget_to_left
+from utils.input_settings import InputSettings
 
 try:
     import Tkinter as tk
+    from Tkconstants import *
 except ImportError:
     import tkinter as tk
+    from tkinter.constants import *
 
 try:
     import ttk
@@ -40,15 +45,10 @@ class ResultsTableWindow(tk.Frame):
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
 
-        # Dynamic results table
-        self.frame_height = 300
-        self.frame_width = 450
-
-        self.results_table = ResultsPermutationFrame(self)
-        self.results_table.place(relx=0,
-                                 rely=0,
-                                 height=self.frame_height,
-                                 width=self.frame_width)
+        self.results_table = Table(self,
+                                   columns=["Metric", "Down attack", "Up attack", "Fore attack", "Random attack"],
+                                   column_minwidths=[None, None, None])
+        self.results_table.pack(expand=True, fill=X, padx=0, pady=0)
 
         # Page footer
         self.back_button = tk.Button(self, command=self.back_window)
@@ -66,9 +66,49 @@ class ResultsTableWindow(tk.Frame):
         self.reinitialize_results_table()
 
     def reinitialize_results_table(self):
-        self.results_table.destroy()
-        self.results_table = ResultsPermutationFrame(self)
-        self.results_table.place(relx=0.1,
-                                 rely=0.3,
-                                 height=self.frame_height,
-                                 width=self.frame_width)
+        try:
+            chosen_algorithms = list(InputSettings.get_algorithms())
+            flight_routes = list(InputSettings.get_flight_routes())
+
+            selected_algorithm = self.controller.get_results_selected_algorithm()
+            selected_flight_route = self.controller.get_results_selected_flight_route()
+
+            original_algorithm = ""
+
+            for algorithm in chosen_algorithms:
+                if trim_unnecessary_chars(algorithm).lower() == selected_algorithm.lower():
+                    original_algorithm = algorithm
+
+            original_flight_route = ""
+
+            for route in flight_routes:
+                if trim_unnecessary_chars(route).lower() == selected_flight_route.lower():
+                    original_flight_route = route
+
+            current_title = 'Results for algorithm: [{0}] and flight route: [{1}]'.format(selected_algorithm,
+                                                                                          selected_flight_route)
+
+            self.instructions = tk.Label(self)
+            self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
+            self.instructions.configure(text=current_title)
+            set_widget_to_left(self.instructions)
+
+            results_data = InputSettings.get_results_metrics_data()
+
+            data = results_data[original_algorithm][original_flight_route]
+
+            attacks_columns = list(data.values())[0]
+
+            # Creates a 2D array, all set to 0
+            rows = len(data.keys())
+            columns = len(attacks_columns)
+            zero_matrix = [[0 for i in xrange(columns)] for i in xrange(rows)]
+            self.results_table.set_data(zero_matrix)
+
+            for i, metric in enumerate(data.keys()):
+                attacks_data = data[metric]
+                self.results_table.cell(i, 0, metric.upper())
+                for j, attack in enumerate(attacks_data.keys()):
+                    self.results_table.cell(i, j + 1, attacks_data[attack])
+        except Exception:
+            pass
