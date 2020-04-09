@@ -1,5 +1,15 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Algorithm window which is part of GUI application
+'''
+
 import os
 import win32api
 
@@ -25,12 +35,58 @@ except ImportError:
 
 
 class AlgorithmsWindow(tk.Frame):
+    """
+    A Class used to enable the user the option to choose algorithms
+
+    Methods
+    -------
+    reset_widgets()
+            Description | Reset check bar values
+
+    show_algorithms_options(algorithm_name)
+            Description | Show the parameters options window
+
+    set_algorithm_parameters(algorithm_name, algorithm_parameters)
+            Description | Set updated parameters' values
+
+    remove_algorithm_parameters(algorithm_name, algorithm_parameters)
+            Description | Remove parameters' values
+
+    check_algorithm_selected()
+            Description | Validates that any algorithm was selected before continue to next window
+
+    check_algorithm_parameters_edited()
+            Description | Validates that algorithm's parameters was changed before approve save functionality
+
+    validate_next_step()
+            Description | Validates that algorithm was selected and the parameters were updated before
+                          moving to next window
+
+    next_window()
+            Description | Handle a click on next button
+
+    set_algorithm_checked()
+            Description | Set each algorithm that was checked by the check button
+
+    """
 
     def __init__(self, parent, controller):
+
+        """
+        Parameters
+        ----------
+
+        :param parent: window
+        :param controller: GUI controller
+        """
+
         tk.Frame.__init__(self, parent)
+
+        # Page init
         self.controller = controller
         self.menubar = Menubar(controller)
-        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        # Disables ability to tear menu bar into own window
+        self.controller.option_add('*tearOff', 'FALSE')
         system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
         photo_location = os.path.join(system_logo)
         global logo_img
@@ -47,6 +103,7 @@ class AlgorithmsWindow(tk.Frame):
             text='''Please select the algorithms for which you want to build anomaly detection models.''')
         set_widget_to_left(self.instructions)
 
+        # Page body
         self.anomaly_detection_methods = Checkbar(self,
                                                   picks=load_anomaly_detection_list(),
                                                   editButtons=True,
@@ -67,6 +124,11 @@ class AlgorithmsWindow(tk.Frame):
         set_copyright_configuration(self.copyright)
 
     def reset_widgets(self):
+        """
+        Reset check bar values
+        :return: empty values in the widgets
+        """
+
         for check, button, var in zip(self.anomaly_detection_methods.get_checks(),
                                       self.anomaly_detection_methods.get_buttons(),
                                       self.anomaly_detection_methods.get_vars()):
@@ -76,26 +138,58 @@ class AlgorithmsWindow(tk.Frame):
             check['state'] = 'active'
 
     def show_algorithms_options(self, algorithm_name):
+        """
+        Show the parameters options window
+        :param algorithm_name: input algorithm
+        :return: new window opened
+        """
+
         self.controller.set_current_algorithm_to_edit(algorithm_name)
         self.controller.reinitialize_frame("ParametersOptionsWindow")
 
     def set_algorithm_parameters(self, algorithm_name, algorithm_parameters):
+        """
+        Set updated parameters' values
+        :param algorithm_name: input algorithm
+        :param algorithm_parameters:  parameters to update
+        :return: updated parameters' values for a given algorithm
+        """
+
         self.controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
 
     def remove_algorithm_parameters(self, algorithm_name, algorithm_parameters):
+        """
+        Remove parameters' values
+        :param algorithm_name: input algorithm
+        :param algorithm_parameters: parameters to remove
+        :return: empty values for give parameters
+        """
+
         self.controller.remove_algorithm_parameters(algorithm_name, algorithm_parameters)
 
     def check_algorithm_selected(self):
+        """
+        Validates that any algorithm was selected before continue to next window
+        :return: True if valid, otherwise False
+        """
+
         for check, var in zip(self.anomaly_detection_methods.get_checks(),
                               self.anomaly_detection_methods.get_vars()):
             if var.get():
                 return True
         win32api.MessageBox(0, 'Please select algorithm before the next step.', 'Invalid Algorithm',
                             0x00001000)
+
         return False
 
     def check_algorithm_parameters_edited(self):
+        """
+        Validates that algorithm's parameters was changed before approve save functionality
+        :return: True if valid, otherwise False
+        """
+
         selected_algorithms = self.controller.get_algorithms()
+
         for check, var in zip(self.anomaly_detection_methods.get_checks(),
                               self.anomaly_detection_methods.get_vars()):
             current_algorithm = check.cget("text")
@@ -104,18 +198,35 @@ class AlgorithmsWindow(tk.Frame):
                 win32api.MessageBox(0, 'Please edit algorithm parameters before the next step.', 'Invalid Parameters',
                                     0x00001000)
                 return False
+
         return True
 
     def validate_next_step(self):
+        """
+        Validates that algorithm was selected and the parameters were updated before moving to next window
+        :return: True if valid, otherwise False
+        """
+
         if self.check_algorithm_selected() and self.check_algorithm_parameters_edited():
             return True
+
         return False
 
     def next_window(self):
+        """
+        Handle a click on next button
+        :return: if validations pass move to next window
+        """
+
         if self.validate_next_step():
             self.controller.reinitialize_frame("SimilarityFunctionsWindow")
 
     def set_algorithm_checked(self):
+        """
+        Set each algorithm that was checked by the check button
+        :return: updated input settings
+        """
+
         for check, var in zip(self.anomaly_detection_methods.get_checks(),
                               self.anomaly_detection_methods.get_vars()):
             if not var.get():

@@ -1,5 +1,15 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Results table window which is part of GUI application
+'''
+
 import os
 
 from ipython_genutils.py3compat import xrange
@@ -29,12 +39,42 @@ except ImportError:
 
 
 class ResultsTableWindow(tk.Frame):
+    """
+    A Class used to present a results table permutation by an algorithm and a flight route
+
+    Methods
+    -------
+    reset_widgets()
+            Description | Reset check bar values
+
+    back_window()
+            Description | Handle a click on back button
+
+    reinitialize()
+            Description | Reinitialize frame values and view
+
+    reinitialize_results_table()
+            Description | Reinitialize results table and view
+
+    """
 
     def __init__(self, parent, controller):
+
+        """
+        Parameters
+        ----------
+
+        :param parent: window
+        :param controller: GUI controller
+        """
+
         tk.Frame.__init__(self, parent)
+
+        # Page init
         self.controller = controller
         self.menubar = Menubar(controller)
-        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        # Disables ability to tear menu bar into own window
+        self.controller.option_add('*tearOff', 'FALSE')
         system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
         photo_location = os.path.join(system_logo)
         global logo_img
@@ -45,6 +85,7 @@ class ResultsTableWindow(tk.Frame):
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
 
+        # Page body
         self.results_table = Table(self,
                                    columns=["Metric", "Down attack", "Up attack", "Fore attack", "Random attack"],
                                    column_minwidths=[None, None, None])
@@ -60,17 +101,39 @@ class ResultsTableWindow(tk.Frame):
         set_copyright_configuration(self.copyright)
 
     def reset_widgets(self):
+        """
+        Reset check bar values
+        :return: empty values in the widgets
+        """
+
         pass
 
     def back_window(self):
+        """
+        Handle back button click
+        :return: previous window
+        """
+
         self.controller.reinitialize_frame("ResultsWindow")
 
     def reinitialize(self):
+        """
+         Reinitialize frame values and view
+         :return: new frame view
+         """
+
         self.reinitialize_results_table()
 
     def reinitialize_results_table(self):
+        """
+         Reinitialize results table and view
+         :return: new frame view
+         """
+
         try:
+            # Handle suitable flow
             new_model_running = self.controller.get_new_model_running()
+
             if new_model_running:
                 chosen_algorithms = list(self.controller.get_algorithms())
             else:
@@ -78,6 +141,7 @@ class ResultsTableWindow(tk.Frame):
 
             flight_routes = list(self.controller.get_flight_routes())
 
+            # selected values without transformation to UI components
             selected_algorithm = self.controller.get_results_selected_algorithm()
             selected_flight_route = self.controller.get_results_selected_flight_route()
 
@@ -113,10 +177,13 @@ class ResultsTableWindow(tk.Frame):
             zero_matrix = [[0 for i in xrange(columns)] for i in xrange(rows)]
             self.results_table.set_data(zero_matrix)
 
+            # Set the updated values to the table
             for i, metric in enumerate(data.keys()):
                 attacks_data = data[metric]
                 self.results_table.cell(i, 0, metric.upper())
                 for j, attack in enumerate(attacks_data.keys()):
                     self.results_table.cell(i, j + 1, attacks_data[attack])
+
         except Exception:
+            # Handle error in setting new data in the table
             pass

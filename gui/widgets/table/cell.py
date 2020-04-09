@@ -1,6 +1,15 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
 
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Table cell which is presented in the application
+'''
+
 try:
     from Tkinter import Frame, Label, Message, StringVar
     from Tkconstants import *
@@ -19,4 +28,6 @@ except ImportError:
 
 
 class Cell(Frame):
-    """Base class for cells"""
+    """
+    A Class used as a base class for table cells
+    """

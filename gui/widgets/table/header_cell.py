@@ -1,6 +1,15 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
 
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Table header cell which is presented in the application
+'''
+
 from gui.widgets.table.cell import Cell
 
 try:
@@ -21,8 +30,28 @@ except ImportError:
 
 
 class Header_Cell(Cell):
+    """
+     A Class used as a header cell for a table widget
+
+    """
+
     def __init__(self, master, text, bordercolor=None, borderwidth=1, padx=None, pady=None, background=None,
                  foreground=None, font=None, anchor=CENTER):
+        """
+        Parameters
+        ----------
+
+        :param master: the master of the header cell
+        :param text: the text to present in the header cell
+        :param bordercolor: the color of the border
+        :param borderwidth: the width of the border
+        :param padx: x coordinate padding
+        :param pady: y coordinate padding
+        :param background: background color
+        :param foreground: foreground color
+        :param font: text font
+        :param anchor: anchor
+        """
         Cell.__init__(self,
                       master,
                       background=background,

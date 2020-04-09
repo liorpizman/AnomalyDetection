@@ -1,3 +1,11 @@
+# Anomaly Detection of GPS Spoofing Attacks on UAVs
+# Authors: Lior Pizman & Yehuda Pashay
+# GitHub: https://github.com/liorpizman/AnomalyDetection
+# DataSets: 1. ADS-B dataset 2. simulated data
+# ----------------------------------------------------------------------------------
+# Serialized data used for SVR algorithm
+# ----------------------------------------------------------------------------------
+
 # The values are the text params for each label in SVR frame options
 # Must be: 1st list in current yaml file
 widget_names:

@@ -1,6 +1,15 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
 
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Loading window which is part of GUI application
+'''
+
 import os
 import threading
 
@@ -30,12 +39,48 @@ except ImportError:
 
 
 class LoadingWindow(tk.Frame):
+    """
+    A Class used to be presented while the models are running in the background of the application
+
+    Methods
+    -------
+    reset_widgets()
+            Description | Reset check bar values
+
+    back_window()
+            Description | Handle a click on back button
+
+    stop_model_process()
+            Description | Handle a click on stop button
+
+    reinitialize()
+            Description | Reinitialize frame values and view
+
+    update_clock()
+            Description | Updates the time on the clock
+
+    loading_process()
+            Description | Run chosen models and move to results window
+
+    """
 
     def __init__(self, parent, controller):
+
+        """
+        Parameters
+        ----------
+
+        :param parent: window
+        :param controller: GUI controller
+        """
+
         tk.Frame.__init__(self, parent)
+
+        # Page init
         self.controller = controller
         self.menubar = Menubar(controller)
-        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        # Disables ability to tear menu bar into own window
+        self.controller.option_add('*tearOff', 'FALSE')
         system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
         photo_location = os.path.join(system_logo)
         global logo_img
@@ -51,6 +96,7 @@ class LoadingWindow(tk.Frame):
         self.instructions.configure(text='''Loading model, please wait...''')
         set_widget_to_left(self.instructions)
 
+        # Page body
         loading_gif = LOADING_WINDOW_SETTINGS.get('LOADING_GIF')
         delay_between_frames = LOADING_WINDOW_SETTINGS.get('DELAY_BETWEEN_FRAMES')
 
@@ -80,41 +126,81 @@ class LoadingWindow(tk.Frame):
         self.loading_gif.start()
 
     def reset_widgets(self):
+        """
+        Reset check bar values
+        :return: empty values in the widgets
+        """
+
         pass
 
     def back_window(self):
+        """
+        Handle back button click
+        :return: previous window
+        """
+
         self.controller.reinitialize_frame("SimilarityFunctionsWindow")
 
     def stop_model_process(self):
+        """
+        Handle stop button click
+        :return: freeze state
+        """
+
         self.back_button.configure(state='active')
         self.stop_button.configure(state='disabled')
         try:
             self.model_process_thread.join()
-        except:
+        except Exception:
             pass
 
     def reinitialize(self):
+        """
+        Reinitialize frame values and view
+        :return: new frame view
+        """
+
         self.model_process_thread = threading.Thread(name='model_process', target=self.loading_process)
         self.model_process_thread.start()
         self.start_time = timer()
         self.update_clock()
 
     def update_clock(self):
+        """
+        Updates the time on the clock
+        :return: updated time
+        """
+
         now = timer()
         duration = timedelta(seconds=now - self.start_time)
         self.clock_label.configure(text=strfdelta(duration, '%H:%M:%S'))
         self.controller.after(200, self.update_clock)
 
     def loading_process(self):
+        """
+        Run chosen models and move to results window
+        :return: results window
+        """
+
         self.controller.run_models()
         self.controller.reinitialize_frame("ResultsWindow")
 
 
 class DeltaTemplate(Template):
+    """
+    A class used to create a delta template
+    """
     delimiter = "%"
 
 
 def strfdelta(tdelta, fmt):
+    """
+    Create string structure for the time
+    :param tdelta: time delta
+    :param fmt: format
+    :return: time as a string
+    """
+
     d = {"D": tdelta.days}
     hours, rem = divmod(tdelta.seconds, 3600)
     minutes, seconds = divmod(rem, 60)
@@ -122,4 +208,5 @@ def strfdelta(tdelta, fmt):
     d["M"] = '{:02d}'.format(minutes)
     d["S"] = '{:02d}'.format(seconds)
     t = DeltaTemplate(fmt)
+
     return t.substitute(**d)
