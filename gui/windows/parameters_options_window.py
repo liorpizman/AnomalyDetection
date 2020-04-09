@@ -1,5 +1,15 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Parameters options window which is part of GUI application
+'''
+
 import os
 import win32api
 
@@ -26,12 +36,66 @@ except ImportError:
 
 
 class ParametersOptionsWindow(tk.Frame):
+    """
+    A Class used to show all the parameters for each algorithm in the application
+
+    Methods
+    -------
+    reset_widgets()
+            Description | Reset check bar values
+
+    handle_next_button()
+            Description | Handle a click on next button
+
+    set_algorithm_parameters()
+            Description | Set parameters for each algorithm
+
+    set_users_selected_features()
+            Description | Set the selected features from the test data set
+
+    save_algorithm_parameters()
+            Description | Save the parameters for each algorithm which was chosen
+
+    validate_next_step()
+            Description | Validation before passing to next step
+
+    set_suitable_yaml_file()
+            Description | Set the yaml file according to algorithm name
+
+    reinitialize()
+            Description | Reinitialize frame values and view
+
+    reinitialize_features_columns_options()
+            Description | Reinitialize feature columns values and view
+
+    reinitialize_current_algorithm_options()
+            Description |  Reinitialize algorithm value and view
+
+    get_selected_features()
+            Description | Get selected features by the user
+
+    get_features_columns_options()
+            Description | Get selected data set columns by the user
+
+    """
 
     def __init__(self, parent, controller):
+
+        """
+        Parameters
+        ----------
+
+        :param parent: window
+        :param controller: GUI controller
+        """
+
         tk.Frame.__init__(self, parent)
+
+        # Page init
         self.controller = controller
         self.menubar = Menubar(controller)
-        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        # Disables ability to tear menu bar into own window
+        self.controller.option_add('*tearOff', 'FALSE')
         system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
         photo_location = os.path.join(system_logo)
         global logo_img
@@ -47,6 +111,8 @@ class ParametersOptionsWindow(tk.Frame):
         self.instructions.configure(
             text='''Please select the values for each of the following parameters:''')
         set_widget_to_left(self.instructions)
+
+        # Page body
 
         # Dynamic algorithm options
         self.algorithms_files = load_anomaly_detection_list()
@@ -89,20 +155,51 @@ class ParametersOptionsWindow(tk.Frame):
         set_copyright_configuration(self.copyright)
 
     def reset_widgets(self):
+        """
+        Reset check bar values
+        :return: empty values in the widgets
+        """
+
         pass
 
     def handle_next_button(self):
+        """
+        Handle a click on next button
+        :return: if validations pass move to next window
+        """
+
         algorithm_parameters = self.options_to_show.get_algorithm_parameters()
         selected_features = self.get_selected_features()
         self.save_algorithm_parameters(algorithm_parameters, selected_features)
 
     def set_algorithm_parameters(self, algorithm_name, algorithm_parameters):
+        """
+        Set parameters for each algorithm
+        :param algorithm_name: the name of the algorithm
+        :param algorithm_parameters: the values of the parameteres
+        :return: updates state
+        """
+
         self.controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
 
     def set_users_selected_features(self, algorithm_name, features_list):
+        """
+        Set the selected features from the test data set
+        :param algorithm_name: the name of the current algorithm
+        :param features_list: the list of selected features
+        :return: updates state of features selection
+        """
+
         self.controller.set_users_selected_features(algorithm_name, features_list)
 
     def save_algorithm_parameters(self, algorithm_parameters, features_list):
+        """
+        Save the parameters for each algorithm which was chosen
+        :param algorithm_parameters: new values
+        :param features_list: features list
+        :return: updated state of user choice
+        """
+
         if not self.validate_next_step():
             return
         else:
@@ -112,26 +209,49 @@ class ParametersOptionsWindow(tk.Frame):
             self.controller.show_frame("AlgorithmsWindow")
 
     def validate_next_step(self):
+        """
+        Validation before passing to next step
+        :return: True in case validation passed, otherwise False
+        """
+
         if not self.get_selected_features():
             win32api.MessageBox(0, 'Please select feature for the algorithm before the next step.', 'Invalid Feature',
                                 0x00001000)
             return False
+
         return True
 
     def set_suitable_yaml_file(self, algorithm_name):
+        """
+        Set the yaml file according to algorithm name
+        :param algorithm_name: the name of the algorithm
+        :return: yaml file
+        """
+
         switcher = {
             self.algorithms_files[0]: "lstm_params.yaml",
             self.algorithms_files[1]: "svr_params.yaml",
             self.algorithms_files[2]: "knn_params.yaml",
             self.algorithms_files[3]: "random_forest_params.yaml",
         }
+
         return switcher.get(algorithm_name, None)
 
     def reinitialize(self):
+        """
+        Reinitialize frame values and view
+        :return: new frame view
+        """
+
         self.reinitialize_current_algorithm_options()
         self.reinitialize_features_columns_options()
 
     def reinitialize_features_columns_options(self):
+        """
+        Reinitialize features columns values and view
+        :return: new frame view
+        """
+
         self.features_label = tk.Label(self)
         self.features_label.place(relx=0.6, rely=0.35, height=32, width=100)
         self.features_label.configure(text='''Select features:''')
@@ -151,6 +271,11 @@ class ParametersOptionsWindow(tk.Frame):
         self.features_listbox.place(relx=0.6, rely=0.4, height=200, width=120)
 
     def reinitialize_current_algorithm_options(self):
+        """
+        Reinitialize algorithm value and view
+        :return: new frame view
+        """
+
         self.current_algorithm = self.controller.get_current_algorithm_to_edit()
         self.current_yaml = self.set_suitable_yaml_file(self.current_algorithm)
         self.controller.remove_algorithm(self.current_algorithm)
@@ -160,12 +285,24 @@ class ParametersOptionsWindow(tk.Frame):
         self.options_to_show.place(relx=0.1, rely=0.35, height=268, width=450)
 
     def get_selected_features(self):
+        """
+        Get selected features by the user
+        :return: selected features
+        """
+
         features = []
         selection = self.features_listbox.curselection()
+
         for i in selection:
             selected = self.features_listbox.get(i)
             features.append(selected)
+
         return features
 
     def get_features_columns_options(self):
+        """
+        Get selected data set columns by the user
+        :return: selected columns
+        """
+
         return self.controller.get_features_columns_options()

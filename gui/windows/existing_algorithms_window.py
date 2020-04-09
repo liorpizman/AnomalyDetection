@@ -1,10 +1,19 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Existing algorithms window which is part of GUI application
+'''
+
 import os
 import win32api
 
 from tkinter import END
-from tkinter.ttk import Combobox
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, set_path, clear_text
 from gui.shared.inputs_validation_helper import is_valid_model_paths, is_valid_model_data_file
@@ -27,12 +36,54 @@ except ImportError:
 
 
 class ExistingAlgorithmsWindow(tk.Frame):
+    """
+    A Class used to enable the user load existing machine learning model
+
+    Methods
+    -------
+    reset_widgets()
+            Description | Reset check bar values
+
+    back_window()
+            Description | Handle back button click
+
+    set_input_entry()
+            Description | Set input entry and update the state
+
+    set_algorithm_path()
+            Description | Set the algorithm path in the UI
+
+    next_window()
+            Description |  Handle next button click
+
+    validate_next_step()
+            Description | Validation before approving the move to the next window
+
+    update_selected_algorithms()
+            Description | Updates local variables which algorithms were selected by the user
+
+    set_load_model_parameters()
+            Description | Updates input settings and move to next window
+
+    """
 
     def __init__(self, parent, controller):
+
+        """
+        Parameters
+        ----------
+
+        :param parent: window
+        :param controller: GUI controller
+        """
+
         tk.Frame.__init__(self, parent)
+
+        # Page init
         self.controller = controller
         self.menubar = Menubar(controller)
-        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        # Disables ability to tear menu bar into own window
+        self.controller.option_add('*tearOff', 'FALSE')
         system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
         photo_location = os.path.join(system_logo)
         global logo_img
@@ -49,6 +100,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
             text='''Please insert paths for existing models.''')
         set_widget_to_left(self.instructions)
 
+        # Page body
         self.algorithms = dict()
         self.browse_buttons = dict()
         self.input_entries = dict()
@@ -152,6 +204,11 @@ class ExistingAlgorithmsWindow(tk.Frame):
         set_copyright_configuration(self.copyright)
 
     def reset_widgets(self):
+        """
+        Reset check bar values
+        :return: empty values in the widgets
+        """
+
         widgets = [
             self.lstm_input,
             self.svr_input,
@@ -182,10 +239,22 @@ class ExistingAlgorithmsWindow(tk.Frame):
             check_button['variable'] = var
 
     def back_window(self):
+        """
+        Handle back button click
+        :return: previous window
+        """
+
         self.controller.set_new_model_running(False)
         self.controller.show_frame("MainWindow")
 
     def set_input_entry(self, entry_name, state):
+        """
+        Set input entry and update the state
+        :param entry_name: input's algorithm name
+        :param state: input's state
+        :return: updated input
+        """
+
         if state:
             self.browse_buttons[entry_name]['state'] = 'active'
             self.input_entries[entry_name]['state'] = 'normal'
@@ -197,16 +266,32 @@ class ExistingAlgorithmsWindow(tk.Frame):
             self.algorithms.pop(entry_name, None)
 
     def set_algorithm_path(self, algorithm):
+        """
+        Set the algorithm path in the UI
+        :param algorithm: input algorithm
+        :return: updated state
+        """
+
         self.input_entries[algorithm].delete(0, END)
         path = set_path()
         self.input_entries[algorithm].insert(0, path)
 
     def next_window(self):
+        """
+        Handle next button click
+        :return: if validations pass move to next window
+        """
+
         self.update_selected_algorithms()
         if self.validate_next_step():
             self.set_load_model_parameters()
 
     def validate_next_step(self):
+        """
+        Validation before approving the move to the next window
+        :return:
+        """
+
         if not self.algorithms:
             win32api.MessageBox(0, 'Please select algorithm & path for the model before the next step.',
                                 'Invalid algorithm', 0x00001000)
@@ -215,19 +300,34 @@ class ExistingAlgorithmsWindow(tk.Frame):
         if not is_valid_model_paths(self.algorithms.values()):
             win32api.MessageBox(0, 'At least one of your algorithms paths invalid or not include the required files!',
                                 'Invalid inputs', 0x00001000)
+            return False
+
         if not is_valid_model_data_file(self.algorithms.values()):
             win32api.MessageBox(0,
                                 'At least one of the required data is missing in model_data json file!',
                                 'Missing data', 0x00001000)
             return False
+
         return True
 
     def update_selected_algorithms(self):
+        """
+        Updates local variables which algorithms were selected by the user
+        :return: updated selection
+        """
+
         tmp_algorithms = dict()
+
         for algorithm in self.algorithms:
             tmp_algorithms[algorithm] = self.input_entries[algorithm].get()
+
         self.algorithms = tmp_algorithms
 
     def set_load_model_parameters(self):
+        """
+        Updates input settings and move to next window
+        :return: next window
+        """
+
         self.controller.set_existing_algorithms(self.algorithms)
         self.controller.reinitialize_frame("SimilarityFunctionsWindow")

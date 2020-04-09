@@ -1,5 +1,15 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Load model window which is part of GUI application
+'''
+
 import os
 
 from gui.widgets.menubar import Menubar
@@ -25,12 +35,48 @@ except ImportError:
 
 
 class LoadModel(tk.Frame):
+    """
+    A Class used to get all the paths from the user in order to load existing models
+
+    Methods
+    -------
+    reset_widgets()
+            Description | Reset check bar values
+
+    back_window()
+            Description | Handle a click on back button
+
+    next_window()
+            Description | Handle a click on next button
+
+    set_test_path()
+            Description | Set the test data set path to entry widget
+
+    set_results_path()
+            Description | Set the results path to entry widget
+
+    set_load_model_parameters()
+            Description | Set parameters to load model flow
+
+    """
 
     def __init__(self, parent, controller):
+
+        """
+        Parameters
+        ----------
+
+        :param parent: window
+        :param controller: GUI controller
+        """
+
         tk.Frame.__init__(self, parent)
+
+        # Page init
         self.controller = controller
         self.menubar = Menubar(controller)
-        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        # Disables ability to tear menu bar into own window
+        self.controller.option_add('*tearOff', 'FALSE')
         system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
         photo_location = os.path.join(system_logo)
         global logo_img
@@ -46,6 +92,8 @@ class LoadModel(tk.Frame):
         self.instructions.configure(
             text='''Please insert input files for existing model.''')
         set_widget_to_left(self.instructions)
+
+        # Page body
 
         # Testing input directory
         self.test_label = tk.Label(self)
@@ -87,6 +135,11 @@ class LoadModel(tk.Frame):
         set_copyright_configuration(self.copyright)
 
     def reset_widgets(self):
+        """
+        Reset check bar values
+        :return: empty values in the widgets
+        """
+
         widgets = [
             self.test_input,
             self.results_input
@@ -96,25 +149,50 @@ class LoadModel(tk.Frame):
             clear_text(widget)
 
     def back_window(self):
+        """
+        Handle back button click
+        :return: previous window
+        """
+
         self.controller.set_new_model_running(False)
         self.controller.show_frame("MainWindow")
 
     def next_window(self):
+        """
+        Handle a click on next button
+        :return: if validations pass move to next window
+        """
+
         if load_model_paths_validation(self.test_input.get(), self.results_input.get()):
             self.set_load_model_parameters()
             self.controller.show_frame("ExistingAlgorithmsWindow")
 
     def set_test_path(self):
+        """
+        Set the test data set path to entry widget
+        :return: updated test path
+        """
+
         self.test_input.delete(0, END)
         path = set_path()
         self.test_input.insert(0, path)
 
     def set_results_path(self):
+        """
+        Set the results path to entry widget
+        :return: updated results path
+        """
+
         self.results_input.delete(0, END)
         path = set_path()
         self.results_input.insert(0, path)
 
     def set_load_model_parameters(self):
+        """
+        Set parameters to load model flow
+        :return: updated parameters in load model flow in the system
+        """
+
         self.controller.set_new_model_test_input_path(self.test_input.get())
         self.controller.set_new_model_results_input_path(self.results_input.get())
         self.controller.set_new_model_running(False)

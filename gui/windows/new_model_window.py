@@ -1,5 +1,15 @@
 #! /usr/bin/env python
 #  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+New model window which is part of GUI application
+'''
+
 import os
 
 from gui.widgets.menubar import Menubar
@@ -25,12 +35,51 @@ except ImportError:
 
 
 class NewModel(tk.Frame):
+    """
+    A Class used to get all the paths from the user in order to create new models
+
+    Methods
+    -------
+    reset_widgets()
+            Description | Reset check bar values
+
+    set_input_path()
+            Description | Set the train data set path to entry widget
+
+    set_test_path()
+            Description | Set the test data set path to entry widget
+
+    set_results_path()
+            Description | Set the results path to entry widget
+
+    back_window()
+            Description | Handle a click on back button
+
+    next_window()
+            Description | Handle a click on next button
+
+    set_new_model_parameters()
+            Description | Set parameters to new model flow
+
+    """
 
     def __init__(self, parent, controller):
+
+        """
+        Parameters
+        ----------
+
+        :param parent: window
+        :param controller: GUI controller
+        """
+
         tk.Frame.__init__(self, parent)
+
+        # Page init
         self.controller = controller
         self.menubar = Menubar(controller)
-        self.controller.option_add('*tearOff', 'FALSE')  # Disables ability to tear menu bar into own window
+        # Disables ability to tear menu bar into own window
+        self.controller.option_add('*tearOff', 'FALSE')
         system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
         photo_location = os.path.join(system_logo)
         global logo_img
@@ -46,6 +95,8 @@ class NewModel(tk.Frame):
         self.instructions.configure(
             text='''Please insert 'Mobilicom Ltd' simulated data / ADS-B dataset input files.''')
         set_widget_to_left(self.instructions)
+
+        # Page body
 
         # Training input directory
         self.training_label = tk.Label(self)
@@ -104,6 +155,11 @@ class NewModel(tk.Frame):
         # ------------------------------- end ------------------------------------------------------------------------
 
     def reset_widgets(self):
+        """
+        Reset check bar values
+        :return: empty values in the widgets
+        """
+
         widgets = [
             self.training_input,
             self.test_input,
@@ -114,30 +170,60 @@ class NewModel(tk.Frame):
             clear_text(widget)
 
     def set_input_path(self):
+        """
+        Set the train data set path to entry widget
+        :return: updated train path
+        """
+
         self.training_input.delete(0, END)
         path = set_path()
         self.training_input.insert(0, path)
 
     def set_test_path(self):
+        """
+        Set the test data set path to entry widget
+        :return: updated test path
+        """
+
         self.test_input.delete(0, END)
         path = set_path()
         self.test_input.insert(0, path)
 
     def set_results_path(self):
+        """
+        Set the results path to entry widget
+        :return: updated results path
+        """
+
         self.results_input.delete(0, END)
         path = set_path()
         self.results_input.insert(0, path)
 
     def back_window(self):
+        """
+        Handle back button click
+        :return: previous window
+        """
+
         self.controller.set_new_model_running(False)
         self.controller.show_frame("MainWindow")
 
     def next_window(self):
+        """
+        Handle a click on next button
+        :return: if validations pass move to next window
+        """
+
         if new_model_paths_validation(self.training_input.get(), self.test_input.get(), self.results_input.get()):
             self.set_new_model_parameters()
             self.controller.show_frame("AlgorithmsWindow")
 
     def set_new_model_parameters(self):
+        """
+        Set parameters to new model flow
+        :return: updated parameters in new model flow in the system
+        """
+
         self.controller.set_new_model_training_input_path(self.training_input.get())
         self.controller.set_new_model_test_input_path(self.test_input.get())
         self.controller.set_new_model_results_input_path(self.results_input.get())
