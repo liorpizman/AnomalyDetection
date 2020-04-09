@@ -1,3 +1,11 @@
+# Anomaly Detection of GPS Spoofing Attacks on UAVs
+# Authors: Lior Pizman & Yehuda Pashay
+# GitHub: https://github.com/liorpizman/AnomalyDetection
+# DataSets: 1. ADS-B dataset 2. simulated data
+# ----------------------------------------------------------------------------------
+# Serialized data used for different possible attacks and for different flight routes
+# ----------------------------------------------------------------------------------
+
 FLIGHT_ROUTES:
   - "chicago_to_guadalajara"
   - "mexico_las_veags"

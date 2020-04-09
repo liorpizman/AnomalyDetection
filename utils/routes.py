@@ -1,3 +1,12 @@
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Constants of operating system routes used to handle repeatable values in model controller
+'''
+
 import os
 
 DATA_DIR = "data"

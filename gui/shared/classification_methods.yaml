@@ -11,6 +11,6 @@ feature_selection_methods:
 
 similarity_functions:
   - Cosine similarity
-  - Mahalanubis distance
+  - Mahalanobis distance
   - MSE
   - Euclidean distance
