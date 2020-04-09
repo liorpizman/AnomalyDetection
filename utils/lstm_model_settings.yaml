@@ -1,4 +1,11 @@
-#these flight have corrupted data - "speed" attribute
+# Anomaly Detection of GPS Spoofing Attacks on UAVs
+# Authors: Lior Pizman & Yehuda Pashay
+# GitHub: https://github.com/liorpizman/AnomalyDetection
+# DataSets: 1. ADS-B dataset 2. simulated data
+# ----------------------------------------------------------------------------------
+# Serialized data used for flights that have corrupted data - "speed" attribute
+# ----------------------------------------------------------------------------------
+
 EXCLUDE_FLIGHTS:
   "washington_to_san_francisco":
     - "38.csv"

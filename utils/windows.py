@@ -1,3 +1,12 @@
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Constants of attacks windows' sizes in Automatic dependent surveillance – broadcast (ADS-B) dataset
+'''
+
 # from utils.settings import LSTM_WINDOW_SIZE
 
 windows = {
