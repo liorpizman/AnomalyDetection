@@ -9,6 +9,7 @@ Methods to handle repeatable actions which are done by the model controller
 
 import os
 import shutil
+import warnings
 import numpy as np
 import pandas as pd
 import yaml
@@ -17,6 +18,7 @@ import matplotlib.pyplot as plt
 from numpy import dot
 from numpy.linalg import norm
 from datetime import datetime
+from sklearn.metrics import pairwise
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 from utils.constants import NON_ATTACK_VALUE, ATTACK_VALUE
 
@@ -39,7 +41,19 @@ def cosine_similarity(x, y):
     :return: cosine similarity
     """
 
-    return dot(x, y) / (norm(x) * norm(y))
+    with warnings.catch_warnings():
+
+        warnings.filterwarnings('error')
+
+        try:
+            return 1 - (dot(x, y) / (norm(x) * norm(y)))
+
+        except Warning as e:
+
+            x_transformed = x.reshape(-1, 1).transpose((1, 0))
+            y_transformed = y.reshape(-1, 1).transpose((1, 0))
+
+            return 1 - pairwise.cosine_similarity(x_transformed, y_transformed)[0][0]
 
 
 def euclidean_distance(x, y):
@@ -94,7 +108,7 @@ def anomaly_score(input_vector, output_vector, similarity_function):
 
     # Switch between chosen similarity function by the user
     switcher = {
-        "Cosine similarity": 1 - cosine_similarity(input_vector, output_vector),
+        "Cosine similarity": cosine_similarity(input_vector, output_vector),
         "Euclidean distance": euclidean_distance(input_vector, output_vector),
         "Mahalanobis distance": mahalanobis_distance(input_vector, output_vector),
         "MSE": mse_distance(input_vector, output_vector)
