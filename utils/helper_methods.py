@@ -438,14 +438,13 @@ def plot(data, xlabel, ylabel, title, plot_dir):
     """
     labels = [x for x in range(1, len(data)+1)]
     plt.plot(labels, data)
-    # plt.xlim([1,len(data)])
-    # plt.ylim([0,max(data)])
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
     plt.savefig(f'{plot_dir}/{title}.png')
 
     plt.clf()
+    
     # plt.show()
 
 
@@ -470,5 +469,6 @@ def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title
     plt.hlines(y=threshold, xmin=plt.xlim()[0], xmax=plt.xlim()[1], colors='r')
 
     plt.savefig(f'{plot_dir}/{title}.png')
+
     plt.clf()
     # plt.show()
