@@ -1,3 +1,15 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Random forest train and prediction execution function
+'''
+
 import pickle
 import json
 import pandas as pd
@@ -16,21 +28,25 @@ from collections import defaultdict
 
 def get_random_forest_new_model_parameters():
     """
-    get random forest hyper parameters
-    :return:
+    Get random forest hyper parameters
+    :return:random forest hyper parameters
     """
-    return (random_forest_hyper_parameters.get_n_estimators(),
-            random_forest_hyper_parameters.get_criterion(),
-            random_forest_hyper_parameters.get_max_features(),
-            random_forest_hyper_parameters.get_random_state(),
-            random_forest_hyper_parameters.get_threshold())
+
+    return (
+        random_forest_hyper_parameters.get_n_estimators(),
+        random_forest_hyper_parameters.get_criterion(),
+        random_forest_hyper_parameters.get_max_features(),
+        random_forest_hyper_parameters.get_random_state(),
+        random_forest_hyper_parameters.get_threshold()
+    )
 
 
 def get_random_forest_model(n_estimators, criterion, max_features, random_state):
     """
-    get random forest model
+    Get random forest model
     :return: random forest model
     """
+
     return MultiOutputRegressor(RandomForestRegressor(n_estimators=n_estimators,
                                                       criterion=criterion,
                                                       max_features=max_features,
@@ -39,6 +55,21 @@ def get_random_forest_model(n_estimators, criterion, max_features, random_state)
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
               algorithm_path, threshold, features_list):
+    """
+    Run Random forest model process
+    :param training_data_path: train data set directory path
+    :param test_data_path: test data set directory path
+    :param results_path: results directory path
+    :param similarity_score: chosen similarity functions
+    :param save_model: indicator whether the user want to save the model or not
+    :param new_model_running: indicator whether we are in new model creation flow or not
+    :param algorithm_path: path of existing algorithm
+    :param threshold: saved threshold for load model flow
+    :param features_list:  saved chosen features for load model flow
+    :return:  reported results for Random forest execution
+    """
+
+    # Choose between new model creation flow and load existing model flow
     if new_model_running:
         n_estimators, criterion, max_features, random_state, threshold = get_random_forest_new_model_parameters()
     else:
@@ -52,11 +83,14 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
     create_directories(f'{results_path}/random_forest/{current_time}')
 
+    # Create sub directories for each similarity function
     for similarity in similarity_score:
         create_directories(f'{results_path}/random_forest/{current_time}/{similarity}')
 
+    # Train the model for each flight route
     for flight_route in FLIGHT_ROUTES:
 
+        # Execute training for new model flow
         if new_model_running:
             random_forest_model, scalar, X_train = execute_train(flight_route,
                                                                  training_data_path=training_data_path,
@@ -66,6 +100,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                  random_state=random_state,
                                                                  features_list=features_list)
 
+        # Get results for each similarity function
         for similarity in similarity_score:
             current_results_path = f'{results_path}/random_forest/{current_time}/{similarity}/{flight_route}'
             create_directories(current_results_path)
@@ -93,6 +128,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
     algorithm_name = "Random Forest"
 
+    # Report results for training data to csv files
     for similarity in similarity_score:
         report_results(f'{results_path}/random_forest/{current_time}/{similarity}',
                        test_data_path,
@@ -107,14 +143,28 @@ def execute_train(flight_route,
                   max_features=None,
                   random_state=None,
                   features_list=None):
+    """
+    Execute train function for a specific flight route
+    :param flight_route: current flight route we should train on
+    :param training_data_path: the path of training data directory
+    :param n_estimators: n estimators value
+    :param criterion: criterion variable
+    :param max_features: max amount of features
+    :param random_state: random state value
+    :param features_list: the list of features which the user chose
+    :return: random forest model, normalization scalar, X_train data frame
+    """
+
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
 
     df_train = df_train[features_list]
 
     scalar = MaxAbsScaler()
 
+    # Normalize the data
     X_train = scalar.fit_transform(df_train)
 
+    # Get the model which is created by user's parameters
     random_forest_model = get_random_forest_model(n_estimators=n_estimators,
                                                   criterion=criterion,
                                                   max_features=max_features,
@@ -136,10 +186,28 @@ def execute_predict(flight_route,
                     X_train=None,
                     features_list=None,
                     save_model=False):
+    """
+    Execute predictions function for a specific flight route
+    :param flight_route: current flight route we should train on
+    :param test_data_path: the path of test data directory
+    :param similarity_score: similarity function
+    :param threshold: threshold from the train
+    :param random_forest_model: random forest model
+    :param scalar: normalization scalar
+    :param results_path: the path of results directory
+    :param add_plots: indicator whether to add plots or not
+    :param run_new_model: indicator whether current flow is new model creation or not
+    :param X_train: data frame
+    :param features_list: the list of features which the user chose
+    :param save_model: indicator whether the user want to save the model or not
+    :return: tpr_scores, fpr_scores, delay_scores
+    """
+
     tpr_scores = defaultdict(list)
     fpr_scores = defaultdict(list)
     delay_scores = defaultdict(list)
 
+    # Set a threshold in new model creation flow
     if run_new_model:
         threshold = predict_train_set(random_forest_model,
                                       X_train,
@@ -154,6 +222,7 @@ def execute_predict(flight_route,
     flight_dir = os.path.join(test_data_path, flight_route)
     ATTACKS = get_subdirectories(flight_dir)
 
+    # Iterate over all attacks in order to find anomalies
     for attack in ATTACKS:
         for flight_csv in os.listdir(f'{test_data_path}/{flight_route}/{attack}'):
 
@@ -173,6 +242,7 @@ def execute_predict(flight_route,
             for i, pred in enumerate(X_pred):
                 scores_test.append(anomaly_score(X_test[i], pred, similarity_score))
 
+            # Add plots if the indicator is true
             if add_plots:
                 plot_reconstruction_error_scatter(scores=scores_test,
                                                   labels=Y_test,
@@ -201,19 +271,36 @@ def predict_train_set(random_forest_model,
                       results_path,
                       flight_route,
                       similarity_score):
+    """
+    Execute prediction on the train data set
+    :param random_forest_model: random forest model
+    :param X_train: data frame
+    :param save_model: indicator whether the user want to save the model or not
+    :param add_plots: indicator whether to add plots or not
+    :param threshold: threshold from the train
+    :param features_list: the list of features which the user chose
+    :param results_path: the path of results directory
+    :param flight_route: current flight route we are working on
+    :param similarity_score: similarity function
+    :return: threshold
+    """
+
     X_pred = random_forest_model.predict(X_train)
     scores_train = []
+
     for i, pred in enumerate(X_pred):
         scores_train.append(anomaly_score(X_train[i], pred, similarity_score))
 
     # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
     threshold = get_threshold(scores_train, threshold)
 
+    # Add plots if the indicator is true
     if add_plots:
         plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
                                           plot_dir=results_path,
                                           title=f'Outlier Score Training for {flight_route})')
 
+    # Save created model if the indicator is true
     if save_model:
         data = {}
         data['features'] = features_list
