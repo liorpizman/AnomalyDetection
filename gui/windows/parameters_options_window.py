@@ -137,6 +137,7 @@ class ParametersOptionsWindow(tk.Frame):
         self.features_listbox = tk.Listbox(self,
                                            listvariable=self.csv_features,
                                            selectmode=tk.MULTIPLE,
+                                           exportselection=0,  # Fix : ComboBox clears unrelated ListBox selection
                                            width=120,
                                            height=200)
         self.features_listbox.place(relx=0.6, rely=0.4, height=200, width=120)
@@ -266,6 +267,7 @@ class ParametersOptionsWindow(tk.Frame):
         self.features_listbox = tk.Listbox(self,
                                            listvariable=self.csv_features,
                                            selectmode=tk.MULTIPLE,
+                                           exportselection=0,  # Fix : ComboBox clears unrelated ListBox selection
                                            width=120,
                                            height=150)
         self.features_listbox.place(relx=0.6, rely=0.4, height=200, width=120)
