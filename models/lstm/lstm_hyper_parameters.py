@@ -1,4 +1,22 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+LSTM hyper parameters to reach best LSTM model
+'''
+
+
 class lstm_hyper_parameters:
+
+    """
+    A Class used to hyper LSTM parameters
+    """
+
     # number of training samples to use for encoding and decoding each time for the LSTM
     LSTM_WINDOW_SIZE = None
 
@@ -16,6 +34,84 @@ class lstm_hyper_parameters:
     LSTM_OPTIMIZER = None
 
     LSTM_EPOCHS = None
+
+    """
+    Attributes
+    ----------
+    LSTM_WINDOW_SIZE                              : int
+
+    LSTM_ENCODING_DIMENSION                       : int 
+
+    LSTM_THRESHOLD_FROM_TRAINING_PERCENT          : float
+
+    LSTM_ACTIVATION                               : str
+
+    LSTM_LOSS                                     : str
+
+    LSTM_OPTIMIZER                                : str
+
+    LSTM_EPOCHS                                   : int 
+    
+    Methods
+    -------
+    set_window_size()
+            Description | Set new value for window size
+
+    remove_window_size()
+            Description | Remove current value of window size
+            
+    get_window_size()
+            Description | Get current value of window size
+            
+    set_encoding_dimension()
+            Description | Set new value for encoding dimension 
+            
+    remove_encoding_dimension()
+            Description | Remove current value of encoding dimension 
+            
+    get_encoding_dimension()
+            Description | Get current value of encoding dimension  
+            
+    set_activation()
+            Description | Set new value for activation function
+            
+    remove_activation()
+            Description | Remove current value of activation function
+
+    get_activation()
+            Description | Get current value of activation function
+
+    set_loss()
+            Description | Set new value for loss function
+            
+    remove_loss()
+            Description | Remove current value of loss function
+            
+    set_epochs()
+            Description | Set new value for the epochs variable
+            
+    get_epochs()
+            Description | Get current value of epochs variable
+            
+    get_loss()
+            Description |  Get current value of loss function
+            
+    set_optimizer()
+            Description | Set new value for the optimizer
+            
+    remove_optimizer()
+            Description | Remove current value of optimizer
+            
+    set_threshold()
+            Description | Set new value for the threshold
+            
+    remove_threshold()
+            Description | Remove current value of threshold
+
+    get_threshold()
+            Description | Get current value of threshold
+
+    """
 
     @staticmethod
     def set_window_size(window_size):
