@@ -227,8 +227,8 @@ def is_valid_model_data_file(paths):
                 return False
             required_fields = get_json_required_fields()
             algorithm_json_file = read_json_file(full_file_Path)
-            for field in algorithm_json_file:
-                if field not in required_fields or not algorithm_json_file[field]:
+            for field in required_fields:
+                if field not in algorithm_json_file or not algorithm_json_file[field]:
                     return False
 
     return True
