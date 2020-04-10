@@ -12,6 +12,8 @@ Similarity functions window which is part of GUI application
 
 import os
 
+import win32api
+
 from gui.widgets.checkbox import Checkbar
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import load_similarity_list, CROSS_WINDOWS_SETTINGS
@@ -56,6 +58,9 @@ class SimilarityFunctionsWindow(tk.Frame):
 
     set_saving_model()
             Description | Set indicator whether the user want to save the model or not
+
+    similarity_functions_validation()
+            Description | Validations that at least one similarity function was checked
 
     """
 
@@ -153,8 +158,10 @@ class SimilarityFunctionsWindow(tk.Frame):
         Handle a click on next button
         :return: if validations pass move to next window
         """
-
-        self.controller.reinitialize_frame("LoadingWindow")
+        if self.similarity_functions_validation():
+            self.controller.reinitialize_frame("LoadingWindow")
+        else:
+            win32api.MessageBox(0, 'Please select at least one similarity function', 'Invalid input', 0x00001000)
 
     def back_window(self):
         """
@@ -194,3 +201,15 @@ class SimilarityFunctionsWindow(tk.Frame):
         """
 
         self.controller.set_saving_model(self.save_model_var.get() == 1)
+
+    def similarity_functions_validation(self):
+        """
+        Validations that at least one similarity function was checked
+        :return: True if at least one was checked, otherwise false
+        """
+
+        for var in self.similarity_functions.get_vars():
+            if var.get() != 0:
+                return True
+
+        return False

@@ -236,7 +236,7 @@ def is_valid_model_data_file(paths):
 
 def get_json_required_fields():
     """
-    Get required fiels in JSON file
+    Get required fields in JSON file
     :return: required fields
     """
 
