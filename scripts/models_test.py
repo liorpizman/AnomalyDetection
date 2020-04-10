@@ -1,4 +1,17 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Run test scripts on different machine learning models
+'''
+
 import pandas as pd
+
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import MaxAbsScaler
@@ -7,6 +20,12 @@ from sklearn.ensemble import RandomForestRegressor
 
 
 def run_isolation_forest(file_path):
+    """
+    Run test for Isolation forest model
+    :param file_path: the path of the data set
+    :return: isolation forest prediction
+    """
+
     features_list = ['Direction', 'Speed']
     df_train = pd.read_csv(f'{file_path}/without_anom.csv')
 
@@ -36,6 +55,12 @@ def run_isolation_forest(file_path):
 
 
 def run_logistic_regression(file_path):
+    """
+    Run test for Logistic regression model
+    :param file_path: the path of the data set
+    :return: logistic regression prediction
+    """
+
     df_train = pd.read_csv(f'{file_path}/without_anom.csv')
     features_list = ['Direction', 'Speed']
     df_train = df_train[features_list]
@@ -56,6 +81,12 @@ def run_logistic_regression(file_path):
 
 
 def run_linear_regression(file_path):
+    """
+    Run test for Linear regression model
+    :param file_path: the path of the data set
+    :return: linear regression prediction
+    """
+
     df_train = pd.read_csv(f'{file_path}/without_anom.csv')
     features_list = ['Direction', 'Speed']
     df_train = df_train[features_list]
@@ -78,6 +109,12 @@ def run_linear_regression(file_path):
 
 
 def run_MLP_model(file_path):
+    """
+    Run test for MLP model
+    :param file_path: the path of the data set
+    :return: MLP prediction
+    """
+
     df_train = pd.read_csv(f'{file_path}/without_anom.csv')
     features_list = ['Direction', 'Speed']
     df_train = df_train[features_list]
@@ -95,6 +132,7 @@ def run_MLP_model(file_path):
     multi_pred = model.predict(X_train)
 
 
+# path of the data set in the input
 path = "C:\\Users\\Yehuda Pashay\\Desktop\\fligth_data\\data_set\\train\\chicago_to_guadalajara"
 
 # run_logistic_regression(path)
