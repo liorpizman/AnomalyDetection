@@ -38,39 +38,39 @@ Choose Between two different option:<br/>
 ### First Flow - Create new machine learning model
 
 Insert simulated data / ADS-B data set input files<br/>
-<img height=300 width=320 src="utils/images/new_model/newModelWindow.JPG">
+<img height=350 width=370 src="utils/images/new_model/newModelWindow.JPG">
 
 Select algorithms for which you want to build anomaly detection models<br/>
-<img height=300 width=320 src="utils/images/new_model/algorithmsWindow.JPG">
+<img height=350 width=370 src="utils/images/new_model/algorithmsWindow.JPG">
 
 Select the values for each of the following parameters<br/>
-<img height=300 width=320 src="utils/images/new_model/parametersOptionsWindow.JPG">
+<img height=350 width=370 src="utils/images/new_model/parametersOptionsWindow.JPG">
 
 **See next step under the title: Both Flows - similarity functions step**
 
 ### Second Flow - Load existing machine learning model
 
 Insert input files for existing model<br/>
-<img height=300 width=320 src="utils/images/load_model/loadModelWindow.JPG">
+<img height=350 width=370 src="utils/images/load_model/loadModelWindow.JPG">
 
 Insert paths for existing models<br/>
-<img height=300 width=320 src="utils/images/load_model/existingsAlgorithmsWindow.JPG">
+<img height=350 width=370 src="utils/images/load_model/existingsAlgorithmsWindow.JPG">
 
 **See next step under the title: Both Flows - similarity functions step**
 
 ### Both Flows - similarity functions step
 
 Choose similarity functions from the following options<br/>
-<img height=300 width=320 src="utils/images/shared/similarityOptionsWindow.JPG">
+<img height=350 width=370 src="utils/images/shared/similarityOptionsWindow.JPG">
 
 Loading model, please wait...<br/>
-<img height=300 width=320 src="utils/images/shared/loadingWindow.JPG">
+<img height=350 width=370 src="utils/images/shared/loadingWindow.JPG">
 
 Choose an algorithm and a flight route in order to get the results<br/>
-<img height=300 width=320 src="utils/images/shared/resultsWindow.JPG">
+<img height=350 width=370 src="utils/images/shared/resultsWindow.JPG">
 
 Choose an algorithm and a flight route in order to get the results<br/>
-<img height=300 width=320 src="utils/images/shared/resultsTableWindow.JPG">
+<img height=350 width=370 src="utils/images/shared/resultsTableWindow.JPG">
 
 ## Generated Machine Learning Models 
 
