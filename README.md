@@ -1,5 +1,5 @@
 # Anomaly Detection on UAVs 
-![Anomaly Detection logo](gui/images/anomaly_detection_logo.png)
+<img align="center" src="gui/images/anomaly_detection_logo.png">
 
 System's main goal is to create machine learning models for anomaly detection on UAVs.
 The system allows creation and loading of machine learning models by using dynamic inputs. <br/><br/>
