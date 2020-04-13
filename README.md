@@ -12,7 +12,7 @@ in to order to get the earliest possible detection of GPS spoofing attacks on UA
 
 ### Prerequisites
 
-You should run the command (before run the system) in the console
+You should run the command (before run the system) in the console:
 
 ```
 pip install -r requirements.txt
@@ -21,7 +21,14 @@ pip install -r requirements.txt
 
 ## Getting Started
 
-First, you should clone the project to your local computer.<br/><br/>
+First, you should clone the project to your local environment:
+
+```
+git clone https://github.com/liorpizman/AnomalyDetection.git
+```
+
+<br/>
+
 **1.** Run 'guiController.py' file in order to run the system.<br/>
 **2.** Currently the flow of creating new model is working(load existing model will be available later).<br/>
 **3.** Enter valid inputs for train,test and results directories.<br/>
