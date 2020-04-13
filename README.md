@@ -35,7 +35,7 @@ Run 'guiController.py' file in order to run the system.<br/>
 Choose Between two different option:<br/>
 <img height=300 width=320 src="utils/images/shared/mainWindow.JPG">
 
-#### First Flow - Create new machine learning model
+### First Flow - Create new machine learning model
 
 Insert simulated data / ADS-B data set input files<br/>
 <img height=300 width=320 src="utils/images/new_model/newModelWindow.JPG">
@@ -48,7 +48,7 @@ Select the values for each of the following parameters<br/>
 
 **See next step under the title: Both Flows - similarity functions step**
 
-#### Second Flow - Load existing machine learning model
+### Second Flow - Load existing machine learning model
 
 Insert input files for existing model<br/>
 <img height=300 width=320 src="utils/images/load_model/loadModelWindow.JPG">
@@ -58,7 +58,7 @@ Insert paths for existing models<br/>
 
 **See next step under the title: Both Flows - similarity functions step**
 
-#### Both Flows - similarity functions step
+### Both Flows - similarity functions step
 
 Choose similarity functions from the following options<br/>
 <img height=300 width=320 src="utils/images/shared/similarityOptionsWindow.JPG">
