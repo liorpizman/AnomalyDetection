@@ -3,15 +3,13 @@
     <img src="gui/images/anomaly_detection_logo.png">
 </p>
 
-<p>
 System's main goal is to create machine learning models for anomaly detection on UAVs.
 The system allows creation and loading of machine learning models by using dynamic inputs. <br/><br/>
 Moreover, the system displays different output plots and evaluation metrics which compare between different models and the diagnosis of anomalies which were found.
 Running the system with dynamic parameters will allow us to extract many different machine learning models.
 Comparing them based on different evaluation metrics will lead to obtaining the best machine learning models for anomaly detection.<br/><br/>
 Those models will be used as **a baseline for a real-time & light-weight anomaly detection algorithm based on streaming data from UAV sensors
-in to order to get the earliest possible detection of GPS spoofing attacks on UAV’s**.  
-</p>
+in to order to get the earliest possible detection of GPS spoofing attacks on UAV’s.**
 
 ### Prerequisites
 
