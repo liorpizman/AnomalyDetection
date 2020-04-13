@@ -36,14 +36,55 @@ pip install -r requirements.txt
 
 | Algorithm | Description |
 | -- | -- |
-| LSTM | An artificial recurrent neural network (RNN) architecture used in the field of deep learning |
+| LSTM | An artificial recurrent neural network (RNN) architecture used in the field of deep learning. |
 | SVR | A popular machine learning tool for classification and regression. |
 | Random Forest | Are supervised ensemble-learning models used for classification and regression. |
 | ARIMA | A statistical model for time series forecast and analysis. |
 
-## Python Libraries
+## Train & Test Explained
 
-* [Keras](https://keras.io/) - The Python Deep Learning library.
+| Data Set | Description |
+| -- | -- |
+| Train Set | Records containing sensors' values ​​for non-anomalous drone flights. |
+| Data Set | Records containing sensors' values ​​for flights that have been attacked in various predefined attacks. |
+
+## Attacks - ADS-B Data Sets
+
+| Attack | Description |
+| -- | -- |
+| Up attack | -- |
+| Down attack | -- |
+| Fore attack | -- |
+| Random attack | -- |
+
+## Attacks - Simulated Data Sets
+
+| Attack | Description |
+| -- | -- |
+| Up attack | -- |
+| Down attack | -- |
+| Fore attack | -- |
+| Random attack | -- |
+
+## LSTM - Results Example 
+
+---- to do ----
+
+## SVR - Results Example 
+
+---- to do ----
+
+## Random Forest - Results Example 
+
+---- to do ----
+
+## ARIMA - Results Example 
+
+---- to do ----
+
+## Python Libraries We Used
+
+* [Keras](https://keras.io/) - the Python Deep Learning library.
 * [Scikit-learn](https://scikit-learn.org/) - is an open source machine learning library that supports supervised and unsupervised learning.
 * [statsmodel](https://www.statsmodels.org/) -  is a Python module that provides classes and functions for the estimation of many different statistical models, as well as for conducting statistical tests, and statistical data exploration.
 
