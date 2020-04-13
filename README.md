@@ -21,14 +21,14 @@ pip install -r requirements.txt
 
 ## Getting Started
 
-First, you should clone the project to your local computer.
-**1.** Run 'guiController.py' file in order to run the system.
-**2.** Currently the flow of creating new model is working(load existing model will be available later).
-**3.** Enter valid inputs for train,test and results directories.
-**4.** Choose LSTM and edit the parameters in order to continue to next step in the system (LSTM is working, more algorithms will be available later).
-**5.** Skip the next step (will be available later).
-**6.** Choose cosine similarity function (optional).
-**7.** Run new model.
+First, you should clone the project to your local computer.<br/><br/>
+**1.** Run 'guiController.py' file in order to run the system.<br/>
+**2.** Currently the flow of creating new model is working(load existing model will be available later).<br/>
+**3.** Enter valid inputs for train,test and results directories.<br/>
+**4.** Choose LSTM and edit the parameters in order to continue to next step in the system (LSTM is working, more algorithms will be available later).<br/>
+**5.** Skip the next step (will be available later).<br/>
+**6.** Choose cosine similarity function (optional).<br/>
+**7.** Run new model.<br/>
 
 
 ## Generated Machine Learning Models 
