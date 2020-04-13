@@ -1,4 +1,5 @@
 # Anomaly Detection on UAVs 
+![Anomaly Detection logo](gui/images/anomaly_detection_logo.png)
 
 System's main goal is to create machine learning models for anomaly detection on UAVs.
 The system allows creation and loading of machine learning models by using dynamic inputs. <br/><br/>
@@ -20,13 +21,13 @@ pip install -r requirements.txt
 ## Getting Started
 
 First, you should clone the project to your local computer.
-1. Run 'guiController.py' file in order to run the system.
-2. Currently the flow of creating new model is working(load existing model will be available later).
-3. Enter valid inputs for train,test and results directories.
-4. Choose LSTM and edit the parameters in order to continue to next step in the system (LSTM is working, more algorithms will be available later).
-5. Skip the next step (will be available later).
-6. Choose cosine similarity function (optional).
-7. Run new model.
+**1.** Run 'guiController.py' file in order to run the system.
+**2.** Currently the flow of creating new model is working(load existing model will be available later).
+**3.** Enter valid inputs for train,test and results directories.
+**4.** Choose LSTM and edit the parameters in order to continue to next step in the system (LSTM is working, more algorithms will be available later).
+**5.** Skip the next step (will be available later).
+**6.** Choose cosine similarity function (optional).
+**7.** Run new model.
 
 
 ## Generated Machine Learning Models 
@@ -34,7 +35,7 @@ First, you should clone the project to your local computer.
 * LSTM - Long Short-Term Memory
 * SVR - Support Vector Regression
 * Random Forest
-* ARIMA - Auto-regressive Integrated Moving Average
+* Multivariate Linear Regression
 
 
 | Algorithm | Description |
@@ -42,7 +43,7 @@ First, you should clone the project to your local computer.
 | LSTM | An artificial recurrent neural network (RNN) architecture used in the field of deep learning. |
 | SVR | A popular machine learning tool for classification and regression. |
 | Random Forest | Are supervised ensemble-learning models used for classification and regression. |
-| ARIMA | A statistical model for time series forecast and analysis. |
+| Multivariate Linear Regression | An approach for statistical learning. As the name implies, multivariate regression is a technique that estimates a single regression model with more than one outcome variable. |
 
 ## Train & Test Explained
 
@@ -64,11 +65,10 @@ First, you should clone the project to your local computer.
 
 | Attack | Description |
 | -- | -- |
-| Random velocity attack | Constant height and changing velocity. |
-| Decreasing velocity attack | Constant height and increasing velocity. |
-| Increasing velocity attack | Constant height and decreasing velocity. |
-| Increasing height attack | Constant velocity and increasing height. |
-| Decreasing height attack | Constant velocity and decreasing height. |
+| Constant attack | Constant height and constant velocity. |
+| Changing height attack | Constant height and changing velocity. |
+| Changing velocity attack | Changing height and constant velocity. |
+| Changing attack | Changing height and changing velocity. |
 
 ## LSTM - Results Example 
 
@@ -82,7 +82,7 @@ First, you should clone the project to your local computer.
 
 ---- to do ----
 
-## ARIMA - Results Example 
+## Multivariate Linear Regression - Results Example 
 
 ---- to do ----
 
@@ -97,7 +97,6 @@ First, you should clone the project to your local computer.
 
 * [Keras](https://keras.io/) - the Python Deep Learning library.
 * [Scikit-learn](https://scikit-learn.org/) - is an open source machine learning library that supports supervised and unsupervised learning.
-* [statsmodel](https://www.statsmodels.org/) -  is a Python module that provides classes and functions for the estimation of many different statistical models, as well as for conducting statistical tests, and statistical data exploration.
 
 ## Data Sets
 
