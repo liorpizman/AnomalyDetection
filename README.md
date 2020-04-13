@@ -29,23 +29,48 @@ git clone https://github.com/liorpizman/AnomalyDetection.git
 
 <br/>
 
-Run 'guiController.py' file in order to run the system.
-<img src="utils/images/shared/guiController.JPG"><br/>
+Run 'guiController.py' file in order to run the system.<br/>
+<img src="utils/images/shared/guiController.JPG">
 
-Choose Between two different option:
-<img height=300 width=300 src="utils/images/shared/mainWindow.JPG"><br/>
+Choose Between two different option:<br/>
+<img height=300 width=320 src="utils/images/shared/mainWindow.JPG">
 
-## Create new machine learning model
+#### First Flow - Create new machine learning model
 
-## Load existing machine learning model
+Insert simulated data / ADS-B data set input files<br/>
+<img height=300 width=320 src="utils/images/new_model/newModelWindow.JPG">
 
-**2.** Currently the flow of creating new model is working(load existing model will be available later).<br/>
-**3.** Enter valid inputs for train,test and results directories.<br/>
-**4.** Choose LSTM and edit the parameters in order to continue to next step in the system (LSTM is working, more algorithms will be available later).<br/>
-**5.** Skip the next step (will be available later).<br/>
-**6.** Choose cosine similarity function (optional).<br/>
-**7.** Run new model.<br/>
+Select algorithms for which you want to build anomaly detection models<br/>
+<img height=300 width=320 src="utils/images/new_model/algorithmsWindow.JPG">
 
+Select the values for each of the following parameters<br/>
+<img height=300 width=320 src="utils/images/new_model/parametersOptionsWindow.JPG">
+
+**See next step under the title: Both Flows - similarity functions step**
+
+#### Second Flow - Load existing machine learning model
+
+Insert input files for existing model<br/>
+<img height=300 width=320 src="utils/images/load_model/loadModelWindow.JPG">
+
+Insert paths for existing models<br/>
+<img height=300 width=320 src="utils/images/load_model/existingsAlgorithmsWindow.JPG">
+
+**See next step under the title: Both Flows - similarity functions step**
+
+#### Both Flows - similarity functions step
+
+Choose similarity functions from the following options<br/>
+<img height=300 width=320 src="utils/images/shared/similarityOptionsWindow.JPG">
+
+Loading model, please wait...<br/>
+<img height=300 width=320 src="utils/images/shared/loadingWindow.JPG">
+
+Choose an algorithm and a flight route in order to get the results<br/>
+<img height=300 width=320 src="utils/images/shared/resultsWindow.JPG">
+
+Choose an algorithm and a flight route in order to get the results<br/>
+<img height=300 width=320 src="utils/images/shared/resultsTableWindow.JPG">
 
 ## Generated Machine Learning Models 
 
@@ -61,6 +86,7 @@ Choose Between two different option:
 | SVR | A popular machine learning tool for classification and regression. |
 | Random Forest | Are supervised ensemble-learning models used for classification and regression. |
 | Multivariate Linear Regression | An approach for statistical learning. As the name implies, multivariate regression is a technique that estimates a single regression model with more than one outcome variable. |
+<br/>
 
 ## Train & Test Explained
 
@@ -68,6 +94,7 @@ Choose Between two different option:
 | -- | -- |
 | Train Set | Records containing sensors' values ​​for non-anomalous drone flights. |
 | Test Set | Records containing sensors' values ​​for flights that have been attacked in various predefined attacks. |
+<br/>
 
 ## GPS Spoofing Attacks - ADS-B Data Sets
 
@@ -77,6 +104,7 @@ Choose Between two different option:
 | Down attack | An attempt to raise the drone up and get him out of his real route. |
 | Fore attack | Randomly change sensors’ values. |
 | Random attack | Injection of real sensors’ data from another flight to current flight. |
+<br/>
 
 ## GPS Spoofing Attacks - Simulated Data Sets
 
@@ -86,6 +114,7 @@ Choose Between two different option:
 | Changing height attack | Constant height and changing velocity. |
 | Changing velocity attack | Changing height and constant velocity. |
 | Mixed attack | Changing height and changing velocity. |
+<br/>
 
 ## LSTM - Results Example 
 
