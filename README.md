@@ -29,7 +29,16 @@ git clone https://github.com/liorpizman/AnomalyDetection.git
 
 <br/>
 
-**1.** Run 'guiController.py' file in order to run the system.<br/>
+Run 'guiController.py' file in order to run the system.
+<img src="utils/images/shared/guiController.JPG"><br/>
+
+Choose Between two different option:
+<img height=300 width=300 src="utils/images/shared/mainWindow.JPG"><br/>
+
+## Create new machine learning model
+
+## Load existing machine learning model
+
 **2.** Currently the flow of creating new model is working(load existing model will be available later).<br/>
 **3.** Enter valid inputs for train,test and results directories.<br/>
 **4.** Choose LSTM and edit the parameters in order to continue to next step in the system (LSTM is working, more algorithms will be available later).<br/>
@@ -76,7 +85,7 @@ git clone https://github.com/liorpizman/AnomalyDetection.git
 | Constant attack | Constant height and constant velocity. |
 | Changing height attack | Constant height and changing velocity. |
 | Changing velocity attack | Changing height and constant velocity. |
-| Changing attack | Changing height and changing velocity. |
+| Mixed attack | Changing height and changing velocity. |
 
 ## LSTM - Results Example 
 
