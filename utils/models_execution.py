@@ -162,7 +162,7 @@ class ModelsExecution:
         :return: results after model prediction
         """
 
-        # Run random LSTM function
+        # Run LSTM function
         run_lstm_model(training_data_path,
                        test_data_path,
                        results_path,
@@ -197,7 +197,7 @@ class ModelsExecution:
         :return: results after model prediction
         """
 
-        # Run random SVR function
+        # Run SVR function
         run_svr_model(training_data_path,
                       test_data_path,
                       results_path,

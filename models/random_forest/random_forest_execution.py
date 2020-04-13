@@ -73,8 +73,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     if new_model_running:
         n_estimators, criterion, max_features, random_state, threshold = get_random_forest_new_model_parameters()
     else:
-        # To Do - Load model process
-        # random_forest_model = load_model(algorithm_path)
+        random_forest_model = pickle.load(open(algorithm_path, 'rb'))
         scalar, X_train = None, None
 
     FLIGHT_ROUTES = get_subdirectories(test_data_path)

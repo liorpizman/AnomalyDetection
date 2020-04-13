@@ -172,9 +172,9 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.random_forest_var = tk.IntVar()
         self.random_forest_check_button = tk.Checkbutton(self)
         self.random_forest_check_button.place(relx=0.015, rely=0.65, height=32, width=146)
-        self.random_forest_check_button.configure(text="Random forest",
+        self.random_forest_check_button.configure(text="Random Forest",
                                                   variable=self.random_forest_var,
-                                                  command=lambda: self.set_input_entry("random_forest",
+                                                  command=lambda: self.set_input_entry("Random Forest",
                                                                                        self.random_forest_var.get()))
         set_widget_to_left(self.random_forest_check_button)
 
@@ -182,13 +182,13 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.random_forest_input.place(relx=0.195, rely=0.65, height=25, relwidth=0.624)
         self.random_forest_input.configure(state='disabled')
 
-        self.random_forest_btn = tk.Button(self, command=lambda: self.set_algorithm_path("random_forest"))
+        self.random_forest_btn = tk.Button(self, command=lambda: self.set_algorithm_path("Random Forest"))
         self.random_forest_btn.place(relx=0.833, rely=0.65, height=25, width=60)
         self.random_forest_btn.configure(state='disabled')
         set_button_configuration(self.random_forest_btn, text='''Browse''')
 
-        self.browse_buttons["random_forest"] = self.random_forest_btn
-        self.input_entries["random_forest"] = self.random_forest_input
+        self.browse_buttons["Random Forest"] = self.random_forest_btn
+        self.input_entries["Random Forest"] = self.random_forest_input
 
         # Page footer
         self.next_button = tk.Button(self, command=self.next_window)
