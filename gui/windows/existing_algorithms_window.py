@@ -147,26 +147,27 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.browse_buttons["SVR"] = self.svr_btn
         self.input_entries["SVR"] = self.svr_input
 
-        # KNN existing algorithm
-        self.knn_var = tk.IntVar()
-        self.knn_check_button = tk.Checkbutton(self)
-        self.knn_check_button.place(relx=0.015, rely=0.56, height=32, width=146)
-        self.knn_check_button.configure(text="KNN",
-                                        variable=self.knn_var,
-                                        command=lambda: self.set_input_entry("KNN", self.knn_var.get()))
-        set_widget_to_left(self.knn_check_button)
+        # Linear Regression existing algorithm
+        self.linear_regression_var = tk.IntVar()
+        self.linear_regression_check_button = tk.Checkbutton(self)
+        self.linear_regression_check_button.place(relx=0.015, rely=0.56, height=32, width=146)
+        self.linear_regression_check_button.configure(text="Linear Regression",
+                                                      variable=self.linear_regression_var,
+                                                      command=lambda: self.set_input_entry("Linear Regression",
+                                                                                           self.linear_regression_var.get()))
+        set_widget_to_left(self.linear_regression_check_button)
 
-        self.knn_input = tk.Entry(self)
-        self.knn_input.place(relx=0.195, rely=0.56, height=25, relwidth=0.624)
-        self.knn_input.configure(state='disabled')
+        self.linear_regression_input = tk.Entry(self)
+        self.linear_regression_input.place(relx=0.195, rely=0.56, height=25, relwidth=0.624)
+        self.linear_regression_input.configure(state='disabled')
 
-        self.knn_btn = tk.Button(self, command=lambda: self.set_algorithm_path("KNN"))
-        self.knn_btn.place(relx=0.833, rely=0.56, height=25, width=60)
-        self.knn_btn.configure(state='disabled')
-        set_button_configuration(self.knn_btn, text='''Browse''')
+        self.linear_regression_btn = tk.Button(self, command=lambda: self.set_algorithm_path("Linear Regression"))
+        self.linear_regression_btn.place(relx=0.833, rely=0.56, height=25, width=60)
+        self.linear_regression_btn.configure(state='disabled')
+        set_button_configuration(self.linear_regression_btn, text='''Browse''')
 
-        self.browse_buttons["KNN"] = self.knn_btn
-        self.input_entries["KNN"] = self.knn_input
+        self.browse_buttons["Linear Regression"] = self.linear_regression_btn
+        self.input_entries["Linear Regression"] = self.linear_regression_input
 
         # Random Forest existing algorithm
         self.random_forest_var = tk.IntVar()
@@ -212,21 +213,21 @@ class ExistingAlgorithmsWindow(tk.Frame):
         widgets = [
             self.lstm_input,
             self.svr_input,
-            self.knn_input,
+            self.linear_regression_input,
             self.random_forest_input
         ]
 
         variables = [
             self.lstm_var,
             self.svr_var,
-            self.knn_var,
+            self.linear_regression_var,
             self.random_forest_var
         ]
 
         check_buttons = [
             self.lstm_check_button,
             self.svr_check_button,
-            self.knn_check_button,
+            self.linear_regression_check_button,
             self.random_forest_check_button
         ]
 

@@ -11,6 +11,7 @@ from gui.shared.helper_methods import read_json_file, get_model_path, load_anoma
 from models.lstm.lstm_execution import run_model as run_lstm_model
 from models.svr.svr_execution import run_model as run_svr_model
 from models.random_forest.random_forest_execution import run_model as run_random_forest_model
+from models.linear_regression.linear_regression_execution import run_model as run_linear_regression_model
 from utils.input_settings import InputSettings
 from utils.helper_methods import get_subdirectories
 
@@ -244,6 +245,41 @@ class ModelsExecution:
                                 features_list)
 
     @staticmethod
+    def Linear_Regression_execution(test_data_path,
+                                    results_path,
+                                    similarity_score,
+                                    training_data_path,
+                                    save_model,
+                                    new_model_running,
+                                    algorithm_path,
+                                    threshold,
+                                    features_list):
+        """
+        executes Linear Regression algorithm
+        :param test_data_path: path of test data set directory
+        :param results_path: path of results  directory
+        :param similarity_score: similarity functions
+        :param training_data_path: path of train data set directory
+        :param save_model: Indicator for saving the model or not
+        :param new_model_running: Indicator whether the current flow is new model creation or not
+        :param algorithm_path: path of existing model directory
+        :param threshold: which was calculated in an existing model
+        :param features_list: all the features in the test data set
+        :return: results after model prediction
+        """
+
+        # Run Linear Regression execution function
+        run_linear_regression_model(training_data_path,
+                                    test_data_path,
+                                    results_path,
+                                    similarity_score,
+                                    save_model,
+                                    new_model_running,
+                                    algorithm_path,
+                                    threshold,
+                                    features_list)
+
+    @staticmethod
     def get_algorithm_execution_function(algorithm_name):
         """
         switch to get the execution function for a given algorithm
@@ -257,7 +293,7 @@ class ModelsExecution:
         switcher = {
             algorithms[0]: ModelsExecution.LSTM_execution,
             algorithms[1]: ModelsExecution.SVR_execution,
-            # algorithms[2]: ModelsExecution.KNN_execution,
+            algorithms[2]: ModelsExecution.Linear_Regression_execution,
             algorithms[3]: ModelsExecution.Random_Forest_execution
         }
 
