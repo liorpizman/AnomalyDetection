@@ -46,8 +46,8 @@ class Checkbar(Frame):
     show_SVR_options()
             Description | Callback to open SVR parameters options
 
-    show_KNN_options()
-            Description | Callback to open KNN parameters options
+    show_Linear_Regression_options()
+            Description | Callback to open Linear Regression parameters options
 
     show_Random_Forest_options()
             Description | Callback to open Random forest parameters options
@@ -177,10 +177,10 @@ class Checkbar(Frame):
 
         self.parent.show_algorithms_options(load_anomaly_detection_list()[1])
 
-    def show_KNN_options(self):
+    def show_Linear_Regression_options(self):
         """
-        Callback to open KNN parameters options
-        :return: suitable parameters for KNN algorithm
+        Callback to open Linear Regression parameters options
+        :return: suitable parameters for Linear Regression algorithm
         """
 
         self.parent.show_algorithms_options(load_anomaly_detection_list()[2])
@@ -206,7 +206,7 @@ class Checkbar(Frame):
         switcher = {
             algorithms[0]: self.show_LSTM_options,
             algorithms[1]: self.show_SVR_options,
-            algorithms[2]: self.show_KNN_options,
+            algorithms[2]: self.show_Linear_Regression_options,
             algorithms[3]: self.show_Random_Forest_options
         }
 
