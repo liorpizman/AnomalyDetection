@@ -242,7 +242,7 @@ class NewModel(tk.Frame):
         self.set_permutations(
             training_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\train",
             test_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\test",
-            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\results"
+            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\results\\new_model_results"
         )
 
     def set_permutations(self, training_path, test_path, results_path):

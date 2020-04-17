@@ -15,7 +15,7 @@ import pandas as pd
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import MaxAbsScaler
-from sklearn.linear_model import LogisticRegression, LinearRegression
+from sklearn.linear_model import LogisticRegression, LinearRegression, SGDRegressor
 from sklearn.ensemble import RandomForestRegressor
 
 
@@ -88,7 +88,7 @@ def run_linear_regression(file_path):
     """
 
     df_train = pd.read_csv(f'{file_path}/without_anom.csv')
-    features_list = ['Direction', 'Speed']
+    features_list = ["Direction", "Speed", "Altitude", "lat", "long", "first_dis", "second_dis", "third_dis", "fourth_dis"]
     df_train = df_train[features_list]
 
     scalar = MaxAbsScaler()
@@ -101,11 +101,11 @@ def run_linear_regression(file_path):
     linear_model.fit(X_train, X_train)
     multi_model.fit(X_train, X_train)
 
-    linear_model_params = linear_model.get_params()
-    multi_model_params = multi_model.get_params()
+    linear_model_predict = linear_model.predict(X_train)
+    multi_model_predict = multi_model.predict(X_train)
 
-    print(linear_model_params)
-    print(multi_model_params)
+    print(linear_model_predict)
+    print(multi_model_predict)
 
 
 def run_MLP_model(file_path):
@@ -132,8 +132,33 @@ def run_MLP_model(file_path):
     multi_pred = model.predict(X_train)
 
 
+def run_SGD(file_path):
+    """
+    Run test for Linear regression model
+    :param file_path: the path of the data set
+    :return: linear regression prediction
+    """
+
+    df_train = pd.read_csv(f'{file_path}/without_anom.csv')
+    features_list = ['Direction', 'Speed']
+    df_train = df_train[features_list]
+
+    scalar = MaxAbsScaler()
+
+    X_train = scalar.fit_transform(df_train)
+
+    linear_model = SGDRegressor()
+    multi_model = MultiOutputRegressor(SGDRegressor())
+
+    multi_model.fit(X_train, X_train)
+
+    multi_model_predict = multi_model.predict(X_train)
+
+    print(multi_model_predict)
+
+
 # path of the data set in the input
-path = "C:\\Users\\Yehuda Pashay\\Desktop\\fligth_data\\data_set\\train\\chicago_to_guadalajara"
+path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\train\\chicago_to_guadalajara"
 
 # run_logistic_regression(path)
 run_MLP_model(path)
