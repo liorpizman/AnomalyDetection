@@ -14,6 +14,8 @@ import json
 
 from tkinter.filedialog import askdirectory, askopenfilename
 from gui.shared.constants import *
+from gui.shared.mappers.algorithms import algorithms_mapper
+from gui.shared.mappers.similarity_functions import similarity_functions_mapper
 from gui.widgets_configurations.helper_methods import set_widget_to_left
 
 try:
@@ -147,6 +149,7 @@ def get_model_path(path):
 
     return ""
 
+
 def get_scalar_path(path):
     """
     Get the full path of an existing scalar (pkl file)
@@ -187,7 +190,7 @@ def set_widget_for_param(frame, text, combobox_values, param_key, relative_x, y_
 
         # Create new combo box - possible values for the label
         frame.algorithm_param_combo = ttk.Combobox(frame, state="readonly", values=combobox_values)
-        frame.algorithm_param_combo.place(relx=relative_x + 0.1, rely=y_coordinate, height=25, width=170)
+        frame.algorithm_param_combo.place(relx=relative_x + 0.12, rely=y_coordinate, height=25, width=160)
         frame.algorithm_param_combo.current(0)
         frame.parameters[param_key] = frame.algorithm_param_combo
 
@@ -205,6 +208,19 @@ def trim_unnecessary_chars(text):
     :param text: text with unnecessary characters
     :return: clean text - text without unnecessary characters
     """
+
+    text = text.lower()
+    print(text)
+
+    algorithm = algorithms_mapper(text)
+
+    if algorithm is not None:
+        return algorithm
+
+    similarity_function = similarity_functions_mapper(text)
+
+    if similarity_function is not None:
+        return similarity_function
 
     removed_apostrophe = text.replace("'", "")
     removed_underscore = removed_apostrophe.replace("_", " ")

@@ -338,13 +338,14 @@ def get_current_time():
     return now.strftime("%b-%d-%Y-%H-%M-%S")
 
 
-def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_name, verbose=1):
+def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_name, similarity_function, verbose=1):
     """
     report all the results, according to the algorithm in the input
     :param results_dir_path: the path of results directory
     :param test_data_path: the path of test dataset directory
     :param FLIGHT_ROUTES: names of existing flight routes
     :param algorithm_name: the name of the algorithm that we want to report about
+    :param similarity_function: the similarity function we currently report about
     :param verbose: default = 1 , otherwise = can be changed to 0
     :return: all the reports are saved to suitable csv files
     """
@@ -357,7 +358,13 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
     for flight_route in FLIGHT_ROUTES:
         flight_dir = os.path.join(test_data_path, flight_route)
         ATTACKS = get_subdirectories(flight_dir)
-        results_data[algorithm_name][flight_route] = dict()
+
+        try:
+            results_data[algorithm_name][flight_route]
+        except KeyError:
+            results_data[algorithm_name][flight_route] = dict()
+
+        results_data[algorithm_name][flight_route][similarity_function] = dict()
 
     metrics_list = ['fpr', 'tpr', 'delay']
 
@@ -373,12 +380,12 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
             output = [f'{round(x, 2)}±{round(y, 2)}%' for x, y in zip(mean, std)]
             results.loc[i] = output
 
-            results_data[algorithm_name][flight_route][metric] = dict()
+            results_data[algorithm_name][flight_route][similarity_function][metric] = dict()
 
             # Iterate over all existing attacks in test data set
             for j, attack in enumerate(ATTACKS):
-                results_data[algorithm_name][flight_route][metric][attack] = dict()
-                results_data[algorithm_name][flight_route][metric][attack] = output[j]
+                results_data[algorithm_name][flight_route][similarity_function][metric][attack] = dict()
+                results_data[algorithm_name][flight_route][similarity_function][metric][attack] = output[j]
 
         results.index = FLIGHT_ROUTES
 

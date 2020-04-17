@@ -145,6 +145,20 @@ class AnomalyDetectionGUI(tk.Tk):
             Description | Get a dictionary which includes all the algorithm which were chosen by the user in a load
                           existing models flow
 
+    get_similarity_functions()
+            Description | Get all similarity functions which were chosen by the user
+
+    set_results_selected_similarity_function(similarity_function)
+            Description | Set the variable which indicates which similarity function should be shown in the results
+                          table at this moment
+
+    get_results_selected_similarity_function()
+            Description | Get the variable which indicates which similarity function should be shown in the results
+                          table at this moment
+
+    get_results_metrics_data()
+            Description |  Get the dictionary which includes all the metrics for the current flow
+
     """
 
     def __init__(self, *args, **kwargs):
@@ -312,6 +326,17 @@ class AnomalyDetectionGUI(tk.Tk):
     def get_existing_algorithms(self):
         return self.model_controller.get_existing_algorithms()
 
+    def get_similarity_functions(self):
+        return self.model_controller.get_similarity_functions()
+
+    def set_results_selected_similarity_function(self, similarity_function):
+        self.model_controller.set_results_selected_similarity_function(similarity_function)
+
+    def get_results_selected_similarity_function(self):
+        return self.model_controller.get_results_selected_similarity_function()
+
+    def get_results_metrics_data(self):
+        return self.model_controller.get_results_metrics_data()
 
 # Main loop of the Anomaly Detection application
 if __name__ == "__main__":

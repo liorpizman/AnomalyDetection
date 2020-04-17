@@ -17,6 +17,8 @@ feature_selection_methods:
   - Chi-square test
   - Fisher score
 
+# Note: Be aware! results table window is suitable for those names
+# path: gui/windows/results_table_window.py [line: 181]
 similarity_functions:
   - Cosine similarity
   - Mahalanobis distance
