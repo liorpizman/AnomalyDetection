@@ -49,7 +49,7 @@ Select algorithms for which you want to build anomaly detection models<br/>
 Select the values for each of the following parameters<br/>
 <img height=350 width=370 src="utils/images/new_model/parametersOptionsWindow.JPG">
 
-** See next step under the title: Both Flows - similarity functions step
+-- See next step under the title: Both Flows - similarity functions step
 
 ### Second Flow - Load existing machine learning model
 
