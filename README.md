@@ -59,7 +59,7 @@ Insert input files for existing model<br/>
 Insert paths for existing models<br/>
 <img height=350 width=370 src="utils/images/load_model/existingsAlgorithmsWindow.JPG">
 
-**See next step under the title: Both Flows - similarity functions step**
+** See next step under the title: Both Flows - similarity functions step
 
 ### Both Flows - similarity functions step
 
