@@ -52,7 +52,7 @@ def get_svr_model(kernel, gamma, epsilon):
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
-              algorithm_path, threshold, features_list):
+              algorithm_path, threshold, features_list, scalar_path):
     """
     Run SVR model process
     :param training_data_path: train data set directory path
@@ -64,6 +64,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :param algorithm_path: path of existing algorithm
     :param threshold: saved threshold for load model flow
     :param features_list:  saved chosen features for load model flow
+    :param scalar_path: path of existing scalar directory
     :return:  reported results for SVR execution
     """
 
@@ -72,7 +73,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         kernel, gamma, epsilon, threshold = get_svr_new_model_parameters()
     else:
         svr_model = pickle.load(open(algorithm_path, 'rb'))
-        scalar, X_train = None, None
+        scalar = pickle.load(open(scalar_path, 'rb'))
+        X_train = None
 
     FLIGHT_ROUTES = get_subdirectories(test_data_path)
 
@@ -211,7 +213,8 @@ def execute_predict(flight_route,
                                       features_list,
                                       results_path,
                                       flight_route,
-                                      similarity_score)
+                                      similarity_score,
+                                      scalar)
 
     flight_dir = os.path.join(test_data_path, flight_route)
     ATTACKS = get_subdirectories(flight_dir)
@@ -223,10 +226,6 @@ def execute_predict(flight_route,
             df_test_source = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
             Y_test = df_test_source[[ATTACK_COLUMN]].values
             df_test = df_test_source[features_list]
-
-            if not run_new_model:
-                scalar = MaxAbsScaler()
-                scalar.fit(df_test)
 
             X_test = scalar.transform(df_test)
 
@@ -264,7 +263,8 @@ def predict_train_set(svr_model,
                       features_list,
                       results_path,
                       flight_route,
-                      similarity_score):
+                      similarity_score,
+                      scalar):
     """
     Execute prediction on the train data set
     :param svr_model: SVR model
@@ -276,6 +276,7 @@ def predict_train_set(svr_model,
     :param results_path: the path of results directory
     :param flight_route: current flight route we are working on
     :param similarity_score: similarity function
+    :param scalar: normalization scalar
     :return: threshold
     """
 
@@ -295,9 +296,12 @@ def predict_train_set(svr_model,
         data['threshold'] = threshold
         with open(f'{results_path}/model_data.json', 'w') as outfile:
             json.dump(data, outfile)
-        save_file_path = os.path.join(results_path, flight_route + ".pkl")
-        with open(save_file_path, 'wb') as file:
+        save_model_file_path = os.path.join(results_path, flight_route + "_model.pkl")
+        with open(save_model_file_path, 'wb') as file:
             pickle.dump(svr_model, file)
+        save_scalar_file_path = os.path.join(results_path, flight_route + "_scalar.pkl")
+        with open(save_scalar_file_path, 'wb') as file:
+            pickle.dump(scalar, file)
 
     # Add plots if the indicator is true
     if add_plots:

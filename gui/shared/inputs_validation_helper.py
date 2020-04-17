@@ -201,7 +201,8 @@ def is_valid_model_paths(paths):
             fullPath = os.path.join(path, file)
             if not os.path.isfile(fullPath) or not (
                     file.endswith('.h5')
-                    or file.endswith('.pkl')
+                    or file.endswith('_model.pkl')
+                    or file.endswith('_scalar.pkl')
                     or (file == "model_data.json")
             ):
                 return False

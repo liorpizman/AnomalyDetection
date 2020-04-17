@@ -142,7 +142,22 @@ def get_model_path(path):
     files = os.listdir(path)
 
     for file in files:
-        if file.endswith('.h5') or file.endswith('.pkl'):
+        if file.endswith('.h5') or file.endswith('_model.pkl'):
+            return os.path.join(path, file)
+
+    return ""
+
+def get_scalar_path(path):
+    """
+    Get the full path of an existing scalar (pkl file)
+    :param path: scalar directory path
+    :return: full path of the file
+    """
+
+    files = os.listdir(path)
+
+    for file in files:
+        if file.endswith('.h5') or file.endswith('_scalar.pkl'):
             return os.path.join(path, file)
 
     return ""

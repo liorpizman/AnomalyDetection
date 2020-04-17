@@ -7,7 +7,7 @@ DataSets: 1. ADS-B dataset 2. simulated data
 Switcher between models execution in the system
 '''
 
-from gui.shared.helper_methods import read_json_file, get_model_path, load_anomaly_detection_list
+from gui.shared.helper_methods import read_json_file, get_model_path, load_anomaly_detection_list, get_scalar_path
 from models.lstm.lstm_execution import run_model as run_lstm_model
 from models.svr.svr_execution import run_model as run_svr_model
 from models.random_forest.random_forest_execution import run_model as run_random_forest_model
@@ -120,12 +120,14 @@ class ModelsExecution:
             if new_model_running:
                 algorithm_model_path = None
                 algorithm_features_list = features_list[algorithm]
+                scalar_path = None
             else:
                 algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
                 algorithm_json_file = read_json_file(f'{algorithm_path}/model_data.json')
                 algorithm_features_list = algorithm_json_file['features']
                 threshold = algorithm_json_file['threshold']
                 algorithm_model_path = get_model_path(algorithm_path)
+                scalar_path = get_scalar_path(algorithm_path)
 
             # Dynamic execution for each chosen model
             model_execution_function = ModelsExecution.get_algorithm_execution_function(algorithm)
@@ -137,7 +139,8 @@ class ModelsExecution:
                                      new_model_running,
                                      algorithm_model_path,
                                      threshold,
-                                     algorithm_features_list)
+                                     algorithm_features_list,
+                                     scalar_path)
 
     @staticmethod
     def LSTM_execution(test_data_path,
@@ -148,7 +151,8 @@ class ModelsExecution:
                        new_model_running,
                        algorithm_path,
                        threshold,
-                       features_list):
+                       features_list,
+                       scalar_path):
         """
         executes Long short-term memory algorithm
         :param test_data_path: path of test data set directory
@@ -160,6 +164,7 @@ class ModelsExecution:
         :param algorithm_path: path of existing model directory
         :param threshold: which was calculated in an existing model
         :param features_list: all the features in the test data set
+        :param scalar_path: path of existing scalar directory
         :return: results after model prediction
         """
 
@@ -172,7 +177,8 @@ class ModelsExecution:
                        new_model_running,
                        algorithm_path,
                        threshold,
-                       features_list)
+                       features_list,
+                       scalar_path)
 
     @staticmethod
     def SVR_execution(test_data_path,
@@ -183,7 +189,8 @@ class ModelsExecution:
                       new_model_running,
                       algorithm_path,
                       threshold,
-                      features_list):
+                      features_list,
+                      scalar_path):
         """
         executes Support Vector Regression algorithm
         :param test_data_path: path of test data set directory
@@ -195,6 +202,7 @@ class ModelsExecution:
         :param algorithm_path: path of existing model directory
         :param threshold: which was calculated in an existing model
         :param features_list: all the features in the test data set
+        :param scalar_path: path of existing scalar directory
         :return: results after model prediction
         """
 
@@ -207,7 +215,8 @@ class ModelsExecution:
                       new_model_running,
                       algorithm_path,
                       threshold,
-                      features_list)
+                      features_list,
+                      scalar_path)
 
     @staticmethod
     def Random_Forest_execution(test_data_path,
@@ -218,7 +227,8 @@ class ModelsExecution:
                                 new_model_running,
                                 algorithm_path,
                                 threshold,
-                                features_list):
+                                features_list,
+                                scalar_path):
         """
         executes Random forest algorithm
         :param test_data_path: path of test data set directory
@@ -230,6 +240,7 @@ class ModelsExecution:
         :param algorithm_path: path of existing model directory
         :param threshold: which was calculated in an existing model
         :param features_list: all the features in the test data set
+        :param scalar_path: path of existing scalar directory
         :return: results after model prediction
         """
 
@@ -242,7 +253,8 @@ class ModelsExecution:
                                 new_model_running,
                                 algorithm_path,
                                 threshold,
-                                features_list)
+                                features_list,
+                                scalar_path)
 
     @staticmethod
     def Linear_Regression_execution(test_data_path,
@@ -253,7 +265,8 @@ class ModelsExecution:
                                     new_model_running,
                                     algorithm_path,
                                     threshold,
-                                    features_list):
+                                    features_list,
+                                    scalar_path):
         """
         executes Linear Regression algorithm
         :param test_data_path: path of test data set directory
@@ -265,6 +278,7 @@ class ModelsExecution:
         :param algorithm_path: path of existing model directory
         :param threshold: which was calculated in an existing model
         :param features_list: all the features in the test data set
+        :param scalar_path: path of existing scalar directory
         :return: results after model prediction
         """
 
@@ -277,7 +291,8 @@ class ModelsExecution:
                                     new_model_running,
                                     algorithm_path,
                                     threshold,
-                                    features_list)
+                                    features_list,
+                                    scalar_path)
 
     @staticmethod
     def get_algorithm_execution_function(algorithm_name):
