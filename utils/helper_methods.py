@@ -112,13 +112,14 @@ def anomaly_score(input_vector, output_vector, similarity_function):
 
     # Switch between chosen similarity function by the user
     switcher = {
-        "Cosine similarity": cosine_similarity(input_vector, output_vector),
-        "Euclidean distance": euclidean_distance(input_vector, output_vector),
-        "Mahalanobis distance": mahalanobis_distance(input_vector, output_vector),
-        "MSE": mse_distance(input_vector, output_vector)
+        "Cosine similarity": lambda input_vector, output_vector: cosine_similarity(input_vector, output_vector),
+        "Euclidean distance": lambda input_vector, output_vector: euclidean_distance(input_vector, output_vector),
+        "Mahalanobis distance": lambda input_vector, output_vector: mahalanobis_distance(input_vector, output_vector),
+        "MSE": lambda input_vector, output_vector: mse_distance(input_vector, output_vector)
     }
 
-    return switcher.get(similarity_function, euclidean_distance(input_vector, output_vector))
+    return switcher.get(similarity_function, cosine_similarity(input_vector, output_vector))(input_vector,
+                                                                                             output_vector)
 
 
 def anomaly_score_multi(input_vectors, output_vectors, similarity_function):
