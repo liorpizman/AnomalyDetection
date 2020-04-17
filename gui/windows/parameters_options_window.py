@@ -215,8 +215,10 @@ class ParametersOptionsWindow(tk.Frame):
         :return: True in case validation passed, otherwise False
         """
 
-        if not self.get_selected_features():
-            win32api.MessageBox(0, 'Please select feature for the algorithm before the next step.', 'Invalid Feature',
+        current_features = self.get_selected_features()
+        if not current_features or len(current_features) < 2:
+            win32api.MessageBox(0, 'Please select at least two features for the algorithm before the next step.',
+                                'Invalid Feature',
                                 0x00001000)
             return False
 
