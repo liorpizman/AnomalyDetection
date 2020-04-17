@@ -40,40 +40,43 @@ class InputSettings:
 
     RESULTS_TABLE_ALGORITHM = ""
     RESULTS_TABLE_FLIGHT_ROUTE = ""
+    RESULTS_TABLE_SIMILARITY_FUNCTION = ""
 
     """
     Attributes
     ----------
     
-    TRAINING_DATA_PATH              : str
+    TRAINING_DATA_PATH                   : str
 
-    TEST_DATA_PATH                  : str
+    TEST_DATA_PATH                       : str
             
-    RESULTS_DATA_PATH               : str
+    RESULTS_DATA_PATH                    : str
             
-    ALGORITHMS                      : set
+    ALGORITHMS                           : set
             
-    SIMILARITY_SCORES               : set
+    SIMILARITY_SCORES                    : set
             
-    SAVE_MODEL                      : bool
+    SAVE_MODEL                           : bool
             
-    NEW_MODEL_RUNNING               : bool
+    NEW_MODEL_RUNNING                    : bool
             
-    EXISTING_ALGORITHMS             : dict
+    EXISTING_ALGORITHMS                  : dict
             
-    FEATURES_COLUMNS_OPTIONS        : list
+    FEATURES_COLUMNS_OPTIONS             : list
             
-    USERS_SELECTED_FEATURES         : dict
+    USERS_SELECTED_FEATURES              : dict
             
-    THREADS                         : list
+    THREADS                              : list
             
-    RESULTS_METRICS_DATA            : dict
+    RESULTS_METRICS_DATA                 : dict
             
-    FLIGHT_ROUTES                   : list
+    FLIGHT_ROUTES                        : list
             
-    RESULTS_TABLE_ALGORITHM         : str
+    RESULTS_TABLE_ALGORITHM              : str
             
-    RESULTS_TABLE_FLIGHT_ROUTE      : str
+    RESULTS_TABLE_FLIGHT_ROUTE           : str
+    
+    RESULTS_TABLE_SIMILARITY_FUNCTION    : str
 
     Methods
     -------
@@ -207,6 +210,14 @@ class InputSettings:
             
     reset_input_settings_params()
             Description | Reset all the values of input settings attributes
+            
+    set_results_selected_similarity_function(similarity_function)
+            Description | Set the variable which indicates which similarity function should be shown in the results
+                          table at this moment
+                          
+    get_results_selected_similarity_function()
+            Description | Get the variable which indicates which similarity function should be shown in the results 
+                          table at this moment
 
     """
 
@@ -448,3 +459,11 @@ class InputSettings:
 
         InputSettings.RESULTS_TABLE_ALGORITHM = ""
         InputSettings.RESULTS_TABLE_FLIGHT_ROUTE = ""
+
+    @staticmethod
+    def set_results_selected_similarity_function(similarity_function):
+        InputSettings.RESULTS_TABLE_SIMILARITY_FUNCTION = similarity_function
+
+    @staticmethod
+    def get_results_selected_similarity_function():
+        return InputSettings.RESULTS_TABLE_SIMILARITY_FUNCTION

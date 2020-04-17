@@ -140,10 +140,12 @@ class ResultsTableWindow(tk.Frame):
                 chosen_algorithms = list(self.controller.get_existing_algorithms().keys())
 
             flight_routes = list(self.controller.get_flight_routes())
+            similarity_functions = list(self.controller.get_similarity_functions())
 
-            # selected values without transformation to UI components
+            # selected values with transformation to UI components
             selected_algorithm = self.controller.get_results_selected_algorithm()
             selected_flight_route = self.controller.get_results_selected_flight_route()
+            selected_similarity_function = self.controller.get_results_selected_similarity_function()
 
             original_algorithm = ""
 
@@ -157,17 +159,26 @@ class ResultsTableWindow(tk.Frame):
                 if trim_unnecessary_chars(route).lower() == selected_flight_route.lower():
                     original_flight_route = route
 
-            current_title = 'Results for algorithm: [{0}] and flight route: [{1}]'.format(selected_algorithm,
-                                                                                          selected_flight_route)
+            original_similarity_function = ""
+
+            for similarity_function in similarity_functions:
+                if trim_unnecessary_chars(similarity_function).lower() == selected_similarity_function.lower():
+                    original_similarity_function = similarity_function
+
+            current_title = 'Results for algorithm: [{0}], flight route: [{1}] and similarity function: [{2}] '.format(
+                selected_algorithm,
+                selected_flight_route,
+                selected_similarity_function
+            )
 
             self.instructions = tk.Label(self)
             self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
             self.instructions.configure(text=current_title)
             set_widget_to_left(self.instructions)
 
-            results_data = InputSettings.get_results_metrics_data()
+            results_data = self.controller.get_results_metrics_data()
 
-            data = results_data[original_algorithm][original_flight_route]
+            data = results_data[original_algorithm][original_flight_route][original_similarity_function]
 
             attacks_columns = list(data.values())[0]
 

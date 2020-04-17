@@ -134,7 +134,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         report_results(f'{results_path}/random_forest/{current_time}/{similarity}',
                        test_data_path,
                        FLIGHT_ROUTES,
-                       algorithm_name)
+                       algorithm_name,
+                       similarity)
 
 
 def execute_train(flight_route,

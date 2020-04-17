@@ -84,7 +84,7 @@ class ResultsWindow(tk.Frame):
 
         # Page body
         self.toggle_results_button = tk.Button(self, command=self.toggle_results)
-        self.toggle_results_button.place(relx=0.8, rely=0.4, height=25, width=81)
+        self.toggle_results_button.place(relx=0.67, rely=0.5, height=25, width=81)
         set_button_configuration(self.toggle_results_button, text='''Show results''')
 
         # Page footer
@@ -121,9 +121,11 @@ class ResultsWindow(tk.Frame):
         """
         selected_algorithm = self.parameters['algorithm'].get()
         selected_flight_route = self.parameters['flight_route'].get()
+        selected_similarity_function = self.parameters['similarity_function'].get()
 
         self.controller.set_results_selected_algorithm(selected_algorithm)
         self.controller.set_results_selected_flight_route(selected_flight_route)
+        self.controller.set_results_selected_similarity_function(selected_similarity_function)
 
         self.controller.reinitialize_frame("ResultsTableWindow")
 
@@ -140,9 +142,11 @@ class ResultsWindow(tk.Frame):
             chosen_algorithms = list(self.controller.get_existing_algorithms().keys())
 
         flight_routes = list(self.controller.get_flight_routes())
+        similarity_functions = list(self.controller.get_similarity_functions())
 
         transformed_chosen_algorithms = transform_list(chosen_algorithms)
         transformed_flight_routes = transform_list(flight_routes)
+        transformed_similarity_functions = transform_list(similarity_functions)
 
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
@@ -165,5 +169,13 @@ class ResultsWindow(tk.Frame):
                              text="Flight route:",
                              combobox_values=transformed_flight_routes,
                              param_key="flight_route",
-                             relative_x=0.4,
+                             relative_x=0.45,
                              y_coordinate=0.4)
+
+        # set dynamic pair of label and combo box to select a similarity function
+        set_widget_for_param(frame=self,
+                             text="Similarity:",
+                             combobox_values=transformed_similarity_functions,
+                             param_key="similarity_function",
+                             relative_x=0.05,
+                             y_coordinate=0.45)
