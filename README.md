@@ -49,7 +49,7 @@ Select algorithms for which you want to build anomaly detection models<br/>
 Select the values for each of the following parameters<br/>
 <img height=350 width=370 src="utils/images/new_model/parametersOptionsWindow.JPG">
 
-**See next step under the title: Both Flows - similarity functions step**
+[**See next step under the title: Both Flows - similarity functions step]
 
 ### Second Flow - Load existing machine learning model
 
@@ -157,11 +157,11 @@ Choose an algorithm and a flight route in order to get the results<br/>
 In order to create requirements.txt file we used **pipreqs** package.<br/>
 **pipreqs** - Generate pip requirements.txt file based on imports of any project. (Automatically generate python dependencies)
 
-Why not use pip freeze ? <br/>
-As the github repo of **pipreqs** says:
-
+**Why not use pip freeze ?** <br/>
+As the github repo of **pipreqs** says:<br/>
+[pipreqs Github repo](https://github.com/bndr/pipreqs)<br/>
 1. **pip freeze** saves all packages in the environment including even those that you don't use in your current project.<br/>
-2. **pip freeze** is harmful. Dependencies may be deprecated as our libraries are updated, but will then be left in our requirements.txt file with no good reason, polluting our dependency list.
+2. **pip freeze** is harmful. Dependencies may be deprecated as our libraries are updated, but will then be left in our requirements.txt file with no good reason, polluting our dependency list.<br/>
 See the article [$ pip freeze > requirements.txt considered harmful](https://medium.com/@tomagee/pip-freeze-requirements-txt-considered-harmful-f0bce66cf895) 
 
 ## Built With
