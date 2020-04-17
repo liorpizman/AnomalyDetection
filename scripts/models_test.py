@@ -88,7 +88,8 @@ def run_linear_regression(file_path):
     """
 
     df_train = pd.read_csv(f'{file_path}/without_anom.csv')
-    features_list = ["Direction", "Speed", "Altitude", "lat", "long", "first_dis", "second_dis", "third_dis", "fourth_dis"]
+    features_list = ["Direction", "Speed", "Altitude", "lat", "long", "first_dis", "second_dis", "third_dis",
+                     "fourth_dis"]
     df_train = df_train[features_list]
 
     scalar = MaxAbsScaler()

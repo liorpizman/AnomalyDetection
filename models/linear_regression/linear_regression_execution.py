@@ -15,7 +15,6 @@ import json
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.multioutput import MultiOutputRegressor
-from sklearn.neural_network import MLPRegressor
 
 from models.linear_regression.linear_regression_hyper_parameters import linear_regression_hyper_parameters
 from utils.constants import ATTACK_COLUMN

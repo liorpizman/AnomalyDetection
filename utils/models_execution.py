@@ -7,7 +7,7 @@ DataSets: 1. ADS-B dataset 2. simulated data
 Switcher between models execution in the system
 '''
 
-from gui.shared.helper_methods import read_json_file, get_model_path, load_anomaly_detection_list ,get_scalar_path
+from gui.shared.helper_methods import read_json_file, get_model_path, load_anomaly_detection_list, get_scalar_path
 from models.lstm.lstm_execution import run_model as run_lstm_model
 from models.svr.svr_execution import run_model as run_svr_model
 from models.random_forest.random_forest_execution import run_model as run_random_forest_model

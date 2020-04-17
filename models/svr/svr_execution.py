@@ -76,7 +76,6 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         scalar = pickle.load(open(scalar_path, 'rb'))
         X_train = None
 
-
     FLIGHT_ROUTES = get_subdirectories(test_data_path)
 
     current_time = get_current_time()
