@@ -17,8 +17,9 @@ import matplotlib.pyplot as plt
 
 from numpy import dot
 from numpy.linalg import norm
+from scipy.spatial import distance
 from datetime import datetime
-from sklearn.metrics import pairwise
+from sklearn.metrics import pairwise, mean_squared_error
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 from utils.constants import NON_ATTACK_VALUE, ATTACK_VALUE
 
@@ -72,10 +73,13 @@ def mahalanobis_distance(x, y):
     calculate the mahalanobis distance between 2 given vectors
     :param x: vector
     :param y: vector
-    :return: euclidean distance
+    :return: mahalanobis_distance
     """
 
-    pass
+    v = np.cov(np.array([x, y]).T)
+    iv = np.linalg.pinv(v)
+
+    return distance.mahalanobis(x, y, iv)
 
 
 def mse_distance(x, y):
@@ -83,10 +87,10 @@ def mse_distance(x, y):
     calculate the mse distance between 2 given vectors
     :param x: vector
     :param y: vector
-    :return: euclidean distance
+    :return: mse distance
     """
 
-    pass
+    return mean_squared_error(x, y)
 
 
 def anomaly_score(input_vector, output_vector, similarity_function):
@@ -450,7 +454,7 @@ def plot(data, xlabel, ylabel, title, plot_dir):
     :param plot_dir: the directory we want to save the plot into
     :return: saved plot in a given directory
     """
-    labels = [x for x in range(1, len(data)+1)]
+    labels = [x for x in range(1, len(data) + 1)]
     plt.plot(labels, data)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
@@ -458,7 +462,7 @@ def plot(data, xlabel, ylabel, title, plot_dir):
     plt.savefig(f'{plot_dir}/{title}.png')
 
     plt.clf()
-    
+
     # plt.show()
 
 
