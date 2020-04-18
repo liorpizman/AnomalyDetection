@@ -53,11 +53,11 @@ def get_mlp_model(hidden_layer_sizes, activation, solver, alpha, random_state):
     :return: MLP model
     """
 
-    return MLPRegressor(hidden_layer_sizes=hidden_layer_sizes,
-                        activation=activation,
-                        solver=solver,
-                        alpha=alpha,
-                        random_state=random_state)
+    return MultiOutputRegressor(MLPRegressor(hidden_layer_sizes=hidden_layer_sizes,
+                                             activation=activation,
+                                             solver=solver,
+                                             alpha=alpha,
+                                             random_state=random_state))
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,

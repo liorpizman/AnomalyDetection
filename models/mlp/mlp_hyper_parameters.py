@@ -100,7 +100,7 @@ class mlp_hyper_parameters:
     # Hidden layer sizes parameter
     @staticmethod
     def set_hidden_layer_sizes(hidden_layer_sizes):
-        mlp_hyper_parameters.HIDDEN_LAYER_SIZES = hidden_layer_sizes
+        mlp_hyper_parameters.HIDDEN_LAYER_SIZES = eval(hidden_layer_sizes)
 
     @staticmethod
     def remove_hidden_layer_sizes():
@@ -139,7 +139,7 @@ class mlp_hyper_parameters:
     # Alpha sizes parameter
     @staticmethod
     def set_alpha(alpha):
-        mlp_hyper_parameters.ALPHA = alpha
+        mlp_hyper_parameters.ALPHA = float(alpha)
 
     @staticmethod
     def remove_alpha():
@@ -152,7 +152,7 @@ class mlp_hyper_parameters:
     # Random state sizes parameter
     @staticmethod
     def set_random_state(random_state):
-        mlp_hyper_parameters.RANDOM_STATE = random_state
+        mlp_hyper_parameters.RANDOM_STATE = int(random_state)
 
     @staticmethod
     def remove_random_state():

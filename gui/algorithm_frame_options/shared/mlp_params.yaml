@@ -14,6 +14,7 @@ widget_names:
   - "Solver"
   - "Alpha"
   - "Random state"
+  - "Threshold"
 
 # The values are the keys of the parameters in the helper method file
 # For example: 'frame.parameters[param_key] = frame.algorithm_param_combo'  (param_key is each value in the list)
@@ -25,6 +26,7 @@ widget_param_keys:
   - "solver"
   - "alpha"
   - "random_state"
+  - "threshold"
 
 # All the lists in the bottom represent the values in each combobox which will be displayed.
 # Should be: It is better that the keys of the lists will be informative but they can be every string you want
@@ -65,3 +67,10 @@ mlp_hidden_random_state:
   - 10
   - 15
   - 20
+
+mlp_threshold:
+  - 0.99
+  - 0.98
+  - 0.97
+  - 0.96
+  - 0.95

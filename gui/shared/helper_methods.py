@@ -210,7 +210,6 @@ def trim_unnecessary_chars(text):
     """
 
     text = text.lower()
-    print(text)
 
     algorithm = algorithms_mapper(text)
 
