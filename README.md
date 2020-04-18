@@ -80,7 +80,7 @@ Choose an algorithm and a flight route in order to get the results<br/>
 * LSTM - Long Short-Term Memory
 * SVR - Support Vector Regression
 * Random Forest
-* Multivariate Linear Regression
+* MLP Neural Network
 
 
 | Algorithm | Description |
@@ -88,7 +88,7 @@ Choose an algorithm and a flight route in order to get the results<br/>
 | LSTM | An artificial recurrent neural network (RNN) architecture used in the field of deep learning. |
 | SVR | A popular machine learning tool for classification and regression. |
 | Random Forest | Are supervised ensemble-learning models used for classification and regression. |
-| Multivariate Linear Regression | An approach for statistical learning. As the name implies, multivariate regression is a technique that estimates a single regression model with more than one outcome variable. |
+| MLP Neural Network | Multi-layer Perceptron regressor. This model optimizes the squared-loss using LBFGS or stochastic gradient descent.|
 <br/>
 
 ## Train & Test Explained
@@ -131,7 +131,7 @@ Choose an algorithm and a flight route in order to get the results<br/>
 
 ---- to do ----
 
-## Multivariate Linear Regression - Results Example 
+## MLP Neural Network - Results Example 
 
 ---- to do ----
 

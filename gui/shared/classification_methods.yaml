@@ -9,7 +9,7 @@
 anomaly_detection_methods:
   - LSTM
   - SVR
-  - Linear Regression
+  - MLP
   - Random Forest
 
 feature_selection_methods:

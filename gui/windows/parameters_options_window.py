@@ -234,7 +234,7 @@ class ParametersOptionsWindow(tk.Frame):
         switcher = {
             self.algorithms_files[0]: "lstm_params.yaml",
             self.algorithms_files[1]: "svr_params.yaml",
-            self.algorithms_files[2]: "linear_regression_params.yaml",
+            self.algorithms_files[2]: "mlp_params.yaml",
             self.algorithms_files[3]: "random_forest_params.yaml",
         }
 

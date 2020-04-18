@@ -22,6 +22,7 @@ class random_forest_hyper_parameters:
     RANDOM_STATE = None
     THRESHOLD = None
 
+    DEFAULT_THRESHOLD = 0.99
     """
     Attributes
     ----------
@@ -136,10 +137,13 @@ class random_forest_hyper_parameters:
     def get_random_state():
         return random_forest_hyper_parameters.RANDOM_STATE
 
-    # N estimators parameter
+    # Threshold parameter
     @staticmethod
     def set_threshold(threshold):
-        random_forest_hyper_parameters.THRESHOLD = float(threshold)
+        try:
+            random_forest_hyper_parameters.THRESHOLD = float(threshold)
+        except:
+            random_forest_hyper_parameters.THRESHOLD = random_forest_hyper_parameters.DEFAULT_THRESHOLD
 
     @staticmethod
     def remove_threshold():

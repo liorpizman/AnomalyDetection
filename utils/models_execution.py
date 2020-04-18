@@ -11,7 +11,7 @@ from gui.shared.helper_methods import read_json_file, get_model_path, load_anoma
 from models.lstm.lstm_execution import run_model as run_lstm_model
 from models.svr.svr_execution import run_model as run_svr_model
 from models.random_forest.random_forest_execution import run_model as run_random_forest_model
-from models.linear_regression.linear_regression_execution import run_model as run_linear_regression_model
+from models.mlp.mlp_execution import run_model as run_mlp_model
 from utils.input_settings import InputSettings
 from utils.helper_methods import get_subdirectories
 
@@ -43,6 +43,10 @@ class ModelsExecution:
             Description | Executes Support Vector Regression algorithm
 
     Random_Forest_execution(test_data_path, results_path, similarity_score, training_data_path, save_model,
+                            new_model_running, algorithm_path, threshold, features_list)
+            Description | Executes Random forest algorithm
+
+    MLP_execution_execution(test_data_path, results_path, similarity_score, training_data_path, save_model,
                             new_model_running, algorithm_path, threshold, features_list)
             Description | Executes Random forest algorithm
 
@@ -257,18 +261,18 @@ class ModelsExecution:
                                 scalar_path)
 
     @staticmethod
-    def Linear_Regression_execution(test_data_path,
-                                    results_path,
-                                    similarity_score,
-                                    training_data_path,
-                                    save_model,
-                                    new_model_running,
-                                    algorithm_path,
-                                    threshold,
-                                    features_list,
-                                    scalar_path):
+    def MLP_execution(test_data_path,
+                      results_path,
+                      similarity_score,
+                      training_data_path,
+                      save_model,
+                      new_model_running,
+                      algorithm_path,
+                      threshold,
+                      features_list,
+                      scalar_path):
         """
-        executes Linear Regression algorithm
+        executes MLP algorithm
         :param test_data_path: path of test data set directory
         :param results_path: path of results  directory
         :param similarity_score: similarity functions
@@ -282,17 +286,17 @@ class ModelsExecution:
         :return: results after model prediction
         """
 
-        # Run Linear Regression execution function
-        run_linear_regression_model(training_data_path,
-                                    test_data_path,
-                                    results_path,
-                                    similarity_score,
-                                    save_model,
-                                    new_model_running,
-                                    algorithm_path,
-                                    threshold,
-                                    features_list,
-                                    scalar_path)
+        # Run MLP execution function
+        run_mlp_model(training_data_path,
+                      test_data_path,
+                      results_path,
+                      similarity_score,
+                      save_model,
+                      new_model_running,
+                      algorithm_path,
+                      threshold,
+                      features_list,
+                      scalar_path)
 
     @staticmethod
     def get_algorithm_execution_function(algorithm_name):
@@ -308,7 +312,7 @@ class ModelsExecution:
         switcher = {
             algorithms[0]: ModelsExecution.LSTM_execution,
             algorithms[1]: ModelsExecution.SVR_execution,
-            algorithms[2]: ModelsExecution.Linear_Regression_execution,
+            algorithms[2]: ModelsExecution.MLP_execution,
             algorithms[3]: ModelsExecution.Random_Forest_execution
         }
 

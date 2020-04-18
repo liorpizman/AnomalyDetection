@@ -147,27 +147,27 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.browse_buttons["SVR"] = self.svr_btn
         self.input_entries["SVR"] = self.svr_input
 
-        # Linear Regression existing algorithm
-        self.linear_regression_var = tk.IntVar()
-        self.linear_regression_check_button = tk.Checkbutton(self)
-        self.linear_regression_check_button.place(relx=0.015, rely=0.56, height=32, width=146)
-        self.linear_regression_check_button.configure(text="Linear Regression",
-                                                      variable=self.linear_regression_var,
-                                                      command=lambda: self.set_input_entry("Linear Regression",
-                                                                                           self.linear_regression_var.get()))
-        set_widget_to_left(self.linear_regression_check_button)
+        # MLP existing algorithm
+        self.mlp_var = tk.IntVar()
+        self.mlp_check_button = tk.Checkbutton(self)
+        self.mlp_check_button.place(relx=0.015, rely=0.56, height=32, width=146)
+        self.mlp_check_button.configure(text="MLP",
+                                        variable=self.mlp_var,
+                                        command=lambda: self.set_input_entry("MLP",
+                                                                             self.mlp_var.get()))
+        set_widget_to_left(self.mlp_check_button)
 
-        self.linear_regression_input = tk.Entry(self)
-        self.linear_regression_input.place(relx=0.195, rely=0.56, height=25, relwidth=0.624)
-        self.linear_regression_input.configure(state='disabled')
+        self.mlp_input = tk.Entry(self)
+        self.mlp_input.place(relx=0.195, rely=0.56, height=25, relwidth=0.624)
+        self.mlp_input.configure(state='disabled')
 
-        self.linear_regression_btn = tk.Button(self, command=lambda: self.set_algorithm_path("Linear Regression"))
-        self.linear_regression_btn.place(relx=0.833, rely=0.56, height=25, width=60)
-        self.linear_regression_btn.configure(state='disabled')
-        set_button_configuration(self.linear_regression_btn, text='''Browse''')
+        self.mlp_btn = tk.Button(self, command=lambda: self.set_algorithm_path("MLP"))
+        self.mlp_btn.place(relx=0.833, rely=0.56, height=25, width=60)
+        self.mlp_btn.configure(state='disabled')
+        set_button_configuration(self.mlp_btn, text='''Browse''')
 
-        self.browse_buttons["Linear Regression"] = self.linear_regression_btn
-        self.input_entries["Linear Regression"] = self.linear_regression_input
+        self.browse_buttons["MLP"] = self.mlp_btn
+        self.input_entries["MLP"] = self.mlp_input
 
         # Random Forest existing algorithm
         self.random_forest_var = tk.IntVar()
@@ -213,21 +213,21 @@ class ExistingAlgorithmsWindow(tk.Frame):
         widgets = [
             self.lstm_input,
             self.svr_input,
-            self.linear_regression_input,
+            self.mlp_input,
             self.random_forest_input
         ]
 
         variables = [
             self.lstm_var,
             self.svr_var,
-            self.linear_regression_var,
+            self.mlp_var,
             self.random_forest_var
         ]
 
         check_buttons = [
             self.lstm_check_button,
             self.svr_check_button,
-            self.linear_regression_check_button,
+            self.mlp_check_button,
             self.random_forest_check_button
         ]
 

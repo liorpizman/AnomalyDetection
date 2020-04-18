@@ -7,16 +7,16 @@ Authors: Lior Pizman & Yehuda Pashay
 GitHub: https://github.com/liorpizman/AnomalyDetection
 DataSets: 1. ADS-B dataset 2. simulated data
 ---
-Linear Regression train and prediction execution function
+MLP train and prediction execution function
 '''
 
 import pickle
 import json
 import pandas as pd
-from sklearn.linear_model import LinearRegression
-from sklearn.multioutput import MultiOutputRegressor
 
-from models.linear_regression.linear_regression_hyper_parameters import linear_regression_hyper_parameters
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.neural_network import MLPRegressor
+from models.mlp.mlp_hyper_parameters import mlp_hyper_parameters
 from utils.constants import ATTACK_COLUMN
 from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
@@ -26,31 +26,44 @@ from sklearn.preprocessing import MaxAbsScaler
 from collections import defaultdict
 
 
-def get_linear_regression_new_model_parameters():
+def get_mlp_new_model_parameters():
     """
-    Get Linear Regression hyper parameters
-    :return: Linear Regression hyper parameters
+    Get MLP hyper parameters
+    :return: MLP hyper parameters
     """
 
     return (
-        linear_regression_hyper_parameters.get_fit_intercept(),
-        linear_regression_hyper_parameters.get_threshold()
+        mlp_hyper_parameters.get_hidden_layer_sizes(),
+        mlp_hyper_parameters.get_activation(),
+        mlp_hyper_parameters.get_solver(),
+        mlp_hyper_parameters.get_alpha(),
+        mlp_hyper_parameters.get_random_state(),
+        mlp_hyper_parameters.get_threshold()
     )
 
 
-def get_linear_regression_model(fit_intercept):
+def get_mlp_model(hidden_layer_sizes, activation, solver, alpha, random_state):
     """
-    Get Linear Regression model
-    :return: Linear Regression model
+    Get MLP model
+    :param hidden_layer_sizes: The ith element represents the number of neurons in the ith hidden layer.
+    :param activation: Activation function for the hidden layer.
+    :param solver: The solver for weight optimization.
+    :param alpha: L2 penalty (regularization term) parameter
+    :param random_state: If int, random_state is the seed used by the random number generator
+    :return: MLP model
     """
 
-    return MultiOutputRegressor(LinearRegression(fit_intercept=fit_intercept))
+    return MultiOutputRegressor(MLPRegressor(hidden_layer_sizes=hidden_layer_sizes,
+                                             activation=activation,
+                                             solver=solver,
+                                             alpha=alpha,
+                                             random_state=random_state))
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
               algorithm_path, threshold, features_list, scalar_path):
     """
-    Run Linear Regression model process
+    Run MLP model process
     :param training_data_path: train data set directory path
     :param test_data_path: test data set directory path
     :param results_path: results directory path
@@ -61,14 +74,14 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :param threshold: saved threshold for load model flow
     :param features_list:  saved chosen features for load model flow
     :param scalar_path: path of existing scalar directory
-    :return:  reported results for Linear Regression execution
+    :return:  reported results for MLP execution
     """
 
     # Choose between new model creation flow and load existing model flow
     if new_model_running:
-        fit_intercept, threshold = get_linear_regression_new_model_parameters()
+        hidden_layer_sizes, activation, solver, alpha, random_state, threshold = get_mlp_new_model_parameters()
     else:
-        linear_regression_model = pickle.load(open(algorithm_path, 'rb'))
+        mlp_model = pickle.load(open(algorithm_path, 'rb'))
         scalar = pickle.load(open(scalar_path, 'rb'))
         X_train = None
 
@@ -76,31 +89,35 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
     current_time = get_current_time()
 
-    create_directories(f'{results_path}/Linear Regression/{current_time}')
+    create_directories(f'{results_path}/MLP/{current_time}')
 
     # Create sub directories for each similarity function
     for similarity in similarity_score:
-        create_directories(f'{results_path}/Linear Regression/{current_time}/{similarity}')
+        create_directories(f'{results_path}/MLP/{current_time}/{similarity}')
 
     # Train the model for each flight route
     for flight_route in FLIGHT_ROUTES:
 
         # Execute training for new model flow
         if new_model_running:
-            linear_regression_model, scalar, X_train = execute_train(flight_route,
-                                                                     training_data_path=training_data_path,
-                                                                     fit_intercept=fit_intercept,
-                                                                     features_list=features_list)
+            mlp_model, scalar, X_train = execute_train(flight_route,
+                                                       training_data_path=training_data_path,
+                                                       hidden_layer_sizes=hidden_layer_sizes,
+                                                       activation=activation,
+                                                       solver=solver,
+                                                       alpha=alpha,
+                                                       random_state=random_state,
+                                                       features_list=features_list)
 
         # Get results for each similarity function
         for similarity in similarity_score:
-            current_results_path = f'{results_path}/Linear Regression/{current_time}/{similarity}/{flight_route}'
+            current_results_path = f'{results_path}/mlp/{current_time}/{similarity}/{flight_route}'
             create_directories(current_results_path)
             tpr_scores, fpr_scores, delay_scores = execute_predict(flight_route,
                                                                    test_data_path=test_data_path,
                                                                    similarity_score=similarity,
                                                                    threshold=threshold,
-                                                                   linear_regression_model=linear_regression_model,
+                                                                   mlp_model=mlp_model,
                                                                    scalar=scalar,
                                                                    results_path=current_results_path,
                                                                    add_plots=True,
@@ -118,11 +135,11 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
             df = pd.DataFrame(delay_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_delay.csv', index=False)
 
-    algorithm_name = "Linear Regression"
+    algorithm_name = "MLP"
 
     # Report results for training data to csv files
     for similarity in similarity_score:
-        report_results(f'{results_path}/Linear Regression/{current_time}/{similarity}',
+        report_results(f'{results_path}/MLP/{current_time}/{similarity}',
                        test_data_path,
                        FLIGHT_ROUTES,
                        algorithm_name,
@@ -131,14 +148,23 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
 def execute_train(flight_route,
                   training_data_path=None,
-                  fit_intercept=None,
+                  hidden_layer_sizes=None,
+                  activation=None,
+                  solver=None,
+                  alpha=None,
+                  random_state=None,
                   features_list=None):
     """
     Execute train function for a specific flight route
     :param flight_route: current flight route we should train on
     :param training_data_path: the path of training data directory
-    :param fit_intercept: fit_intercept bool values
-    :return: Linear Regression model, normalization scalar, X_train data frame
+    :param hidden_layer_sizes: The ith element represents the number of neurons in the ith hidden layer.
+    :param activation: Activation function for the hidden layer.
+    :param solver: The solver for weight optimization.
+    :param alpha: L2 penalty (regularization term) parameter.
+    :param random_state: If int, random_state is the seed used by the random number generator
+    :param features_list: list of selected features
+    :return: MLP model, normalization scalar, X_train data frame
     """
 
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
@@ -151,18 +177,22 @@ def execute_train(flight_route,
     X_train = scalar.fit_transform(df_train)
 
     # Get the model which is created by user's parameters
-    linear_regression_model = get_linear_regression_model(fit_intercept=fit_intercept)
+    mlp_model = get_mlp_model(hidden_layer_sizes=hidden_layer_sizes,
+                              activation=activation,
+                              solver=solver,
+                              alpha=alpha,
+                              random_state=random_state)
 
-    linear_regression_model.fit(X_train, X_train)
+    mlp_model.fit(X_train, X_train)
 
-    return linear_regression_model, scalar, X_train
+    return mlp_model, scalar, X_train
 
 
 def execute_predict(flight_route,
                     test_data_path=None,
                     similarity_score=None,
                     threshold=None,
-                    linear_regression_model=None,
+                    mlp_model=None,
                     scalar=None,
                     results_path=None,
                     add_plots=True,
@@ -176,7 +206,7 @@ def execute_predict(flight_route,
     :param test_data_path: the path of test data directory
     :param similarity_score: similarity function
     :param threshold: threshold from the train
-    :param linear_regression_model: Linear Regression model
+    :param mlp_model: MLP model
     :param scalar: normalization scalar
     :param results_path: the path of results directory
     :param add_plots: indicator whether to add plots or not
@@ -193,7 +223,7 @@ def execute_predict(flight_route,
 
     # Set a threshold in new model creation flow
     if run_new_model:
-        threshold = predict_train_set(linear_regression_model,
+        threshold = predict_train_set(mlp_model,
                                       X_train,
                                       save_model,
                                       add_plots,
@@ -217,7 +247,7 @@ def execute_predict(flight_route,
 
             X_test = scalar.transform(df_test)
 
-            X_pred = linear_regression_model.predict(X_test)
+            X_pred = mlp_model.predict(X_test)
 
             scores_test = []
             for i, pred in enumerate(X_pred):
@@ -243,7 +273,7 @@ def execute_predict(flight_route,
     return tpr_scores, fpr_scores, delay_scores
 
 
-def predict_train_set(linear_regression_model,
+def predict_train_set(mlp_model,
                       X_train,
                       save_model,
                       add_plots,
@@ -255,7 +285,7 @@ def predict_train_set(linear_regression_model,
                       scalar):
     """
     Execute prediction on the train data set
-    :param linear_regression_model: Linear Regression model
+    :param mlp_model: MLP model
     :param X_train: data frame
     :param save_model: indicator whether the user want to save the model or not
     :param add_plots: indicator whether to add plots or not
@@ -268,7 +298,7 @@ def predict_train_set(linear_regression_model,
     :return: threshold
     """
 
-    X_pred = linear_regression_model.predict(X_train)
+    X_pred = mlp_model.predict(X_train)
     scores_train = []
 
     for i, pred in enumerate(X_pred):
@@ -286,7 +316,7 @@ def predict_train_set(linear_regression_model,
             json.dump(data, outfile)
         save_model_file_path = os.path.join(results_path, flight_route + "_model.pkl")
         with open(save_model_file_path, 'wb') as file:
-            pickle.dump(linear_regression_model, file)
+            pickle.dump(mlp_model, file)
         save_scalar_file_path = os.path.join(results_path, flight_route + "_scalar.pkl")
         with open(save_scalar_file_path, 'wb') as file:
             pickle.dump(scalar, file)

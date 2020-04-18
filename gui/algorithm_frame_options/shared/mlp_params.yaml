@@ -3,13 +3,17 @@
 # GitHub: https://github.com/liorpizman/AnomalyDetection
 # DataSets: 1. ADS-B dataset 2. simulated data
 # ----------------------------------------------------------------------------------
-# Serialized data used for Linear Regression algorithm
+# Serialized data used for MLP-Regressor algorithm
 # ----------------------------------------------------------------------------------
 
-# The values are the text params for each label in Linear Regression frame options
+# The values are the text params for each label in MLP frame options
 # Must be: 1st list in current yaml file
 widget_names:
-  - "Fit intercept"
+  - "Hidden layer sizes"
+  - "Activation"
+  - "Solver"
+  - "Alpha"
+  - "Random state"
   - "Threshold"
 
 # The values are the keys of the parameters in the helper method file
@@ -17,16 +21,54 @@ widget_names:
 # Moreover, the amount of values here should be same as the amount of values in the list above
 # Must be: 2nd list in current yaml file
 widget_param_keys:
-  - "fit_intercept"
+  - "hidden_layer_sizes"
+  - "activation"
+  - "solver"
+  - "alpha"
+  - "random_state"
   - "threshold"
 
 # All the lists in the bottom represent the values in each combobox which will be displayed.
 # Should be: It is better that the keys of the lists will be informative but they can be every string you want
-linear_regression_fit_intercept:
-  - "True"
-  - "False"
+mlp_hidden_layer_sizes:
+  - (100,)
+  - (35, 35)
+  - (100, 75, 50, 25)
 
-linear_regression_threshold:
+mlp_hidden_activation:
+  - "relu"
+  - "identity"
+  - "logistic"
+  - "tanh"
+
+mlp_hidden_solver:
+  - "adam"
+  - "sgd"
+  - "lbfgs"
+
+mlp_hidden_alpha:
+  - 0.0001
+  - 0.0005
+  - 0.001
+  - 0.005
+  - 0.01
+  - 0.05
+  - 0.1
+  - 0.5
+  - 1
+
+mlp_hidden_random_state:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 10
+  - 15
+  - 20
+
+mlp_threshold:
   - 0.99
   - 0.98
   - 0.97

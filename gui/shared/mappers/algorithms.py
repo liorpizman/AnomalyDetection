@@ -18,7 +18,7 @@ def algorithms_mapper(algorithm):
     switcher = {
         "lstm": "LSTM",
         "svr": "SVR",
-        "linear_regression": "Linear Regression",
+        "mlp": "MLP",
         "random_forest": "Random Forest"
     }
 
