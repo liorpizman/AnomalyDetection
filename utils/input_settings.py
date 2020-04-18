@@ -11,7 +11,7 @@ import os
 import pandas as pd
 
 from gui.shared.helper_methods import load_anomaly_detection_list
-from models.linear_regression.linear_regression_hyper_parameters import linear_regression_hyper_parameters
+from models.mlp.mlp_hyper_parameters import mlp_hyper_parameters
 from models.random_forest.random_forest_hyper_parameters import random_forest_hyper_parameters
 from models.svr.svr_hyper_parameters import svr_hyper_parameters
 from utils.constants import COLUMNS_TO_REMOVE
@@ -180,8 +180,8 @@ class InputSettings:
     set_SVR(algorithm_parameters)
             Description | Set the parameters which were chosen by the user for SVR
             
-    set_Linear_Regression(algorithm_parameters)
-            Description | Set the parameters which were chosen by the user for Linear Regression
+    set_MLP(algorithm_parameters)
+            Description | Set the parameters which were chosen by the user for MLP
             
     get_algorithm_set_function(algorithm_name)
             Description | Switch to get the set function for a given algorithm
@@ -393,13 +393,13 @@ class InputSettings:
             svr_setting_function(algorithm_parameters[param])
 
     @staticmethod
-    def set_Linear_Regression(algorithm_parameters):
-        InputSettings.ALGORITHMS.add("Linear Regression")
+    def set_MLP(algorithm_parameters):
+        InputSettings.ALGORITHMS.add("MLP")
 
-        # Iterate over all parameters for Linear Regression algorithm
+        # Iterate over all parameters for MLP algorithm
         for param in algorithm_parameters:
-            linear_regression_setting_function = getattr(linear_regression_hyper_parameters, "set_" + param)
-            linear_regression_setting_function(algorithm_parameters[param])
+            mlp_setting_function = getattr(mlp_hyper_parameters, "set_" + param)
+            mlp_setting_function(algorithm_parameters[param])
 
     @staticmethod
     def get_algorithm_set_function(algorithm_name):
@@ -409,7 +409,7 @@ class InputSettings:
         switcher = {
             algorithms[0]: InputSettings.set_LSTM,
             algorithms[1]: InputSettings.set_SVR,
-            algorithms[2]: InputSettings.set_Linear_Regression,
+            algorithms[2]: InputSettings.set_MLP,
             algorithms[3]: InputSettings.set_Random_Forest
         }
 

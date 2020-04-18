@@ -20,6 +20,7 @@ class svr_hyper_parameters:
     GAMMA = None
     EPSILON = None
     THRESHOLD = None
+
     DEFAULT_EPSILON = 0.1
     DEFAULT_THRESHOLD = 0.99
 
