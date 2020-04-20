@@ -85,7 +85,7 @@ class Table(Frame):
 
     def __init__(self, master, columns, column_weights=None, column_minwidths=None, height=None, minwidth=20,
                  minheight=20, padx=5, pady=5, cell_font=None, cell_foreground="black", cell_background="white",
-                 cell_anchor=W, header_font=None, header_background="white", header_foreground="black",
+                 cell_anchor=CENTER, header_font=None, header_background="white", header_foreground="black",
                  header_anchor=CENTER, bordercolor="#999999", innerborder=True, outerborder=True,
                  stripped_rows=("#EEEEEE", "white"), on_change_data=None):
         """

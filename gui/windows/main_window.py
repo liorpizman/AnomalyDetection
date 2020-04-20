@@ -74,7 +74,7 @@ class MainWindow(tk.Frame):
         self.controller.minsize(700, 550)
         self.controller.maxsize(700, 550)
         self.controller.resizable(1, 1)
-        self.controller.title("Anomaly Detection Classifier")
+        self.controller.title("Anomaly Detection System")
         self.controller.configure(background="#eeeeee")
 
         # Page header
