@@ -19,7 +19,7 @@ from numpy import dot
 from numpy.linalg import norm
 from scipy.spatial import distance
 from datetime import datetime
-from sklearn.metrics import pairwise, mean_squared_error
+from sklearn.metrics import pairwise, mean_squared_error, roc_curve, auc
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 from utils.constants import NON_ATTACK_VALUE, ATTACK_VALUE
 
@@ -224,13 +224,13 @@ def get_thresholds(list_scores, percent):
 
 def get_method_scores(prediction, run_new_model, attack_start, attack_end, add_window_size=False):
     """
-    get previous method scores (TPR, FPR, delay)
+    get previous method scores (tpr, fpr, accuracy, detection delay)
     :param prediction: predictions
     :param run_new_model: Indicator whether the current flow is new model creation or not
     :param attack_start: Index for the first attack raw
     :param attack_end: Index for the last attack raw
     :param add_window_size: Indicator whether to add a window size or not
-    :return:  TPR, FPR, delay
+    :return: tpr, fpr, accuracy, detection delay
     """
 
     fp = 0
@@ -255,35 +255,42 @@ def get_method_scores(prediction, run_new_model, attack_start, attack_end, add_w
     # Proceed the raws without the attack
     for i in range(lower):
         if prediction[i] == 1:
-            fp += 1
+            fp += 1  # Non-anomalous record was classified as a record with anomaly (False Positive)
         else:
-            tn += 1
+            tn += 1  # Non-anomalous record was classified as a record without anomaly (True Negative)
 
     # Proceed the raws that include the attack
     for i in range(lower, upper):
         if prediction[i] == 1:
-            tp += 1
+            tp += 1  # Anomalous record was classified as a record with anomaly (True Positive)
             if not was_detected:
                 was_detected = True
+                # Calculate Detection Delay
                 detection_delay = i - lower
         else:
-            fn += 1
+            fn += 1  # Anomalous record was classified as a record without anomaly (False Negative)
 
     # Proceed rest of the raws without the attack
     for i in range(upper, len(prediction)):
         if prediction[i] == 1:
-            fp += 1
+            fp += 1  # Non-anomalous record was classified as a record with anomaly (False Positive)
         else:
-            tn += 1
+            tn += 1  # Non-anomalous record was classified as a record without anomaly (True Negative)
 
     # In case the attack was not detected
     if not was_detected:
         detection_delay = upper - lower
 
+    # Calculate True Positive Rate (Sensitivity/ Recall / Hit-Rate)
     tpr = tp / (tp + fn)
+
+    # Calculate False Positive Rate (Fall-Out)
     fpr = fp / (fp + tn)
 
-    return tpr, fpr, detection_delay
+    # Calculate Accuracy
+    acc = (tp + tn) / (tp + tn + fp + fn)
+
+    return tpr, fpr, acc, detection_delay
 
 
 def get_attack_boundaries(df_label):
@@ -366,7 +373,7 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
 
         results_data[algorithm_name][flight_route][similarity_function] = dict()
 
-    metrics_list = ['fpr', 'tpr', 'delay']
+    metrics_list = ['fpr', 'tpr', 'acc', 'delay']
 
     for metric in metrics_list:
 
@@ -474,7 +481,7 @@ def plot(data, xlabel, ylabel, title, plot_dir):
     # plt.show()
 
 
-def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title="Outlier Score - After Training", ):
+def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title="Outlier Score - After Training"):
     """
     plot reconstruction error as a scatter plot and save it to a given directory
     :param scores: input scores
@@ -493,6 +500,35 @@ def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title
     plt.title(title)
 
     plt.hlines(y=threshold, xmin=plt.xlim()[0], xmax=plt.xlim()[1], colors='r')
+
+    plt.savefig(f'{plot_dir}/{title}.png')
+
+    plt.clf()
+    # plt.show()
+
+
+def plot_roc(y_true, y_pred, plot_dir, title="ROC Curve"):
+    """
+    plot roc curve by computing Area Under the Curve (AUC) using the trapezoidal rule
+    :param y_true: ground truth
+    :param y_pred: predictions
+    :param plot_dir: the directory we want to save the plot into
+    :param title: title of the plot
+    :return:
+    """
+
+    true = y_true.reshape(-1, 1).transpose(1, 0)[0]
+    pred = np.array(y_pred)
+
+    fpr, tpr, _ = roc_curve(true, pred)
+    auc_score = auc(fpr, tpr)
+
+    plt.figure(figsize=(7, 6))
+    plt.plot(fpr, tpr, color='blue', label='ROC (AUC = %0.4f)' % auc_score)
+    plt.legend(loc='lower right')
+    plt.title(title)
+    plt.xlabel("FPR")
+    plt.ylabel("TPR")
 
     plt.savefig(f'{plot_dir}/{title}.png')
 
