@@ -84,7 +84,7 @@ class ResultsWindow(tk.Frame):
 
         # Page body
         self.toggle_results_button = tk.Button(self, command=self.toggle_results)
-        self.toggle_results_button.place(relx=0.67, rely=0.5, height=25, width=81)
+        self.toggle_results_button.place(relx=0.678, rely=0.5, height=25, width=81)
         set_button_configuration(self.toggle_results_button, text='''Show results''')
 
         # Page footer

@@ -21,7 +21,7 @@ from utils.constants import ATTACK_COLUMN
 from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
     create_directories, get_current_time, \
-    plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score
+    plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score, plot_roc
 from sklearn.preprocessing import MaxAbsScaler
 from collections import defaultdict
 
@@ -105,24 +105,27 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         for similarity in similarity_score:
             current_results_path = f'{results_path}/random_forest/{current_time}/{similarity}/{flight_route}'
             create_directories(current_results_path)
-            tpr_scores, fpr_scores, delay_scores = execute_predict(flight_route,
-                                                                   test_data_path=test_data_path,
-                                                                   similarity_score=similarity,
-                                                                   threshold=threshold,
-                                                                   random_forest_model=random_forest_model,
-                                                                   scalar=scalar,
-                                                                   results_path=current_results_path,
-                                                                   add_plots=True,
-                                                                   run_new_model=new_model_running,
-                                                                   X_train=X_train,
-                                                                   features_list=features_list,
-                                                                   save_model=save_model)
+            tpr_scores, fpr_scores, acc_scores, delay_scores = execute_predict(flight_route,
+                                                                               test_data_path=test_data_path,
+                                                                               similarity_score=similarity,
+                                                                               threshold=threshold,
+                                                                               random_forest_model=random_forest_model,
+                                                                               scalar=scalar,
+                                                                               results_path=current_results_path,
+                                                                               add_plots=True,
+                                                                               run_new_model=new_model_running,
+                                                                               X_train=X_train,
+                                                                               features_list=features_list,
+                                                                               save_model=save_model)
 
             df = pd.DataFrame(tpr_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_tpr.csv', index=False)
 
             df = pd.DataFrame(fpr_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_fpr.csv', index=False)
+
+            df = pd.DataFrame(acc_scores)
+            df.to_csv(f'{current_results_path}/{flight_route}_acc.csv', index=False)
 
             df = pd.DataFrame(delay_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_delay.csv', index=False)
@@ -202,11 +205,12 @@ def execute_predict(flight_route,
     :param X_train: data frame
     :param features_list: the list of features which the user chose
     :param save_model: indicator whether the user want to save the model or not
-    :return: tpr_scores, fpr_scores, delay_scores
+    :return: tpr scores, fpr scores, acc scores, delay scores
     """
 
     tpr_scores = defaultdict(list)
     fpr_scores = defaultdict(list)
+    acc_scores = defaultdict(list)
     delay_scores = defaultdict(list)
 
     # Set a threshold in new model creation flow
@@ -241,14 +245,20 @@ def execute_predict(flight_route,
             for i, pred in enumerate(X_pred):
                 scores_test.append(anomaly_score(X_test[i], pred, similarity_score))
 
-            # Add plots if the indicator is true
+            # Add reconstruction error scatter if plots indicator is true
             if add_plots:
                 plot_reconstruction_error_scatter(scores=scores_test,
                                                   labels=Y_test,
                                                   threshold=threshold,
                                                   plot_dir=results_path,
                                                   title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
+
             predictions = [1 if x >= threshold else 0 for x in scores_test]
+
+            # Add roc curve if plots indicator is true
+            if add_plots:
+                pass
+                # plot_roc(y_true=Y_test,y_pred=predictions, plot_dir=results_path,title=f'ROC Curve - {flight_csv} in {flight_route}({attack})')
 
             attack_start, attack_end = get_attack_boundaries(df_test_source[ATTACK_COLUMN])
 
@@ -256,9 +266,10 @@ def execute_predict(flight_route,
 
             tpr_scores[attack].append(method_scores[0])
             fpr_scores[attack].append(method_scores[1])
-            delay_scores[attack].append(method_scores[2])
+            acc_scores[attack].append(method_scores[2])
+            delay_scores[attack].append(method_scores[3])
 
-    return tpr_scores, fpr_scores, delay_scores
+    return tpr_scores, fpr_scores, acc_scores, delay_scores
 
 
 def predict_train_set(random_forest_model,
@@ -319,6 +330,6 @@ def predict_train_set(random_forest_model,
         if add_plots:
             plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
                                               plot_dir=results_path,
-                                              title=f'Outlier Score Training for {flight_route})')
+                                              title=f'Outlier Score Training for {flight_route}')
 
     return threshold
