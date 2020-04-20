@@ -9,12 +9,14 @@ DataSets: 1. ADS-B dataset 2. simulated data
 ---
 Script to create train set data for different routes by the simulator
 '''
-
+import os
 import random
+import shutil
 
 from pandas import DataFrame
 
 from scripts.simulator.shared.index import write_data_frame_to_csv
+from utils.helper_methods import create_directories, get_subdirectories
 
 
 def get_data_columns():
@@ -279,13 +281,13 @@ def name_of_spoofer_column_creation(num_of_way_points):
     return ["-" for index in range(num_of_way_points + 4)]
 
 
-def create_train_set(num_of_way_points,
-                     velocity_state,
-                     height_state,
-                     directory_path,
-                     file_name):
+def create_train_file(num_of_way_points,
+                      velocity_state,
+                      height_state,
+                      directory_path,
+                      file_name):
     """
-    creation of basic route
+    creation of basic route file
     :param num_of_way_points: num of way points in route
     :param velocity_state: can be 'Up' , 'Down' ro 'Stable'
     :param height_state: can be 'Up' , 'Down' ro 'Stable'
@@ -318,8 +320,89 @@ def create_train_set(num_of_way_points,
                             data_frame=df)
 
 
-create_train_set(num_of_way_points=7,
-                 velocity_state="Up",
-                 height_state="Down",
-                 directory_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\simulator_data_set\\train_set",
-                 file_name="train_0")
+def get_random_state():
+    """
+    creation of random flight state
+    :return: 'Up' , 'Down' ro 'Stable'
+    """
+
+    state = random.randint(1, 3)
+    switcher = {
+        1: 'Up',
+        2: 'Down',
+        3: 'Stable'
+    }
+    return switcher.get(state, 'Stable')
+
+
+def create_train_set(source_folder, files_amount):
+    """
+    creation of train routes files
+    :param source_folder: source path
+    :param files_amount: files amount
+    :return:
+    """
+
+    for i in range(files_amount):
+        rout_name = "rout_" + str(i)
+        create_directories(f'{source_folder}/{rout_name}')
+        create_train_file(num_of_way_points=random.randint(10, 20),
+                          velocity_state=get_random_state(),
+                          height_state=get_random_state(),
+                          directory_path=f'{source_folder}/{rout_name}',
+                          file_name=rout_name)
+
+
+def move_file_to_target_path(source_directory, target_directory,
+                             source_file_name, target_file_name):
+    """
+    move files from source path to target path
+    :param source_directory: source path
+    :param target_directory: target path
+    :param source_file_name: source file name
+    :param target_file_name: target file name
+    :return:
+    """
+
+    shutil.move(f'{source_directory}/{source_file_name}', f'{target_directory}/{target_file_name}')
+
+
+def get_sensors_file(path):
+    """
+    get sensors file which is exist in a current path
+    :param path: input path
+    :return: return sensors file name
+    """
+
+    for file in os.listdir(path):
+        if file.endswith("_LATEST.csv"):
+            return file
+
+    return ""
+
+
+def move_train_files_to_target_path(source_directory, target_directory):
+    """
+    move train files from source path to target path
+    :param source_directory: source path
+    :param target_directory: target path
+    :return:
+    """
+
+    flight_files = get_subdirectories(source_directory)
+
+    for index, rout in enumerate(flight_files):
+        new_rout_name = "rout_" + str(index)
+        current_directory = os.path.join(source_directory, rout)
+        sensors_file = get_sensors_file(current_directory)
+        create_directories(f'{target_directory}/{new_rout_name}')
+        move_file_to_target_path(current_directory, f'{target_directory}/{new_rout_name}',
+                                 sensors_file, "without_anom.csv")
+
+
+# source_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\our_creation\\routs_data"
+# logs_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Simulator\\Logs"
+# target_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\our_creation\\train"
+# files_amount = 10
+# create_train_set(source_folder=source_folder, files_amount=files_amount)
+# move_train_files_to_target_path(logs_folder, target_folder)
