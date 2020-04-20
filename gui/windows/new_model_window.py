@@ -247,9 +247,9 @@ class NewModel(tk.Frame):
 
     def set_inputs_third_permutation(self):
         self.set_permutations(
-            training_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\train",
-            test_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\test",
-            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\results"
+            training_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\data_set\\train",
+            test_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\data_set\\test",
+            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\data_set\\results"
         )
 
     def set_permutations(self, training_path, test_path, results_path):

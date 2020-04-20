@@ -9,7 +9,6 @@ DataSets: 1. ADS-B dataset 2. simulated data
 ---
 Table data cell which is presented in the application
 '''
-import time
 
 from gui.widgets.table.cell import Cell
 

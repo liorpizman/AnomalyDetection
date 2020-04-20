@@ -8,13 +8,23 @@ GitHub: https://github.com/liorpizman/AnomalyDetection
 DataSets: 1. ADS-B dataset 2. simulated data
 ---
 Script to create test set data for different routes by the simulator
-'''
 
+for create test set you have to :
+1. run -> execute_creation function
+2. run -> create_attack_files function
+3. you have to select specific route and attack - > run the suitable files in the simulator
+4. run -> move_test_files_to_target_path function
+5. delete files from the simulator logs folder
+6. back to stage 3
+'''
+import os
 import random
+import shutil
 
 from pandas import DataFrame
 
 from scripts.simulator.shared.index import write_data_frame_to_csv
+from utils.helper_methods import create_directories, get_subdirectories
 
 
 def get_data_columns():
@@ -375,6 +385,80 @@ def generate_height_and_velocity_columns(num_of_way_points,
                                  velocity_source_column=velocity_source_column)
 
 
+def get_random_state():
+    """
+    creation of random flight state
+    :return: 'Up' , 'Down' ro 'Stable'
+    """
+    state = random.randint(1, 3)
+    switcher = {
+        1: 'Up',
+        2: 'Down',
+        3: 'Stable'
+    }
+    return switcher.get(state, 'Stable')
+
+
+def move_file_to_target_path(source_directory, target_directory,
+                             source_file_name, target_file_name):
+    """
+    move files from source path to target path
+    :param source_directory: source path
+    :param target_directory: target path
+    :param source_file_name: source file name
+    :param target_file_name: target file name
+    :return:
+    """
+
+    shutil.move(f'{source_directory}/{source_file_name}', f'{target_directory}/{target_file_name}')
+
+
+def get_sensors_file(path):
+    """
+    get sensors file which is exist in a current path
+    :param path: input path
+    :return: return sensors file name
+    """
+
+    for file in os.listdir(path):
+        if file.endswith("_LATEST.csv"):
+            return file
+
+    return ""
+
+
+def move_test_files_to_target_path(source_directory, target_directory):
+    """
+    move test files from source path to target path
+    :param source_directory: source path
+    :param target_directory: target path
+    :return:
+    """
+
+    flight_files = get_subdirectories(source_directory)
+
+    for index, rout in enumerate(flight_files):
+        current_directory = os.path.join(source_directory, rout)
+        sensors_file = get_sensors_file(current_directory)
+        move_file_to_target_path(current_directory, target_directory,
+                                 sensors_file, "sensors_{0}.csv".format(index))
+
+
+def create_attack_files(source_directory, files_amount):
+    """
+    create attack files folders
+    :param source_directory: source path
+    :param files_amount: files amount
+    :return:
+    """
+
+    for index in range(files_amount):
+        rout_name = "rout_" + str(index)
+        create_directories(f'{source_directory}/{rout_name}')
+        for attack in ['Constant Attack', 'Height Attack', 'Velocity Attack', 'Mixed Attack']:
+            create_directories(f'{source_directory}/{rout_name}/{attack}')
+
+
 def create_test_set(num_of_way_points,
                     velocity_state,
                     height_state,
@@ -423,34 +507,60 @@ def create_test_set(num_of_way_points,
                             data_frame=df)
 
 
-create_test_set(num_of_way_points=8,
-                velocity_state="Up",
-                height_state="Down",
-                directory_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\simulator_data_set\\train_set",
-                file_name="Mixed_Attack",
-                spoofed_way_point=4,
-                attack="Mixed")
+def execute_creation(source_folder, files_amount):
+    """
+    creation of test routes files
+    :param source_folder: source path
+    :param files_amount: files amount
+    :return:
+    """
 
-create_test_set(num_of_way_points=8,
-                velocity_state="Up",
-                height_state="Down",
-                directory_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\simulator_data_set\\train_set",
-                file_name="Height_Attack",
-                spoofed_way_point=4,
-                attack="Height")
+    for i in range(files_amount):
+        rout_name = "rout_" + str(i)
+        create_directories(f'{source_folder}/{rout_name}')
+    for i in range(files_amount):
+        rout_name = "rout_" + str(i)
+        num_of_way_points = random.randint(10, 20)
+        for j in range(2):
+            create_test_set(num_of_way_points=num_of_way_points,
+                            velocity_state=get_random_state(),
+                            height_state=get_random_state(),
+                            directory_path=f'{source_folder}/{rout_name}',
+                            file_name="Mixed_Attack_{0}".format(j),
+                            spoofed_way_point=random.randint(6, num_of_way_points - 2),
+                            attack="Mixed")
 
-create_test_set(num_of_way_points=8,
-                velocity_state="Up",
-                height_state="Down",
-                directory_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\simulator_data_set\\train_set",
-                file_name="Velocity_Attack",
-                spoofed_way_point=4,
-                attack="Velocity")
+            create_test_set(num_of_way_points=num_of_way_points,
+                            velocity_state=get_random_state(),
+                            height_state=get_random_state(),
+                            directory_path=f'{source_folder}/{rout_name}',
+                            file_name="Velocity_Attack_{0}".format(j),
+                            spoofed_way_point=random.randint(6, num_of_way_points - 2),
+                            attack="Velocity")
 
-create_test_set(num_of_way_points=8,
-                velocity_state="Up",
-                height_state="Down",
-                directory_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\simulator_data_set\\train_set",
-                file_name="Constant_Attack",
-                spoofed_way_point=4,
-                attack="Constant")
+            create_test_set(num_of_way_points=num_of_way_points,
+                            velocity_state=get_random_state(),
+                            height_state=get_random_state(),
+                            directory_path=f'{source_folder}/{rout_name}',
+                            file_name="Constant_Attack_{0}".format(j),
+                            spoofed_way_point=random.randint(6, num_of_way_points - 2),
+                            attack="Constant")
+
+            create_test_set(num_of_way_points=num_of_way_points,
+                            velocity_state=get_random_state(),
+                            height_state=get_random_state(),
+                            directory_path=f'{source_folder}/{rout_name}',
+                            file_name="Height_Attack_{0}".format(j),
+                            spoofed_way_point=random.randint(6, num_of_way_points - 2),
+                            attack="Height")
+
+
+# source_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\our_creation\\routs_data\\test_data"
+# logs_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Simulator\\Logs"
+# target_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\our_creation\\test"
+# files_amount = 6
+#
+# execute_creation(source_folder=source_folder, files_amount=files_amount)
+# create_attack_files(source_directory=target_folder, files_amount=files_amount)
+# attack_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\our_creation\\test\\rout_6\\Constant Attack"
+# move_test_files_to_target_path(source_directory=logs_folder, target_directory=attack_folder)
