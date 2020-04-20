@@ -14,12 +14,11 @@ import os
 
 from ipython_genutils.py3compat import xrange
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
-from gui.shared.helper_methods import trim_unnecessary_chars
+from gui.shared.helper_methods import trim_unnecessary_chars, transform_list
 from gui.widgets.menubar import Menubar
 from gui.widgets.table.table import Table
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_button_configuration, \
     set_copyright_configuration, set_widget_to_left
-from utils.input_settings import InputSettings
 
 try:
     import Tkinter as tk
@@ -56,6 +55,9 @@ class ResultsTableWindow(tk.Frame):
     reinitialize_results_table()
             Description | Reinitialize results table and view
 
+    generate_table_columns_list()
+            Description | Generates a list of columns for table init by given attacks
+
     """
 
     def __init__(self, parent, controller):
@@ -88,8 +90,9 @@ class ResultsTableWindow(tk.Frame):
         # Page body
         self.results_table = Table(self,
                                    columns=["Metric", "Down attack", "Up attack", "Fore attack", "Random attack"],
+                                   header_anchor=CENTER,
                                    column_minwidths=[None, None, None])
-        self.results_table.pack(expand=True, fill=X, padx=0, pady=0)
+        self.results_table.pack(expand=True, fill=X, padx=10, pady=40)
 
         # Page footer
         self.back_button = tk.Button(self, command=self.back_window)
@@ -172,7 +175,7 @@ class ResultsTableWindow(tk.Frame):
             )
 
             self.instructions = tk.Label(self)
-            self.instructions.place(relx=0.015, rely=0.29, height=22, width=635)
+            self.instructions.place(relx=0.015, rely=0.29, height=35, width=635)
             self.instructions.configure(text=current_title)
             set_widget_to_left(self.instructions)
 
@@ -181,6 +184,17 @@ class ResultsTableWindow(tk.Frame):
             data = results_data[original_algorithm][original_flight_route][original_similarity_function]
 
             attacks_columns = list(data.values())[0]
+
+            transform_attacks_list = transform_list(list(attacks_columns.keys()))
+            table_columns = self.generate_table_columns_list(transform_attacks_list)
+
+            self.results_table.pack_forget()
+            # self.results_table.destroy()
+            self.results_table = Table(self,
+                                       columns=table_columns,
+                                       header_anchor=CENTER,
+                                       column_minwidths=[None, None, None])
+            self.results_table.pack(expand=True, fill=X, padx=10, pady=40)
 
             # Creates a 2D array, all set to 0
             rows = len(data.keys())
@@ -195,6 +209,22 @@ class ResultsTableWindow(tk.Frame):
                 for j, attack in enumerate(attacks_data.keys()):
                     self.results_table.cell(i, j + 1, attacks_data[attack])
 
-        except Exception:
+        except Exception as e:
             # Handle error in setting new data in the table
-            pass
+            print("Source: gui/windows/results_table_window.py")
+            print("Function: reinitialize_results_table")
+            print("error: " + str(e))
+
+    def generate_table_columns_list(self, attacks_list):
+        """
+        Generates a list of columns for table init by given attacks
+        :param attacks_list: all existing attacks in the test data set
+        :return: full columns list for creating a new results table
+        """
+
+        table_columns = ["Metric"]
+
+        for attack in attacks_list:
+            table_columns.append(attack)
+
+        return table_columns

@@ -8,7 +8,19 @@ Constants used to handle repeatable values in model controller
 '''
 
 ATTACK_COLUMN = 'GPS Spoofing'
-COLUMNS_TO_REMOVE = ['label', 'flight_id', 'Route Index', 'Route Time', 'Home IP', 'Modem Lock', 'Drone IP',
-                     'Real Time']
+
+COLUMNS_TO_REMOVE = [
+    'label',
+    'flight_id',
+    'Route Index',
+    'Route Time',
+    'Home IP',
+    'Modem Lock',
+    'Drone IP',
+    'Real Time',
+    'GPS Spoofing'
+]
+
 NON_ATTACK_VALUE = 0
+
 ATTACK_VALUE = 1
