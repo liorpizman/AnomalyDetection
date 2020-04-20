@@ -14,7 +14,6 @@ import pickle
 import json
 import pandas as pd
 
-from sklearn.multioutput import MultiOutputRegressor
 from sklearn.neural_network import MLPRegressor
 from models.mlp.mlp_hyper_parameters import mlp_hyper_parameters
 from utils.constants import ATTACK_COLUMN
@@ -53,11 +52,12 @@ def get_mlp_model(hidden_layer_sizes, activation, solver, alpha, random_state):
     :return: MLP model
     """
 
-    return MultiOutputRegressor(MLPRegressor(hidden_layer_sizes=hidden_layer_sizes,
-                                             activation=activation,
-                                             solver=solver,
-                                             alpha=alpha,
-                                             random_state=random_state))
+    return MLPRegressor(hidden_layer_sizes=hidden_layer_sizes,
+                        activation=activation,
+                        solver=solver,
+                        alpha=alpha,
+                        random_state=random_state,
+                        shuffle=False)
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,

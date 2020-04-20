@@ -295,8 +295,10 @@ def get_attack_boundaries(df_label):
 
     attack_start = df_label[df_label != NON_ATTACK_VALUE].first_valid_index()
     partial_df = df_label.truncate(before=attack_start)
-    attack_end = partial_df[partial_df != ATTACK_VALUE].first_valid_index() - 1
-
+    if partial_df[partial_df != ATTACK_VALUE].first_valid_index():  # ADS-B Data
+        attack_end = partial_df[partial_df != ATTACK_VALUE].first_valid_index() - 1
+    else:  # Simulated Data
+        attack_end = len(df_label) - 1
     return attack_start, attack_end
 
 
