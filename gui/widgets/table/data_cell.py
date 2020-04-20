@@ -9,6 +9,7 @@ DataSets: 1. ADS-B dataset 2. simulated data
 ---
 Table data cell which is presented in the application
 '''
+import time
 
 from gui.widgets.table.cell import Cell
 
@@ -40,7 +41,8 @@ class Data_Cell(Cell):
 
     """
 
-    def __init__(self, master, variable, anchor=W, bordercolor=None, borderwidth=1, padx=0, pady=0, background=None,
+    def __init__(self, master, variable, anchor=CENTER, bordercolor=None, borderwidth=1, padx=0, pady=0,
+                 background=None,
                  foreground=None, font=None):
         """
         Parameters
@@ -76,12 +78,18 @@ class Data_Cell(Cell):
                                   pady=pady,
                                   anchor=anchor)
 
-        self.bind("<Configure>", self._on_configure)
+        self._message_widget.configure(width=100, pady=5)
 
-    def _on_configure(self, event):
-        """
-        Message widget configuration
-        :param event: event
-        :return: configures message widget
-        """
-        self._message_widget.configure(width=event.width)
+    # Note: This block of code causing flickering in results table window
+    # Solution source: https://stackoverflow.com/questions/17747904/continuous-call-of-the-configure-event-in-tkinter
+
+    #     self.bind("<Configure>", self._on_configure)
+    #
+    # def _on_configure(self, event):
+    #     """
+    #     Message widget configuration
+    #     :param event: event
+    #     :return: configures message widget
+    #     """
+    #
+    #     self._message_widget.configure(width=event.width)

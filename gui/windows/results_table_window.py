@@ -88,10 +88,11 @@ class ResultsTableWindow(tk.Frame):
         set_logo_configuration(self.logo_png, image=logo_img)
 
         # Page body
-        # self.results_table = Table(self,
-        #                            columns=["Metric", "Down attack", "Up attack", "Fore attack", "Random attack"],
-        #                            column_minwidths=[None, None, None])
-        # self.results_table.pack(expand=True, fill=X, padx=0, pady=0)
+        self.results_table = Table(self,
+                                   columns=["Metric", "Down attack", "Up attack", "Fore attack", "Random attack"],
+                                   header_anchor=CENTER,
+                                   column_minwidths=[None, None, None])
+        self.results_table.pack(expand=True, fill=X, padx=10, pady=40)
 
         # Page footer
         self.back_button = tk.Button(self, command=self.back_window)
@@ -174,7 +175,7 @@ class ResultsTableWindow(tk.Frame):
             )
 
             self.instructions = tk.Label(self)
-            self.instructions.place(relx=0.015, rely=0.29, height=22, width=635)
+            self.instructions.place(relx=0.015, rely=0.29, height=35, width=635)
             self.instructions.configure(text=current_title)
             set_widget_to_left(self.instructions)
 
@@ -187,10 +188,13 @@ class ResultsTableWindow(tk.Frame):
             transform_attacks_list = transform_list(list(attacks_columns.keys()))
             table_columns = self.generate_table_columns_list(transform_attacks_list)
 
+            self.results_table.pack_forget()
+            # self.results_table.destroy()
             self.results_table = Table(self,
                                        columns=table_columns,
+                                       header_anchor=CENTER,
                                        column_minwidths=[None, None, None])
-            self.results_table.pack(expand=True, fill=X, padx=0, pady=0)
+            self.results_table.pack(expand=True, fill=X, padx=10, pady=40)
 
             # Creates a 2D array, all set to 0
             rows = len(data.keys())
@@ -205,9 +209,11 @@ class ResultsTableWindow(tk.Frame):
                 for j, attack in enumerate(attacks_data.keys()):
                     self.results_table.cell(i, j + 1, attacks_data[attack])
 
-        except Exception:
+        except Exception as e:
             # Handle error in setting new data in the table
-            pass
+            print("Source: gui/windows/results_table_window.py")
+            print("Function: reinitialize_results_table")
+            print("error: " + str(e))
 
     def generate_table_columns_list(self, attacks_list):
         """
