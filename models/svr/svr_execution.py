@@ -257,7 +257,8 @@ def execute_predict(flight_route,
 
             attack_start, attack_end = get_attack_boundaries(df_test_source[ATTACK_COLUMN])
 
-            method_scores = get_method_scores(predictions, run_new_model, attack_start, attack_end)
+            method_scores = get_method_scores(predictions, attack_start, attack_end,
+                                              add_window_size=False, window_size=None)
 
             tpr_scores[attack].append(method_scores[0])
             fpr_scores[attack].append(method_scores[1])
