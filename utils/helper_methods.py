@@ -118,8 +118,10 @@ def anomaly_score(input_vector, output_vector, similarity_function):
         "MSE": lambda input_vector, output_vector: mse_distance(input_vector, output_vector)
     }
 
-    return switcher.get(similarity_function, cosine_similarity(input_vector, output_vector))(input_vector,
-                                                                                             output_vector)
+    return switcher.get(
+        similarity_function,
+        lambda input_vector, output_vector: cosine_similarity(input_vector, output_vector)
+    )(input_vector, output_vector)
 
 
 def anomaly_score_multi(input_vectors, output_vectors, similarity_function):

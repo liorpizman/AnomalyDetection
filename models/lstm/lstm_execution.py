@@ -14,16 +14,16 @@ import pickle
 import pandas as pd
 import json
 
+from models.data_preprocessing.data_cleaning import clean_data
+from models.data_preprocessing.data_normalization import normalize_data
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 from utils.constants import ATTACK_COLUMN
 from utils.routes import *
 from models.lstm.lstm_autoencoder import get_lstm_autoencoder_model
 from utils.helper_methods import get_training_data_lstm, get_testing_data_lstm, anomaly_score_multi, \
     get_threshold, report_results, get_method_scores, get_subdirectories, create_directories, get_current_time, plot, \
-    plot_reconstruction_error_scatter, get_attack_boundaries, plot_roc
-
+    plot_reconstruction_error_scatter, get_attack_boundaries
 from tensorflow.python.keras.models import load_model
-from sklearn.preprocessing import MaxAbsScaler
 from collections import defaultdict
 
 
@@ -169,10 +169,12 @@ def execute_train(flight_route,
 
     df_train = df_train[features_list]
 
-    scalar = MaxAbsScaler()
+    # Step 1 : Clean train data set
+    df_train = clean_data(df_train)
 
-    # Normalize the data
-    X_train = scalar.fit_transform(df_train)
+    # Step 2: Normalize the data
+    X_train, scalar = normalize_data(data=df_train,
+                                     scaler="power_transform")
     X_train = get_training_data_lstm(X_train, window_size)
 
     # Get the model which is created by user's parameters
@@ -247,6 +249,10 @@ def execute_predict(flight_route,
             df_test_labels = df_test_source[[ATTACK_COLUMN]].values
             df_test = df_test_source[features_list]
 
+            # Step 1 : Clean test data set
+            df_test = clean_data(df_test)
+
+            # Step 2: Normalize the data
             X_test = scalar.transform(df_test)
             X_test, y_test = get_testing_data_lstm(X_test, df_test_labels, window_size)
 
@@ -329,11 +335,5 @@ def predict_train_set(lstm,
         save_scalar_file_path = os.path.join(results_path, flight_route + "_scalar.pkl")
         with open(save_scalar_file_path, 'wb') as file:
             pickle.dump(scalar, file)
-
-    # Add plots if the indicator is true
-    if add_plots:
-        plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
-                                          plot_dir=results_path,
-                                          title=f'Outlier Score Training for {flight_route}')
 
     return threshold
