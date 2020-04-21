@@ -222,7 +222,7 @@ def get_thresholds(list_scores, percent):
     return [get_threshold(scores, percent) for scores in list_scores]
 
 
-def get_method_scores(prediction, run_new_model, attack_start, attack_end, add_window_size=False):
+def get_method_scores(prediction, attack_start, attack_end, add_window_size, window_size):
     """
     get previous method scores (tpr, fpr, accuracy, detection delay)
     :param prediction: predictions
@@ -240,13 +240,15 @@ def get_method_scores(prediction, run_new_model, attack_start, attack_end, add_w
 
     detection_delay = -1
     lower = attack_start
+    upper = attack_end
 
     # Enrich the process with a window size technique
-    if run_new_model and add_window_size:
-        lower = attack_start - lstm_hyper_parameters.get_window_size() + 1
+    if add_window_size:
+        assert window_size  # check if window_size != None
+        lower = attack_start - window_size + 1
+        upper = attack_end - window_size + 1
 
     # Indexes validation
-    upper = attack_end
     assert len(prediction) >= upper
     assert upper > lower
 

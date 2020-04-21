@@ -399,10 +399,9 @@ def move_train_files_to_target_path(source_directory, target_directory):
         move_file_to_target_path(current_directory, f'{target_directory}/{new_rout_name}',
                                  sensors_file, "without_anom.csv")
 
-
-# source_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\our_creation\\routs_data"
+# source_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\simulator_data_set\\train_2"
 # logs_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Simulator\\Logs"
-# target_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\our_creation\\train"
-# files_amount = 10
+# target_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\simulator_data_set\\suitable_set\\train"
+# files_amount = 3
 # create_train_set(source_folder=source_folder, files_amount=files_amount)
 # move_train_files_to_target_path(logs_folder, target_folder)
