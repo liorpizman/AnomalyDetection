@@ -344,13 +344,13 @@ def create_train_set(source_folder, files_amount):
     """
 
     for i in range(files_amount):
-        rout_name = "rout_" + str(i)
-        create_directories(f'{source_folder}/{rout_name}')
+        route_name = "route_" + str(i)
+        create_directories(f'{source_folder}/{route_name}')
         create_train_file(num_of_way_points=random.randint(10, 20),
                           velocity_state=get_random_state(),
                           height_state=get_random_state(),
-                          directory_path=f'{source_folder}/{rout_name}',
-                          file_name=rout_name)
+                          directory_path=f'{source_folder}/{route_name}',
+                          file_name=route_name)
 
 
 def move_file_to_target_path(source_directory, target_directory,
@@ -392,11 +392,11 @@ def move_train_files_to_target_path(source_directory, target_directory):
     flight_files = get_subdirectories(source_directory)
 
     for index, rout in enumerate(flight_files):
-        new_rout_name = "rout_" + str(index)
+        new_route_name = "route_" + str(index)
         current_directory = os.path.join(source_directory, rout)
         sensors_file = get_sensors_file(current_directory)
-        create_directories(f'{target_directory}/{new_rout_name}')
-        move_file_to_target_path(current_directory, f'{target_directory}/{new_rout_name}',
+        create_directories(f'{target_directory}/{new_route_name}')
+        move_file_to_target_path(current_directory, f'{target_directory}/{new_route_name}',
                                  sensors_file, "without_anom.csv")
 
 # source_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\simulator_data_set\\train_2"
