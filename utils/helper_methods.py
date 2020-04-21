@@ -8,7 +8,6 @@ Methods to handle repeatable actions which are done by the model controller
 '''
 
 import os
-import shutil
 import warnings
 import numpy as np
 import pandas as pd
@@ -336,7 +335,7 @@ def create_directories(path):
     """
 
     if os.path.exists(path) and os.path.isdir(path):
-        shutil.rmtree(path)
+        return
     else:
         os.makedirs(path)
 
