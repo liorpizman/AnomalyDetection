@@ -91,8 +91,8 @@ class ResultsTableWindow(tk.Frame):
         self.results_table = Table(self,
                                    columns=["Metric", "Down attack", "Up attack", "Fore attack", "Random attack"],
                                    header_anchor=CENTER,
-                                   column_minwidths=[None, None, None])
-        self.results_table.pack(expand=True, fill=X, padx=10, pady=40)
+                                   column_minwidths=[1, 1, 1])
+        self.results_table.pack(expand=True, fill=X, padx=25, pady=40)
 
         # Page footer
         self.back_button = tk.Button(self, command=self.back_window)
@@ -193,8 +193,8 @@ class ResultsTableWindow(tk.Frame):
             self.results_table = Table(self,
                                        columns=table_columns,
                                        header_anchor=CENTER,
-                                       column_minwidths=[None, None, None])
-            self.results_table.pack(expand=True, fill=X, padx=10, pady=40)
+                                       column_minwidths=[1, 1, 1])
+            self.results_table.pack(expand=True, fill=X, padx=25, pady=40)
 
             # Creates a 2D array, all set to 0
             rows = len(data.keys())

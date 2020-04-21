@@ -16,13 +16,15 @@ import pandas as pd
 
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.multioutput import MultiOutputRegressor
+
+from models.data_preprocessing.data_cleaning import clean_data
+from models.data_preprocessing.data_normalization import normalize_data
 from models.random_forest.random_forest_hyper_parameters import random_forest_hyper_parameters
 from utils.constants import ATTACK_COLUMN
 from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
     create_directories, get_current_time, \
-    plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score, plot_roc
-from sklearn.preprocessing import MaxAbsScaler
+    plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score
 from collections import defaultdict
 
 
@@ -164,10 +166,12 @@ def execute_train(flight_route,
 
     df_train = df_train[features_list]
 
-    scalar = MaxAbsScaler()
+    # Step 1 : Clean train data set
+    df_train = clean_data(df_train)
 
-    # Normalize the data
-    X_train = scalar.fit_transform(df_train)
+    # Step 2: Normalize the data
+    X_train, scalar = normalize_data(data=df_train,
+                                     scaler="power_transform")
 
     # Get the model which is created by user's parameters
     random_forest_model = get_random_forest_model(n_estimators=n_estimators,
@@ -237,6 +241,10 @@ def execute_predict(flight_route,
             Y_test = df_test_source[[ATTACK_COLUMN]].values
             df_test = df_test_source[features_list]
 
+            # Step 1 : Clean test data set
+            df_test = clean_data(df_test)
+
+            # Step 2: Normalize the data
             X_test = scalar.transform(df_test)
 
             X_pred = random_forest_model.predict(X_test)
@@ -325,11 +333,5 @@ def predict_train_set(random_forest_model,
         save_scalar_file_path = os.path.join(results_path, flight_route + "_scalar.pkl")
         with open(save_scalar_file_path, 'wb') as file:
             pickle.dump(scalar, file)
-
-        # Add plots if the indicator is true
-        if add_plots:
-            plot_reconstruction_error_scatter(scores=scores_train, labels=[0] * len(scores_train), threshold=threshold,
-                                              plot_dir=results_path,
-                                              title=f'Outlier Score Training for {flight_route}')
 
     return threshold
