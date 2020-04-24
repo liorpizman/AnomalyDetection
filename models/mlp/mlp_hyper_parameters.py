@@ -16,6 +16,7 @@ class mlp_hyper_parameters:
     A Class used to hyper MLP parameters
     """
 
+    WINDOW_SIZE = None
     HIDDEN_LAYER_SIZES = None
     ACTIVATION = None
     SOLVER = None
@@ -28,6 +29,8 @@ class mlp_hyper_parameters:
     """
     Attributes
     ----------
+    WINDOW_SIZE                            : int
+    
     HIDDEN_LAYER_SIZES                     : tuple
     
     ACTIVATION                             : str
@@ -42,60 +45,82 @@ class mlp_hyper_parameters:
 
     Methods
     -------
-    set_hidden_layer_sizes()
+    set_window_size(window_size)
+        Description | Set new value for window size
+
+    remove_window_size(window_size)
+            Description | Remove current value of window size
+            
+    get_window_size()
+            Description | Get current value of window size
+            
+    set_hidden_layer_sizes(hidden_layer_sizes)
             Description | Set new value for hidden layer sizes
 
-    remove_hidden_layer_sizes()
+    remove_hidden_layer_sizes(hidden_layer_sizes)
             Description | Remove current value of hidden layer sizes
 
     get_hidden_layer_sizes()
             Description | Get current value of hidden layer sizes
             
-    set_activation()
+    set_activation(activation)
             Description | Set new value for activation
 
-    remove_activation()
+    remove_activation(activation)
             Description | Remove current value of activation
 
     get_activation()
             Description | Get current value of activation
 
-    set_solver()
+    set_solver(solver)
             Description | Set new value for solver
 
-    remove_solver()
+    remove_solver(solver)
             Description | Remove current value of solver
 
     get_solver()
             Description | Get current value of solver
             
-    set_alpha()
+    set_alpha(alpha)
             Description | Set new value for alpha
 
-    remove_alpha()
+    remove_alpha(alpha)
             Description | Remove current value of alpha
 
     get_alpha()
             Description | Get current value of alpha
             
-    set_random_state()
+    set_random_state(random_state)
             Description | Set new value for random state
 
-    remove_random_state()
+    remove_random_state(random_state)
             Description | Remove current value of random state
 
     get_random_state()
             Description | Get current value of random state
     
-    set_threshold()
+    set_threshold(threshold)
             Description | Set new value for threshold
 
-    remove_threshold()
+    remove_threshold(threshold)
             Description | Remove current value of threshold
 
     get_threshold()
             Description | Get current value of threshold
     """
+
+    # Window size parameter
+    @staticmethod
+    def set_window_size(window_size):
+        mlp_hyper_parameters.WINDOW_SIZE = int(window_size)
+
+    @staticmethod
+    def remove_window_size(window_size):
+        mlp_hyper_parameters.WINDOW_SIZE = None
+
+    @staticmethod
+    def get_window_size():
+        return mlp_hyper_parameters.WINDOW_SIZE
 
     # Hidden layer sizes parameter
     @staticmethod

@@ -158,6 +158,7 @@ class SimilarityFunctionsWindow(tk.Frame):
         Handle a click on next button
         :return: if validations pass move to next window
         """
+
         if self.similarity_functions_validation():
             self.controller.reinitialize_frame("LoadingWindow")
         else:
@@ -172,7 +173,7 @@ class SimilarityFunctionsWindow(tk.Frame):
         is_new_model_flow = self.controller.get_new_model_running()
 
         if is_new_model_flow:
-            self.controller.show_frame("AlgorithmsWindow")
+            self.controller.show_frame("FeatureSelectionWindow")
         else:
             self.controller.show_frame("ExistingAlgorithmsWindow")
 

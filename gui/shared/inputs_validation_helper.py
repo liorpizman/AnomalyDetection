@@ -197,16 +197,21 @@ def is_valid_model_paths(paths):
         if not os.path.exists(os.path.dirname(path)):
             return False
         files = os.listdir(path)
+        models_counter = 0
+        scalars_counter = 0
+        json_files_counter = 0
         for file in files:
             fullPath = os.path.join(path, file)
-            if not os.path.isfile(fullPath) or not (
-                    file.endswith('.h5')
-                    or file.endswith('_model.pkl')
-                    or file.endswith('_scalar.pkl')
-                    or (file == "model_data.json")
-            ):
-                return False
-        return True
+            if os.path.isfile(fullPath):
+                if file.endswith('.h5') or file.endswith('_model.pkl'):
+                    models_counter += 1
+                if file.endswith('_scalar.pkl'):
+                    scalars_counter += 1
+                if (file == "model_data.json"):
+                    json_files_counter += 1
+        if not (models_counter == 1 and scalars_counter == 1 and json_files_counter == 1):
+            return False
+    return True
 
 
 def is_valid_model_data_file(paths):

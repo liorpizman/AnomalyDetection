@@ -160,10 +160,10 @@ class InputSettings:
             Description | Set the data set columns which were loaded from the test data set
             
     get_users_selected_features()
-            Description | Get the data set columns which were selected by the user for a given algorithm
+            Description | Get the data set columns which were selected by the user
             
-    set_users_selected_features(algorithm_name, features_list)
-            Description | Set the data set columns which were selected by the user for a given algorithm
+    set_users_selected_features(features_list)
+            Description | Set the data set columns which were selected by the user
             
     add_new_thread(new_thread)
             Description | Add new running thread to the system
@@ -356,8 +356,10 @@ class InputSettings:
         return InputSettings.USERS_SELECTED_FEATURES
 
     @staticmethod
-    def set_users_selected_features(algorithm_name, features_list):
-        InputSettings.USERS_SELECTED_FEATURES[algorithm_name] = features_list
+    def set_users_selected_features(features_list):
+        InputSettings.USERS_SELECTED_FEATURES = dict()
+        for algorithm in InputSettings.ALGORITHMS:
+            InputSettings.USERS_SELECTED_FEATURES[algorithm] = features_list
 
     @staticmethod
     def add_new_thread(new_thread):

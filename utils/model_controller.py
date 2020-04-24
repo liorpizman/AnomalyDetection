@@ -65,8 +65,8 @@ class ModelController:
     get_features_columns_options()
             Description | Get the data set columns which were loaded from the test data set
 
-    set_users_selected_features(algorithm_name, features_list)
-            Description | Set the data set columns which were selected by the user for a given algorithm
+    set_users_selected_features(features_list)
+            Description | Set the data set columns which were selected by the user
 
     add_new_thread(new_thread)
             Description | Add new running thread to the system
@@ -179,8 +179,8 @@ class ModelController:
     def get_features_columns_options(self):
         return InputSettings.get_features_columns_options()
 
-    def set_users_selected_features(self, algorithm_name, features_list):
-        InputSettings.set_users_selected_features(algorithm_name, features_list)
+    def set_users_selected_features(self, features_list):
+        InputSettings.set_users_selected_features(features_list)
 
     def add_new_thread(self, new_thread):
         InputSettings.add_new_thread(new_thread)

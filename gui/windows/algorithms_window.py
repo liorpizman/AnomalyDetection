@@ -219,7 +219,7 @@ class AlgorithmsWindow(tk.Frame):
         """
 
         if self.validate_next_step():
-            self.controller.reinitialize_frame("SimilarityFunctionsWindow")
+            self.controller.reinitialize_frame("FeatureSelectionWindow")
 
     def set_algorithm_checked(self):
         """
