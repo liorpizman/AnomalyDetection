@@ -39,7 +39,7 @@ def get_svr_new_model_parameters():
         svr_hyper_parameters.get_gamma(),
         svr_hyper_parameters.get_epsilon(),
         svr_hyper_parameters.get_threshold(),
-        2
+        svr_hyper_parameters.get_window_size()
     )
 
 
