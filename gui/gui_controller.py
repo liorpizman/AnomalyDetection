@@ -13,6 +13,7 @@ Anomaly detection graphic user interface controller which is used to map all the
 from tkinter import font as tkfont
 from gui.windows.algorithms_window import AlgorithmsWindow
 from gui.windows.existing_algorithms_window import ExistingAlgorithmsWindow
+from gui.windows.feature_selection_window import FeatureSelectionWindow
 from gui.windows.load_model_window import LoadModel
 from gui.windows.loading_window import LoadingWindow
 from gui.windows.parameters_options_window import ParametersOptionsWindow
@@ -95,8 +96,8 @@ class AnomalyDetectionGUI(tk.Tk):
     get_features_columns_options()
             Description | Get the data set columns which were loaded from the test data set
 
-    set_users_selected_features(algorithm_name, features_list)
-            Description | Set the data set columns which were selected by the user for a given algorithm
+    set_users_selected_features(features_list)
+            Description | Set the data set columns which were selected by the user
 
     add_new_thread(new_thread)
             Description | Add new running thread to the system
@@ -197,6 +198,7 @@ class AnomalyDetectionGUI(tk.Tk):
                   NewModel,
                   LoadModel,
                   AlgorithmsWindow,
+                  FeatureSelectionWindow,
                   SimilarityFunctionsWindow,
                   ExistingAlgorithmsWindow,
                   LoadingWindow,
@@ -281,8 +283,8 @@ class AnomalyDetectionGUI(tk.Tk):
     def get_features_columns_options(self):
         return self.model_controller.get_features_columns_options()
 
-    def set_users_selected_features(self, algorithm_name, features_list):
-        self.model_controller.set_users_selected_features(algorithm_name, features_list)
+    def set_users_selected_features(self, features_list):
+        self.model_controller.set_users_selected_features(features_list)
 
     def add_new_thread(self, new_thread):
         self.model_controller.add_new_thread(new_thread)
@@ -337,6 +339,7 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def get_results_metrics_data(self):
         return self.model_controller.get_results_metrics_data()
+
 
 # Main loop of the Anomaly Detection application
 if __name__ == "__main__":

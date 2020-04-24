@@ -12,6 +12,7 @@ widget_names:
   - "Kernel"
   - "Gamma"
   - "Epsilon"
+  - "Window size"
   - "Threshold"
 
 # The values are the keys of the parameters in the helper method file
@@ -22,6 +23,7 @@ widget_param_keys:
   - "kernel"
   - "gamma"
   - "epsilon"
+  - "window_size"
   - "threshold"
 
 # All the lists in the bottom represent the values in each combobox which will be displayed.
@@ -43,6 +45,23 @@ svr_epsilon:
   - 0.1
   - 0.15
   - 0.2
+
+svr_window:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
 
 svr_threshold:
   - 0.99

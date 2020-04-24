@@ -12,7 +12,6 @@ LSTM hyper parameters to reach best LSTM model
 
 
 class lstm_hyper_parameters:
-
     """
     A Class used to hyper LSTM parameters
     """
@@ -54,41 +53,44 @@ class lstm_hyper_parameters:
     
     Methods
     -------
-    set_window_size()
+    set_window_size(window_size)
             Description | Set new value for window size
 
-    remove_window_size()
+    remove_window_size(window_size)
             Description | Remove current value of window size
             
     get_window_size()
             Description | Get current value of window size
             
-    set_encoding_dimension()
+    set_encoding_dimension(encoding_dimension)
             Description | Set new value for encoding dimension 
             
-    remove_encoding_dimension()
+    remove_encoding_dimension(encoding_dimension)
             Description | Remove current value of encoding dimension 
             
     get_encoding_dimension()
             Description | Get current value of encoding dimension  
             
-    set_activation()
+    set_activation(activation)
             Description | Set new value for activation function
             
-    remove_activation()
+    remove_activation(activation)
             Description | Remove current value of activation function
 
     get_activation()
             Description | Get current value of activation function
 
-    set_loss()
+    set_loss(loss)
             Description | Set new value for loss function
             
-    remove_loss()
+    remove_loss(loss)
             Description | Remove current value of loss function
             
     set_epochs()
             Description | Set new value for the epochs variable
+            
+    remove_epochs(epochs)
+            Description | Remove current value of epochs variable
             
     get_epochs()
             Description | Get current value of epochs variable
@@ -96,16 +98,16 @@ class lstm_hyper_parameters:
     get_loss()
             Description |  Get current value of loss function
             
-    set_optimizer()
+    set_optimizer(optimizer)
             Description | Set new value for the optimizer
             
-    remove_optimizer()
+    remove_optimizer(optimizer)
             Description | Remove current value of optimizer
             
-    set_threshold()
+    set_threshold(threshold)
             Description | Set new value for the threshold
             
-    remove_threshold()
+    remove_threshold(threshold)
             Description | Remove current value of threshold
 
     get_threshold()
@@ -113,6 +115,7 @@ class lstm_hyper_parameters:
 
     """
 
+    # Window size parameter
     @staticmethod
     def set_window_size(window_size):
         lstm_hyper_parameters.LSTM_WINDOW_SIZE = int(window_size)
@@ -125,6 +128,7 @@ class lstm_hyper_parameters:
     def get_window_size():
         return lstm_hyper_parameters.LSTM_WINDOW_SIZE
 
+    # Encoding dimension parameter
     @staticmethod
     def set_encoding_dimension(encoding_dimension):
         lstm_hyper_parameters.LSTM_ENCODING_DIMENSION = int(encoding_dimension)
@@ -137,6 +141,7 @@ class lstm_hyper_parameters:
     def get_encoding_dimension():
         return lstm_hyper_parameters.LSTM_ENCODING_DIMENSION
 
+    # Activation parameter
     @staticmethod
     def set_activation(activation):
         lstm_hyper_parameters.LSTM_ACTIVATION = activation
@@ -149,6 +154,7 @@ class lstm_hyper_parameters:
     def get_activation():
         return lstm_hyper_parameters.LSTM_ACTIVATION
 
+    # Loss parameter
     @staticmethod
     def set_loss(loss):
         lstm_hyper_parameters.LSTM_LOSS = loss
@@ -158,17 +164,23 @@ class lstm_hyper_parameters:
         lstm_hyper_parameters.LSTM_LOSS = None
 
     @staticmethod
+    def get_loss():
+        return lstm_hyper_parameters.LSTM_LOSS
+
+    # Epochs parameter
+    @staticmethod
     def set_epochs(epochs):
         lstm_hyper_parameters.LSTM_EPOCHS = int(epochs)
+
+    @staticmethod
+    def remove_epochs(epochs):
+        lstm_hyper_parameters.LSTM_EPOCHS = None
 
     @staticmethod
     def get_epochs():
         return lstm_hyper_parameters.LSTM_EPOCHS
 
-    @staticmethod
-    def get_loss():
-        return lstm_hyper_parameters.LSTM_LOSS
-
+    # Optimizer parameter
     @staticmethod
     def set_optimizer(optimizer):
         lstm_hyper_parameters.LSTM_OPTIMIZER = optimizer
@@ -181,6 +193,7 @@ class lstm_hyper_parameters:
     def get_optimizer():
         return lstm_hyper_parameters.LSTM_OPTIMIZER
 
+    # Threshold parameter
     @staticmethod
     def set_threshold(threshold):
         lstm_hyper_parameters.LSTM_THRESHOLD_FROM_TRAINING_PERCENT = float(threshold)

@@ -299,7 +299,9 @@ class ExistingAlgorithmsWindow(tk.Frame):
             return False
 
         if not is_valid_model_paths(self.algorithms.values()):
-            win32api.MessageBox(0, 'At least one of your algorithms paths invalid or not include the required files!',
+            win32api.MessageBox(0,
+                                'At least one of your algorithms paths invalid or not include the required files! '
+                                'Please check that there are no duplicate files in the same directory.',
                                 'Invalid inputs', 0x00001000)
             return False
 
