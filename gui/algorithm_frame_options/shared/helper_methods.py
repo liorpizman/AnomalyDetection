@@ -13,9 +13,11 @@ Methods to handle repeatable actions which are done by algorithms frame
 import os
 import yaml
 
+from tkinter import messagebox
 from os.path import dirname, abspath
 from tkinter.ttk import Combobox
-from gui.widgets_configurations.helper_methods import set_widget_to_left
+from gui.shared.constants import CROSS_WINDOWS_SETTINGS
+from gui.widgets_configurations.helper_methods import set_widget_to_left, set_info_configuration
 
 try:
     import Tkinter as tk
@@ -46,6 +48,15 @@ def set_widget_for_param(frame, text, combobox_values, param_key, y_coordinate):
     relative_x = 0
 
     try:
+        # Creating a photo image object to use for information button
+        info_dir = CROSS_WINDOWS_SETTINGS.get('INFORMATION_DIR')
+        info_file = CROSS_WINDOWS_SETTINGS.get('INFORMATION_FILE')
+        base_folder = os.path.dirname(__file__)
+        dir_path = os.path.join(base_folder, info_dir)
+        photo_location = os.path.join(dir_path, info_file)
+        global info_photo
+        info_photo = tk.PhotoImage(file=photo_location)
+        # frame.info_png_img = tk.PhotoImage(file=photo_location)
 
         # Create new label
         frame.algorithm_param = tk.Label(frame)
@@ -54,6 +65,13 @@ def set_widget_for_param(frame, text, combobox_values, param_key, y_coordinate):
 
         # Set the widget in the left side of the block
         set_widget_to_left(frame.algorithm_param)
+
+        frame.algorithm_param_info_button = tk.Button(frame,
+                                                      text="i",
+                                                      command=lambda: on_info_button_click(attribute=text))
+        frame.algorithm_param_info_button.place(relx=relative_x + 0.25, rely=y_coordinate, height=25, width=25)
+        # frame.algorithm_param_info_button.configure(image=info_photo)
+        # set_info_configuration(frame.algorithm_param_info_button, image=info_photo)
 
         # Create new combo box - possible values for the label
         frame.algorithm_param_combo = Combobox(frame, state="readonly", values=combobox_values)
@@ -67,6 +85,13 @@ def set_widget_for_param(frame, text, combobox_values, param_key, y_coordinate):
         print("Source: gui/algorithm_frame_options/shared/helper_methods.py")
         print("Function: set_widget_for_param")
         print("error: " + str(e))
+
+
+def on_info_button_click(attribute):
+    messagebox.askokcancel(
+        title='{0} information window'.format(attribute),
+        message="# To Do: Fill loading attribute data from yaml file"
+    )
 
 
 def load_algorithm_constants(filename):

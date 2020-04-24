@@ -12,11 +12,15 @@ ATTACK_COLUMN = 'GPS Spoofing'
 COLUMNS_TO_REMOVE = [
     'label',
     'flight_id',
-    'Route Index',
-    'Route Time',
     'Home IP',
+    'RSSI0 PARABOLIC',
+    'RSSI1 PARABOLIC',
+    'CINR0 PARABOLIC',
+    'CINR1 PARABOLIC',
     'Modem Lock',
     'Drone IP',
+    'Home to drone bearing',
+    'Home to drone elevation',
     'Real Time',
     'GPS Spoofing'
 ]
