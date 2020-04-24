@@ -20,6 +20,7 @@ from sklearn.multioutput import MultiOutputRegressor
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
 from models.random_forest.random_forest_hyper_parameters import random_forest_hyper_parameters
+from models.time_series_model.time_series_estimator import TimeSeriesRegressor
 from utils.constants import ATTACK_COLUMN
 from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
@@ -39,7 +40,8 @@ def get_random_forest_new_model_parameters():
         random_forest_hyper_parameters.get_criterion(),
         random_forest_hyper_parameters.get_max_features(),
         random_forest_hyper_parameters.get_random_state(),
-        random_forest_hyper_parameters.get_threshold()
+        random_forest_hyper_parameters.get_threshold(),
+        2
     )
 
 
@@ -74,7 +76,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
     # Choose between new model creation flow and load existing model flow
     if new_model_running:
-        n_estimators, criterion, max_features, random_state, threshold = get_random_forest_new_model_parameters()
+        n_estimators, criterion, max_features, \
+        random_state, threshold, window_size = get_random_forest_new_model_parameters()
     else:
         random_forest_model = pickle.load(open(algorithm_path, 'rb'))
         scalar = pickle.load(open(scalar_path, 'rb'))
@@ -101,7 +104,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                  criterion=criterion,
                                                                  max_features=max_features,
                                                                  random_state=random_state,
-                                                                 features_list=features_list)
+                                                                 features_list=features_list,
+                                                                 window_size=window_size)
 
         # Get results for each similarity function
         for similarity in similarity_score:
@@ -149,7 +153,8 @@ def execute_train(flight_route,
                   criterion=None,
                   max_features=None,
                   random_state=None,
-                  features_list=None):
+                  features_list=None,
+                  window_size=1):
     """
     Execute train function for a specific flight route
     :param flight_route: current flight route we should train on
@@ -178,9 +183,10 @@ def execute_train(flight_route,
                                                   criterion=criterion,
                                                   max_features=max_features,
                                                   random_state=random_state)
-    random_forest_model.fit(X_train, X_train)
+    tsr = TimeSeriesRegressor(random_forest_model, n_prev=window_size)
+    tsr.fit(X_train)
 
-    return random_forest_model, scalar, X_train
+    return tsr, scalar, X_train
 
 
 def execute_predict(flight_route,
@@ -238,7 +244,10 @@ def execute_predict(flight_route,
         for flight_csv in os.listdir(f'{test_data_path}/{flight_route}/{attack}'):
 
             df_test_source = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
-            Y_test = df_test_source[[ATTACK_COLUMN]].values
+
+            Y_test_labels = df_test_source[[ATTACK_COLUMN]].values
+            Y_test_target = random_forest_model._preprocess(Y_test_labels, Y_test_labels)[1]
+
             df_test = df_test_source[features_list]
 
             # Step 1 : Clean test data set
@@ -256,7 +265,7 @@ def execute_predict(flight_route,
             # Add reconstruction error scatter if plots indicator is true
             if add_plots:
                 plot_reconstruction_error_scatter(scores=scores_test,
-                                                  labels=Y_test,
+                                                  labels=Y_test_target,
                                                   threshold=threshold,
                                                   plot_dir=results_path,
                                                   title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
