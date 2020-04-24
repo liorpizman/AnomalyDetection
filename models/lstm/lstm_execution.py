@@ -178,8 +178,12 @@ def execute_train(flight_route,
     X_train = get_training_data_lstm(X_train, window_size)
 
     # Get the model which is created by user's parameters
-    lstm = get_lstm_autoencoder_model(window_size, df_train.shape[1],
-                                      encoding_dimension, activation, loss, optimizer)
+    lstm = get_lstm_autoencoder_model(timesteps=window_size,
+                                      features=df_train.shape[1],
+                                      encoding_dimension=encoding_dimension,
+                                      activation=activation,
+                                      loss=loss,
+                                      optimizer=optimizer)
     history = lstm.fit(X_train, X_train, epochs=epochs, verbose=1).history
 
     # Add plots if the indicator is true

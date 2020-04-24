@@ -19,6 +19,7 @@ from sklearn.svm import SVR
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
 from models.svr.svr_hyper_parameters import svr_hyper_parameters
+from models.time_series_model.time_series_estimator import TimeSeriesRegressor
 from utils.constants import ATTACK_COLUMN
 from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
@@ -37,7 +38,8 @@ def get_svr_new_model_parameters():
         svr_hyper_parameters.get_kernel(),
         svr_hyper_parameters.get_gamma(),
         svr_hyper_parameters.get_epsilon(),
-        svr_hyper_parameters.get_threshold()
+        svr_hyper_parameters.get_threshold(),
+        2
     )
 
 
@@ -71,7 +73,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
     # Choose between new model creation flow and load existing model flow
     if new_model_running:
-        kernel, gamma, epsilon, threshold = get_svr_new_model_parameters()
+        kernel, gamma, epsilon, threshold, window_size = get_svr_new_model_parameters()
     else:
         svr_model = pickle.load(open(algorithm_path, 'rb'))
         scalar = pickle.load(open(scalar_path, 'rb'))
@@ -97,7 +99,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                        kernel=kernel,
                                                        gamma=gamma,
                                                        epsilon=epsilon,
-                                                       features_list=features_list)
+                                                       features_list=features_list,
+                                                       window_size=window_size)
 
         # Get results for each similarity function
         for similarity in similarity_score:
@@ -144,7 +147,8 @@ def execute_train(flight_route,
                   kernel=None,
                   gamma=None,
                   epsilon=None,
-                  features_list=None):
+                  features_list=None,
+                  window_size=1):
     """
     Execute train function for a specific flight route
     :param flight_route: current flight route we should train on
@@ -165,16 +169,17 @@ def execute_train(flight_route,
 
     # Step 2: Normalize the data
     X_train, scalar = normalize_data(data=df_train,
-                                     scaler="power_transform")
+                                     scaler="max_abs")
 
     # Get the model which is created by user's parameters
     svr_model = get_svr_model(kernel=kernel,
                               gamma=gamma,
                               epsilon=epsilon)
 
-    svr_model.fit(X_train, X_train)
+    tsr = TimeSeriesRegressor(svr_model, n_prev=window_size)
+    tsr.fit(X_train)
 
-    return svr_model, scalar, X_train
+    return tsr, scalar, X_train
 
 
 def execute_predict(flight_route,
@@ -232,7 +237,10 @@ def execute_predict(flight_route,
         for flight_csv in os.listdir(f'{test_data_path}/{flight_route}/{attack}'):
 
             df_test_source = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
-            Y_test = df_test_source[[ATTACK_COLUMN]].values
+
+            Y_test_labels = df_test_source[[ATTACK_COLUMN]].values
+            Y_test_target = svr_model._preprocess(Y_test_labels, Y_test_labels)[1]
+
             df_test = df_test_source[features_list]
 
             # Step 1 : Clean test data set
@@ -250,7 +258,7 @@ def execute_predict(flight_route,
             # Add reconstruction error scatter if plots indicator is true
             if add_plots:
                 plot_reconstruction_error_scatter(scores=scores_test,
-                                                  labels=Y_test,
+                                                  labels=Y_test_target,
                                                   threshold=threshold,
                                                   plot_dir=results_path,
                                                   title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
