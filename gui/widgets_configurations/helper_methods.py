@@ -13,6 +13,7 @@ Methods to handle repeatable actions which are done on widgets' configuration
 from gui.widgets_configurations.anchor_left import ANCHOR_LEFT
 from gui.widgets_configurations.button import BUTTON_CONFIG
 from gui.widgets_configurations.copyright import COPYRIGHT_CONFIG
+from gui.widgets_configurations.info import INFO_CONFIG_INIT, INFO_CONFIG_ADVANCED
 from gui.widgets_configurations.logo import LOGO_CONFIG_INIT, LOGO_CONFIG_ADVANCED
 
 
@@ -59,3 +60,16 @@ def set_widget_to_left(widget):
     """
 
     widget.configure(ANCHOR_LEFT)
+
+
+def set_info_configuration(info, image):
+    """
+    Set a configuration and an image for a given button
+    :param info: info widget
+    :param image: image to set on the info widget
+    :return: configured info
+    """
+
+    info.configure(INFO_CONFIG_INIT)
+    info.configure(image=image)
+    info.configure(INFO_CONFIG_ADVANCED)

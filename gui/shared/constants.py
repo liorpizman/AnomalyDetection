@@ -24,5 +24,7 @@ LOADING_WINDOW_SETTINGS = {
 }
 
 CROSS_WINDOWS_SETTINGS = {
-    'LOGO': './images/anomaly_detection_logo.png'
+    'LOGO': './images/anomaly_detection_logo.png',
+    'INFORMATION_DIR': 'images',
+    'INFORMATION_FILE': 'info.png'
 }
