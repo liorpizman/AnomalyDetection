@@ -41,7 +41,7 @@ def get_random_forest_new_model_parameters():
         random_forest_hyper_parameters.get_max_features(),
         random_forest_hyper_parameters.get_random_state(),
         random_forest_hyper_parameters.get_threshold(),
-        2
+        random_forest_hyper_parameters.get_window_size()
     )
 
 

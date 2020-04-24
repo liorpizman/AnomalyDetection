@@ -40,7 +40,7 @@ def get_mlp_new_model_parameters():
         mlp_hyper_parameters.get_alpha(),
         mlp_hyper_parameters.get_random_state(),
         mlp_hyper_parameters.get_threshold(),
-        2
+        mlp_hyper_parameters.get_window_size()
     )
 
 
