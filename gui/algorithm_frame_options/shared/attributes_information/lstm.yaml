@@ -1,0 +1,28 @@
+# Anomaly Detection of GPS Spoofing Attacks on UAVs
+# Authors: Lior Pizman & Yehuda Pashay
+# GitHub: https://github.com/liorpizman/AnomalyDetection
+# DataSets: 1. ADS-B dataset 2. simulated data
+# ----------------------------------------------------------------------------------
+# Serialized attributes data used for LSTM algorithm
+# ----------------------------------------------------------------------------------
+
+# The values are the text params for each label in LSTM frame options
+# Note: same as the names in the UI, first list in lstm_params.yaml
+
+Epochs: "Parameter information : One Epoch is when an ENTIRE dataset is passed forward and backward through the
+neural network only ONCE."
+
+Activation function: "Parameter information : Activation function to use.(ie. linear activation: a(x) = x)."
+
+Loss function: "Parameter information : A loss function (or objective function, or optimization score function) is
+one of the two parameters required to compile a model."
+
+Optimizer: "Parameter information : An optimizer is one of the two arguments required for compiling a Keras model."
+
+Window size: "Parameter information : The amount of records to look back while calculation a prediction for a current
+record."
+
+Encoding dimension: "Parameter information : Units: Positive integer, dimensionality of the output space."
+
+Threshold: "Parameter information : An 'X' value which represents the value that X% records has a lower value than it.
+It is used to detect anomalies."

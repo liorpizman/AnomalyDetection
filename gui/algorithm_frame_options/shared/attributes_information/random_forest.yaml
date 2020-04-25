@@ -1,0 +1,28 @@
+# Anomaly Detection of GPS Spoofing Attacks on UAVs
+# Authors: Lior Pizman & Yehuda Pashay
+# GitHub: https://github.com/liorpizman/AnomalyDetection
+# DataSets: 1. ADS-B dataset 2. simulated data
+# ----------------------------------------------------------------------------------
+# Serialized attributes data used for Random Forest algorithm
+# ----------------------------------------------------------------------------------
+
+# The values are the text params for each label in Random Forest frame options
+# Note: same as the names in the UI, first list in random_forest_params.yaml
+
+N estimators: "Parameter information : The number of trees in the forest."
+
+Criterion: "Parameter information : The function to measure the quality of a split. Supported criteria are 'mse' for
+the mean squared error, which is equal to variance reduction as feature selection criterion, and 'mae' for the
+mean absolute error."
+
+Max features: "Parameter information : The number of features to consider when looking for the best split"
+
+Random state: "Parameter information : Controls both the randomness of the bootstrapping of the samples used when
+building trees (if bootstrap=True) and the sampling of the features to consider when looking for the best split at
+each node (if max_features < n_features)."
+
+Window size: "Parameter information : The amount of records to look back while calculation a prediction for a current
+record."
+
+Threshold: "Parameter information : An 'X' value which represents the value that X% records has a lower value than it.
+It is used to detect anomalies."
