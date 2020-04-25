@@ -81,7 +81,8 @@ class AlgorithmFrameOptions(tk.Frame):
                                  text=param_description,
                                  combobox_values=self.values_lists[index],
                                  param_key=self.params_keys[index],
-                                 y_coordinate=y_val)
+                                 y_coordinate=y_val,
+                                 filename=yaml_filename)
             y_val += y_delta
             index += 1
 
