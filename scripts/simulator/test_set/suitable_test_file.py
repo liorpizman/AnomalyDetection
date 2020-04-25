@@ -413,23 +413,6 @@ def get_sensors_file(path):
     return ""
 
 
-def move_test_files_to_target_path(source_directory, target_directory):
-    """
-    move test files from source path to target path
-    :param source_directory: source path
-    :param target_directory: target path
-    :return:
-    """
-
-    flight_files = get_subdirectories(source_directory)
-
-    for index, rout in enumerate(flight_files):
-        current_directory = os.path.join(source_directory, rout)
-        sensors_file = get_sensors_file(current_directory)
-        move_file_to_target_path(current_directory, target_directory,
-                                 sensors_file, "sensors_{0}.csv".format(index))
-
-
 def create_attack_files(source_directory, files_amount, route_name):
     """
     create attack files folders
@@ -548,6 +531,51 @@ def execute_creation(source_directory, target_directory):
                                 source_df=train_file_df)
 
 
-source_path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\lior\\train_set_routes_data"
-target_path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\lior\\test_set_routes_data"
-execute_creation(source_path, target_path)
+def move_test_files_to_target_path(source_directory, target_directory, test_folder_name, attack_name):
+    """
+    move test files from source path to target path
+    :param source_directory: source path
+    :param target_directory: target path
+    :param test_folder_name: the name of the route
+    :param attack_name: the name of the attack
+    :return:
+    """
+
+    flight_files = get_subdirectories(source_directory)
+
+    for index, route in enumerate(flight_files):
+        current_directory = os.path.join(source_directory, route)
+        sensors_file = get_sensors_file(current_directory)
+        middle_target_directory = os.path.join(target_directory, test_folder_name)
+        create_directories(middle_target_directory)
+        full_path = os.path.join(middle_target_directory, attack_name)
+        create_directories(full_path)
+        move_file_to_target_path(current_directory, full_path,
+                                 sensors_file, "sensors_{0}.csv".format(index))
+
+
+# source_path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\lior\\train_set_routes_data"
+# target_path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\lior\\test_set_routes_data"
+# execute_creation(source_path, target_path)
+
+source_folder = "C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\FINAL_SIMULATOR_LATEST+TRAIN+TEST SETS\\test_latest_files"
+logs_folder = "C:\\Users\\Lior\\Desktop\\Simulator Versions\\Simulator\\Logs"
+target_folder = "C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\FINAL_SIMULATOR_LATEST+TRAIN+TEST SETS\\test_set"
+
+# velocity_arg = ['Up' , 'Down' ,'Stable' ]
+# height_arg = ['Up' , 'Down' ,'Stable' ]
+# attack_name = ['Constant_Attack' , 'Height_Attack' ,'Mixed_Attack', 'Velocity_Attack']
+# index = [0, 1]
+
+velocity_arg = 'None'  # Note: change it just for run the script and replace it back to None!
+height_arg = 'None'  # Note: change it just for run the script and replace it back to None!
+attack_name = 'None'  # Note: change it just for run the script and replace it back to None!
+index = None  # Note: change it just for run the script and replace it back to None!
+
+test_folder_name = '[Velocity = {0}]_[Height = {1}]_Route_{2}'.format(velocity_arg, height_arg, index)
+
+# You should delete logs folder before each run!
+# move_test_files_to_target_path(source_directory=logs_folder,
+#                                target_directory=target_folder,
+#                                test_folder_name=test_folder_name,
+#                                attack_name=attack_name)
