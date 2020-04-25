@@ -414,9 +414,9 @@ def move_train_files_to_target_path(source_directory, target_directory, train_fo
                                  sensors_file, "without_anom.csv")
 
 
-# source_folder = "C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\simulator_final_train_set\\latest_files"
+# source_folder = "C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\FINAL_SIMULATOR_LATEST+TRAIN+TEST SETS\\train_latest_files"
 # logs_folder = "C:\\Users\\Lior\\Desktop\\Simulator Versions\\Simulator\\Logs"
-# target_folder = "C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\simulator_final_train_set\\train_set"
+# target_folder = "C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\FINAL_SIMULATOR_LATEST+TRAIN+TEST SETS\\train_set"
 
 # source_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\simulator_data_set\\train_2"
 # logs_folder = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Simulator\\Logs"
