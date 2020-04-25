@@ -94,7 +94,7 @@ class FeatureSelectionWindow(tk.Frame):
 
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
-        self.instructions.configure(text='''Please choose both input and output features:''')
+        self.instructions.configure(text='''Please choose both input and target features:''')
         set_widget_to_left(self.instructions)
 
         # Page body
@@ -106,13 +106,38 @@ class FeatureSelectionWindow(tk.Frame):
         self.csv_features = tk.StringVar()
         self.csv_features.set(self.features_columns_options)
 
+        self.instructions = tk.Label(self)
+        self.instructions.place(relx=0.05, rely=0.35, height=32, width=100)
+        self.instructions.configure(text='''Input features:''')
+        set_widget_to_left(self.instructions)
+
         self.features_listbox = tk.Listbox(self,
                                            listvariable=self.csv_features,
                                            selectmode=tk.MULTIPLE,
                                            exportselection=0,  # Fix : ComboBox clears unrelated ListBox selection
                                            width=120,
-                                           height=180)
-        self.features_listbox.place(relx=0.1, rely=0.35, height=250, width=140)
+                                           height=180,
+                                           bd=3,
+                                           bg='antique white',
+                                           selectbackground='sandy brown')
+        self.features_listbox.place(relx=0.05, rely=0.4, height=230, width=140)
+
+        self.instructions = tk.Label(self)
+        self.instructions.place(relx=0.35, rely=0.35, height=32, width=100)
+        self.instructions.configure(text='''Target features:''')
+        set_widget_to_left(self.instructions)
+
+        self.target_features_listbox = tk.Listbox(self,
+                                                  listvariable=self.csv_features,
+                                                  selectmode=tk.MULTIPLE,
+                                                  exportselection=0,
+                                                  # Fix : ComboBox clears unrelated ListBox selection
+                                                  width=120,
+                                                  height=180,
+                                                  bd=3,
+                                                  bg='antique white',
+                                                  selectbackground='sandy brown')
+        self.target_features_listbox.place(relx=0.35, rely=0.4, height=230, width=140)
 
         # Side logo
         feature_selection_logo = CROSS_WINDOWS_SETTINGS.get('FEATURE_SELECTION')
@@ -121,7 +146,7 @@ class FeatureSelectionWindow(tk.Frame):
         fs_logo_img = tk.PhotoImage(file=feature_selection_photo_location)
 
         self.features_logo_png = tk.Button(self)
-        self.features_logo_png.place(relx=0.4, rely=0.35, height=200, width=200)
+        self.features_logo_png.place(relx=0.6, rely=0.35, height=200, width=200)
         set_logo_configuration(self.features_logo_png, image=fs_logo_img)
 
         # Page footer
@@ -154,8 +179,8 @@ class FeatureSelectionWindow(tk.Frame):
         if not self.validate_next_step():
             return
         else:
-            current_features = self.get_selected_features()
-            self.set_users_selected_features(current_features)
+            current_features, target_features = self.get_selected_features()
+            self.set_users_selected_features(current_features, target_features)
             self.controller.reinitialize_frame("SimilarityFunctionsWindow")
 
     def back_window(self):
@@ -183,8 +208,23 @@ class FeatureSelectionWindow(tk.Frame):
                                            selectmode=tk.MULTIPLE,
                                            exportselection=0,  # Fix : ComboBox clears unrelated ListBox selection
                                            width=120,
-                                           height=150)
-        self.features_listbox.place(relx=0.1, rely=0.35, height=250, width=140)
+                                           height=180,
+                                           bd=3,
+                                           bg='antique white',
+                                           selectbackground='sandy brown')
+        self.features_listbox.place(relx=0.05, rely=0.4, height=230, width=140)
+
+        self.target_features_listbox = tk.Listbox(self,
+                                                  listvariable=self.csv_features,
+                                                  selectmode=tk.MULTIPLE,
+                                                  exportselection=0,
+                                                  # Fix : ComboBox clears unrelated ListBox selection
+                                                  width=120,
+                                                  height=180,
+                                                  bd=3,
+                                                  bg='antique white',
+                                                  selectbackground='sandy brown')
+        self.target_features_listbox.place(relx=0.35, rely=0.4, height=230, width=140)
 
     def get_selected_features(self):
         """
@@ -193,13 +233,20 @@ class FeatureSelectionWindow(tk.Frame):
         """
 
         features = []
+        target_features = []
+
         selection = self.features_listbox.curselection()
+        target_selection = self.target_features_listbox.curselection()
 
         for i in selection:
             selected = self.features_listbox.get(i)
             features.append(selected)
 
-        return features
+        for i in target_selection:
+            target_selected = self.target_features_listbox.get(i)
+            target_features.append(target_selected)
+
+        return features, target_features
 
     def get_features_columns_options(self):
         """
@@ -215,20 +262,22 @@ class FeatureSelectionWindow(tk.Frame):
         :return: True in case validation passed, otherwise False
         """
 
-        current_features = self.get_selected_features()
-        if not current_features or len(current_features) < 2:
-            win32api.MessageBox(0, 'Please select at least two features for the algorithm before the next step.',
+        current_features, target_features = self.get_selected_features()
+        if not current_features or not target_features or len(current_features) < 2 or len(target_features) < 2:
+            win32api.MessageBox(0,
+                                'Please select at least two features for input and two features for output before the next step.',
                                 'Invalid Feature',
                                 0x00001000)
             return False
 
         return True
 
-    def set_users_selected_features(self, features_list):
+    def set_users_selected_features(self, features_list, target_features_list):
         """
         Set the selected features from the test data set
-        :param features_list: the list of selected features
+        :param features_list: the list of selected features for input
+        :param target_features_list: the list of selected features for target
         :return: updates state of features selection
         """
 
-        self.controller.set_users_selected_features(features_list)
+        self.controller.set_users_selected_features(features_list, target_features_list)

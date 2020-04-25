@@ -34,6 +34,7 @@ class InputSettings:
     EXISTING_ALGORITHMS = dict()
     FEATURES_COLUMNS_OPTIONS = []
     USERS_SELECTED_FEATURES = dict()
+    USERS_SELECTED_TARGET_FEATURES = dict()
     THREADS = []
     RESULTS_METRICS_DATA = dict()
     FLIGHT_ROUTES = []
@@ -65,6 +66,8 @@ class InputSettings:
     FEATURES_COLUMNS_OPTIONS             : list
             
     USERS_SELECTED_FEATURES              : dict
+    
+    USERS_SELECTED_TARGET_FEATURES       : dict
             
     THREADS                              : list
             
@@ -160,9 +163,12 @@ class InputSettings:
             Description | Set the data set columns which were loaded from the test data set
             
     get_users_selected_features()
-            Description | Get the data set columns which were selected by the user
+            Description | Get the data set columns which were selected by the user for the input
             
-    set_users_selected_features(features_list)
+    get_users_selected_target_features()
+            Description | Get the data set columns which were selected by the user for the target
+            
+    set_users_selected_features(features_list, target_features_list)
             Description | Set the data set columns which were selected by the user
             
     add_new_thread(new_thread)
@@ -356,10 +362,18 @@ class InputSettings:
         return InputSettings.USERS_SELECTED_FEATURES
 
     @staticmethod
-    def set_users_selected_features(features_list):
+    def get_users_selected_target_features():
+        return InputSettings.USERS_SELECTED_TARGET_FEATURES
+
+    @staticmethod
+    def set_users_selected_features(features_list, target_features_list):
+
         InputSettings.USERS_SELECTED_FEATURES = dict()
+        InputSettings.USERS_SELECTED_TARGET_FEATURES = dict()
+
         for algorithm in InputSettings.ALGORITHMS:
             InputSettings.USERS_SELECTED_FEATURES[algorithm] = features_list
+            InputSettings.USERS_SELECTED_TARGET_FEATURES[algorithm] = target_features_list
 
     @staticmethod
     def add_new_thread(new_thread):

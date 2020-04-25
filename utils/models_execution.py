@@ -66,7 +66,8 @@ class ModelsExecution:
                 InputSettings.get_saving_model(),
                 InputSettings.get_algorithms(),
                 None,
-                InputSettings.get_users_selected_features(),)
+                InputSettings.get_users_selected_features(),
+                InputSettings.get_users_selected_target_features(),)
 
     @classmethod
     def get_load_model_parameters(cls):
@@ -102,7 +103,7 @@ class ModelsExecution:
         similarity_score, test_data_path, results_path, new_model_running = ModelsExecution.get_parameters()
 
         if new_model_running:
-            training_data_path, save_model, algorithms, threshold, features_list = ModelsExecution.get_new_model_parameters()
+            training_data_path, save_model, algorithms, threshold, features_list, target_features_list = ModelsExecution.get_new_model_parameters()
         else:
             training_data_path, save_model, algorithms, threshold = ModelsExecution.get_load_model_parameters()
 
@@ -124,11 +125,13 @@ class ModelsExecution:
             if new_model_running:
                 algorithm_model_path = None
                 algorithm_features_list = features_list[algorithm]
+                algorithm_target_features_list = target_features_list[algorithm]
                 scalar_path = None
             else:
                 algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
                 algorithm_json_file = read_json_file(f'{algorithm_path}/model_data.json')
                 algorithm_features_list = algorithm_json_file['features']
+                algorithm_target_features_list = algorithm_json_file['target_features']
                 threshold = algorithm_json_file['threshold']
                 algorithm_model_path = get_model_path(algorithm_path)
                 scalar_path = get_scalar_path(algorithm_path)
@@ -144,6 +147,7 @@ class ModelsExecution:
                                      algorithm_model_path,
                                      threshold,
                                      algorithm_features_list,
+                                     algorithm_target_features_list,
                                      scalar_path)
 
     @staticmethod
@@ -156,6 +160,7 @@ class ModelsExecution:
                        algorithm_path,
                        threshold,
                        features_list,
+                       target_features_list,
                        scalar_path):
         """
         executes Long short-term memory algorithm
@@ -167,7 +172,8 @@ class ModelsExecution:
         :param new_model_running: Indicator whether the current flow is new model creation or not
         :param algorithm_path: path of existing model directory
         :param threshold: which was calculated in an existing model
-        :param features_list: all the features in the test data set
+        :param features_list: all the features in the test data set for input
+        :param target_features_list: all the features in the test data set for the target
         :param scalar_path: path of existing scalar directory
         :return: results after model prediction
         """
@@ -182,6 +188,7 @@ class ModelsExecution:
                        algorithm_path,
                        threshold,
                        features_list,
+                       target_features_list,
                        scalar_path)
 
     @staticmethod
@@ -194,6 +201,7 @@ class ModelsExecution:
                       algorithm_path,
                       threshold,
                       features_list,
+                      target_features_list,
                       scalar_path):
         """
         executes Support Vector Regression algorithm
@@ -206,6 +214,7 @@ class ModelsExecution:
         :param algorithm_path: path of existing model directory
         :param threshold: which was calculated in an existing model
         :param features_list: all the features in the test data set
+        :param target_features_list: all the features in the test data set for the target
         :param scalar_path: path of existing scalar directory
         :return: results after model prediction
         """
@@ -220,6 +229,7 @@ class ModelsExecution:
                       algorithm_path,
                       threshold,
                       features_list,
+                      target_features_list,
                       scalar_path)
 
     @staticmethod
@@ -232,6 +242,7 @@ class ModelsExecution:
                                 algorithm_path,
                                 threshold,
                                 features_list,
+                                target_features_list,
                                 scalar_path):
         """
         executes Random forest algorithm
@@ -244,6 +255,7 @@ class ModelsExecution:
         :param algorithm_path: path of existing model directory
         :param threshold: which was calculated in an existing model
         :param features_list: all the features in the test data set
+        :param target_features_list: all the features in the test data set for the target
         :param scalar_path: path of existing scalar directory
         :return: results after model prediction
         """
@@ -258,6 +270,7 @@ class ModelsExecution:
                                 algorithm_path,
                                 threshold,
                                 features_list,
+                                target_features_list,
                                 scalar_path)
 
     @staticmethod
@@ -270,6 +283,7 @@ class ModelsExecution:
                       algorithm_path,
                       threshold,
                       features_list,
+                      target_features_list,
                       scalar_path):
         """
         executes MLP algorithm
@@ -282,6 +296,7 @@ class ModelsExecution:
         :param algorithm_path: path of existing model directory
         :param threshold: which was calculated in an existing model
         :param features_list: all the features in the test data set
+        :param target_features_list: all the features in the test data set for the target
         :param scalar_path: path of existing scalar directory
         :return: results after model prediction
         """
@@ -296,6 +311,7 @@ class ModelsExecution:
                       algorithm_path,
                       threshold,
                       features_list,
+                      target_features_list,
                       scalar_path)
 
     @staticmethod

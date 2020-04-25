@@ -64,7 +64,7 @@ def get_mlp_model(hidden_layer_sizes, activation, solver, alpha, random_state):
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
-              algorithm_path, threshold, features_list, scalar_path):
+              algorithm_path, threshold, features_list, target_features_list, scalar_path):
     """
     Run MLP model process
     :param training_data_path: train data set directory path
@@ -76,6 +76,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :param algorithm_path: path of existing algorithm
     :param threshold: saved threshold for load model flow
     :param features_list:  saved chosen features for load model flow
+    :param target_features_list: all the features in the test data set for the target
     :param scalar_path: path of existing scalar directory
     :return:  reported results for MLP execution
     """
@@ -129,6 +130,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                                run_new_model=new_model_running,
                                                                                X_train=X_train,
                                                                                features_list=features_list,
+                                                                               target_features_list=target_features_list,
                                                                                save_model=save_model)
 
             df = pd.DataFrame(tpr_scores)
@@ -211,6 +213,7 @@ def execute_predict(flight_route,
                     run_new_model=False,
                     X_train=None,
                     features_list=None,
+                    target_features_list=None,
                     save_model=False):
     """
     Execute predictions function for a specific flight route
@@ -224,7 +227,8 @@ def execute_predict(flight_route,
     :param add_plots: indicator whether to add plots or not
     :param run_new_model: indicator whether current flow is new model creation or not
     :param X_train: data frame
-    :param features_list: the list of features which the user chose
+    :param features_list: the list of features which the user chose for the input
+    :param target_features_list: the list of features which the user chose for the target
     :param save_model: indicator whether the user want to save the model or not
     :return: tpr scores, fpr scores, acc scores, delay scores
     """
@@ -242,6 +246,7 @@ def execute_predict(flight_route,
                                       add_plots,
                                       threshold,
                                       features_list,
+                                      target_features_list,
                                       results_path,
                                       flight_route,
                                       similarity_score,
@@ -307,6 +312,7 @@ def predict_train_set(mlp_model,
                       add_plots,
                       threshold,
                       features_list,
+                      target_features_list,
                       results_path,
                       flight_route,
                       similarity_score,
@@ -318,7 +324,8 @@ def predict_train_set(mlp_model,
     :param save_model: indicator whether the user want to save the model or not
     :param add_plots: indicator whether to add plots or not
     :param threshold: threshold from the train
-    :param features_list: the list of features which the user chose
+    :param features_list: the list of features which the user chose for the input
+    :param target_features_list: the list of features which the user chose for the target
     :param results_path: the path of results directory
     :param flight_route: current flight route we are working on
     :param similarity_score: similarity function
@@ -339,6 +346,7 @@ def predict_train_set(mlp_model,
     if save_model:
         data = {}
         data['features'] = features_list
+        data['target_features'] = target_features_list
         data['threshold'] = threshold
         with open(f'{results_path}/model_data.json', 'w') as outfile:
             json.dump(data, outfile)

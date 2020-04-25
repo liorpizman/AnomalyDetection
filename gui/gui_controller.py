@@ -96,7 +96,7 @@ class AnomalyDetectionGUI(tk.Tk):
     get_features_columns_options()
             Description | Get the data set columns which were loaded from the test data set
 
-    set_users_selected_features(features_list)
+    set_users_selected_features(features_list, target_features_list)
             Description | Set the data set columns which were selected by the user
 
     add_new_thread(new_thread)
@@ -283,8 +283,8 @@ class AnomalyDetectionGUI(tk.Tk):
     def get_features_columns_options(self):
         return self.model_controller.get_features_columns_options()
 
-    def set_users_selected_features(self, features_list):
-        self.model_controller.set_users_selected_features(features_list)
+    def set_users_selected_features(self, features_list, target_features_list):
+        self.model_controller.set_users_selected_features(features_list, target_features_list)
 
     def add_new_thread(self, new_thread):
         self.model_controller.add_new_thread(new_thread)
