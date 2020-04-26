@@ -205,11 +205,11 @@ def is_valid_model_paths(paths):
             if os.path.isfile(fullPath):
                 if file.endswith('.h5') or file.endswith('_model.pkl'):
                     models_counter += 1
-                if file.endswith('_scalar.pkl'):
+                if file.endswith('_scaler.pkl'):
                     scalars_counter += 1
                 if (file == "model_data.json"):
                     json_files_counter += 1
-        if not (models_counter == 1 and scalars_counter == 1 and json_files_counter == 1):
+        if not (models_counter == 1 and scalars_counter == 2 and json_files_counter == 1):
             return False
     return True
 

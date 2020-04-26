@@ -7,7 +7,7 @@ DataSets: 1. ADS-B dataset 2. simulated data
 Switcher between models execution in the system
 '''
 
-from gui.shared.helper_methods import read_json_file, get_model_path, load_anomaly_detection_list, get_scalar_path
+from gui.shared.helper_methods import read_json_file, get_model_path, load_anomaly_detection_list, get_scaler_path
 from models.lstm.lstm_execution import run_model as run_lstm_model
 from models.svr.svr_execution import run_model as run_svr_model
 from models.random_forest.random_forest_execution import run_model as run_random_forest_model
@@ -126,7 +126,8 @@ class ModelsExecution:
                 algorithm_model_path = None
                 algorithm_features_list = features_list[algorithm]
                 algorithm_target_features_list = target_features_list[algorithm]
-                scalar_path = None
+                train_scaler_path = None
+                target_scaler_path = None
             else:
                 algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
                 algorithm_json_file = read_json_file(f'{algorithm_path}/model_data.json')
@@ -134,7 +135,8 @@ class ModelsExecution:
                 algorithm_target_features_list = algorithm_json_file['target_features']
                 threshold = algorithm_json_file['threshold']
                 algorithm_model_path = get_model_path(algorithm_path)
-                scalar_path = get_scalar_path(algorithm_path)
+                train_scaler_path = get_scaler_path(algorithm_path, 'train')
+                target_scaler_path = get_scaler_path(algorithm_path, 'target')
 
             # Dynamic execution for each chosen model
             model_execution_function = ModelsExecution.get_algorithm_execution_function(algorithm)
@@ -148,7 +150,8 @@ class ModelsExecution:
                                      threshold,
                                      algorithm_features_list,
                                      algorithm_target_features_list,
-                                     scalar_path)
+                                     train_scaler_path,
+                                     target_scaler_path)
 
     @staticmethod
     def LSTM_execution(test_data_path,
@@ -284,7 +287,8 @@ class ModelsExecution:
                       threshold,
                       features_list,
                       target_features_list,
-                      scalar_path):
+                      train_scaler_path,
+                      target_scaler_path):
         """
         executes MLP algorithm
         :param test_data_path: path of test data set directory
@@ -297,7 +301,8 @@ class ModelsExecution:
         :param threshold: which was calculated in an existing model
         :param features_list: all the features in the test data set
         :param target_features_list: all the features in the test data set for the target
-        :param scalar_path: path of existing scalar directory
+        :param train_scaler_path: path of existing train scaler directory
+        :param target_scaler_path: path of existing target scaler directory
         :return: results after model prediction
         """
 
@@ -312,7 +317,8 @@ class ModelsExecution:
                       threshold,
                       features_list,
                       target_features_list,
-                      scalar_path)
+                      train_scaler_path,
+                      target_scaler_path)
 
     @staticmethod
     def get_algorithm_execution_function(algorithm_name):

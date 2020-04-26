@@ -64,7 +64,7 @@ def get_mlp_model(hidden_layer_sizes, activation, solver, alpha, random_state):
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
-              algorithm_path, threshold, features_list, target_features_list, scalar_path):
+              algorithm_path, threshold, features_list, target_features_list, train_scaler_path, target_scaler_path):
     """
     Run MLP model process
     :param training_data_path: train data set directory path
@@ -77,7 +77,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :param threshold: saved threshold for load model flow
     :param features_list:  saved chosen features for load model flow
     :param target_features_list: all the features in the test data set for the target
-    :param scalar_path: path of existing scalar directory
+    :param train_scaler_path: path of existing input train scaler directory
+    :param target_scaler_path: path of existing input target scaler directory
     :return:  reported results for MLP execution
     """
 
@@ -87,8 +88,10 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         random_state, threshold, window_size = get_mlp_new_model_parameters()
     else:
         mlp_model = pickle.load(open(algorithm_path, 'rb'))
-        scalar = pickle.load(open(scalar_path, 'rb'))
+        X_train_scaler = pickle.load(open(train_scaler_path, 'rb'))
+        Y_train_scaler = pickle.load(open(target_scaler_path, 'rb'))
         X_train = None
+        Y_train = None
 
     FLIGHT_ROUTES = get_subdirectories(test_data_path)
 
@@ -105,15 +108,16 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
         # Execute training for new model flow
         if new_model_running:
-            mlp_model, scalar, X_train = execute_train(flight_route,
-                                                       training_data_path=training_data_path,
-                                                       hidden_layer_sizes=hidden_layer_sizes,
-                                                       activation=activation,
-                                                       solver=solver,
-                                                       alpha=alpha,
-                                                       random_state=random_state,
-                                                       features_list=features_list,
-                                                       window_size=window_size)
+            mlp_model, X_train_scaler, Y_train_scaler, X_train, Y_train = execute_train(flight_route,
+                                                                                        training_data_path=training_data_path,
+                                                                                        hidden_layer_sizes=hidden_layer_sizes,
+                                                                                        activation=activation,
+                                                                                        solver=solver,
+                                                                                        alpha=alpha,
+                                                                                        random_state=random_state,
+                                                                                        features_list=features_list,
+                                                                                        window_size=window_size,
+                                                                                        target_features_list=target_features_list)
 
         # Get results for each similarity function
         for similarity in similarity_score:
@@ -124,14 +128,16 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                                similarity_score=similarity,
                                                                                threshold=threshold,
                                                                                mlp_model=mlp_model,
-                                                                               scalar=scalar,
+                                                                               X_train_scaler=X_train_scaler,
                                                                                results_path=current_results_path,
                                                                                add_plots=True,
                                                                                run_new_model=new_model_running,
                                                                                X_train=X_train,
                                                                                features_list=features_list,
                                                                                target_features_list=target_features_list,
-                                                                               save_model=save_model)
+                                                                               save_model=save_model,
+                                                                               Y_train_scaler=Y_train_scaler,
+                                                                               Y_train=Y_train)
 
             df = pd.DataFrame(tpr_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_tpr.csv', index=False)
@@ -164,7 +170,8 @@ def execute_train(flight_route,
                   alpha=None,
                   random_state=None,
                   features_list=None,
-                  window_size=1):
+                  window_size=1,
+                  target_features_list=None):
     """
     Execute train function for a specific flight route
     :param flight_route: current flight route we should train on
@@ -175,19 +182,26 @@ def execute_train(flight_route,
     :param alpha: L2 penalty (regularization term) parameter.
     :param random_state: If int, random_state is the seed used by the random number generator
     :param features_list: list of selected features
-    :return: MLP model, normalization scalar, X_train data frame
+    :param target_features_list: the list of features which the user chose for the target
+    :return: MLP model, normalization input train scalar,normalization input target scalar, X_train data frame,Y_train data frame
     """
 
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
 
-    df_train = df_train[features_list]
+    input_df_train = df_train[features_list]
+    target_df_train = df_train[target_features_list]
 
     # Step 1 : Clean train data set
-    df_train = clean_data(df_train)
+    input_df_train = clean_data(input_df_train)
+
+    target_df_train = clean_data(target_df_train)
 
     # Step 2: Normalize the data
-    X_train, scalar = normalize_data(data=df_train,
-                                     scaler="power_transform")
+    X_train, X_train_scaler = normalize_data(data=input_df_train,
+                                             scaler="power_transform")
+
+    Y_train, Y_train_scaler = normalize_data(data=target_df_train,  # target data
+                                             scaler="power_transform")
 
     # Get the model which is created by user's parameters
     mlp_model = get_mlp_model(hidden_layer_sizes=hidden_layer_sizes,
@@ -197,9 +211,9 @@ def execute_train(flight_route,
                               random_state=random_state)
 
     tsr = TimeSeriesRegressor(mlp_model, n_prev=window_size)
-    tsr.fit(X_train)
+    tsr.fit(X_train, Y_train)
 
-    return tsr, scalar, X_train
+    return tsr, X_train_scaler, Y_train_scaler, X_train, Y_train
 
 
 def execute_predict(flight_route,
@@ -207,14 +221,16 @@ def execute_predict(flight_route,
                     similarity_score=None,
                     threshold=None,
                     mlp_model=None,
-                    scalar=None,
+                    X_train_scaler=None,
                     results_path=None,
                     add_plots=True,
                     run_new_model=False,
                     X_train=None,
                     features_list=None,
                     target_features_list=None,
-                    save_model=False):
+                    save_model=False,
+                    Y_train_scaler=None,
+                    Y_train=None):
     """
     Execute predictions function for a specific flight route
     :param flight_route: current flight route we should train on
@@ -222,14 +238,16 @@ def execute_predict(flight_route,
     :param similarity_score: similarity function
     :param threshold: threshold from the train
     :param mlp_model: MLP model
-    :param scalar: normalization scalar
+    :param X_train_scaler: normalization train input scalar
     :param results_path: the path of results directory
     :param add_plots: indicator whether to add plots or not
     :param run_new_model: indicator whether current flow is new model creation or not
-    :param X_train: data frame
+    :param X_train: train input data frame
     :param features_list: the list of features which the user chose for the input
     :param target_features_list: the list of features which the user chose for the target
     :param save_model: indicator whether the user want to save the model or not
+    :param Y_train_scaler: normalization train target scalar
+    :param Y_train: train target data frame
     :return: tpr scores, fpr scores, acc scores, delay scores
     """
 
@@ -250,10 +268,15 @@ def execute_predict(flight_route,
                                       results_path,
                                       flight_route,
                                       similarity_score,
-                                      scalar)
+                                      X_train_scaler,
+                                      Y_train,
+                                      Y_train_scaler)
 
     flight_dir = os.path.join(test_data_path, flight_route)
     ATTACKS = get_subdirectories(flight_dir)
+
+    figures_results_path = os.path.join(results_path, "figures")
+    create_directories(figures_results_path)
 
     # Iterate over all attacks in order to find anomalies
     for attack in ATTACKS:
@@ -264,26 +287,35 @@ def execute_predict(flight_route,
             Y_test_labels = df_test_source[[ATTACK_COLUMN]].values
             Y_test_target = mlp_model._preprocess(Y_test_labels, Y_test_labels)[1]
 
-            df_test = df_test_source[features_list]
+            input_df_test = df_test_source[features_list]
+            target_df_test = df_test_source[target_features_list]
 
             # Step 1 : Clean test data set
-            clean_df_test = clean_data(df_test)
+            input_clean_df_test = clean_data(input_df_test)
+            target_clean_df_test = clean_data(target_df_test)
 
             # Step 2: Normalize the data
-            X_test = scalar.transform(clean_df_test)
+            X_test = X_train_scaler.transform(input_clean_df_test)
+
+            # Y_test = normalize_data(data=target_clean_df_test,
+            #                         scaler="power_transform")[0]
+
+            Y_test = Y_train_scaler.transform(target_clean_df_test)
+
+            Y_test_preprocessed = mlp_model._preprocess(Y_test, Y_test)[1]
 
             X_pred = mlp_model.predict(X_test)
 
             scores_test = []
             for i, pred in enumerate(X_pred):
-                scores_test.append(anomaly_score(X_test[i], pred, similarity_score))
+                scores_test.append(anomaly_score(Y_test_preprocessed[i], pred, similarity_score))
 
             # Add reconstruction error scatter if plots indicator is true
             if add_plots:
                 plot_reconstruction_error_scatter(scores=scores_test,
                                                   labels=Y_test_target,
                                                   threshold=threshold,
-                                                  plot_dir=results_path,
+                                                  plot_dir=figures_results_path,
                                                   title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
 
             predictions = [1 if x >= threshold else 0 for x in scores_test]
@@ -316,11 +348,13 @@ def predict_train_set(mlp_model,
                       results_path,
                       flight_route,
                       similarity_score,
-                      scalar):
+                      X_train_scaler,
+                      Y_train,
+                      Y_train_scaler):
     """
     Execute prediction on the train data set
     :param mlp_model: MLP model
-    :param X_train: data frame
+    :param X_train: train input data frame
     :param save_model: indicator whether the user want to save the model or not
     :param add_plots: indicator whether to add plots or not
     :param threshold: threshold from the train
@@ -329,7 +363,9 @@ def predict_train_set(mlp_model,
     :param results_path: the path of results directory
     :param flight_route: current flight route we are working on
     :param similarity_score: similarity function
-    :param scalar: normalization scalar
+    :param X_train_scaler: train input normalization scalar
+    :param Y_train: train target data frame
+    :param Y_train_scaler: train target normalization scalar
     :return: threshold
     """
 
@@ -337,7 +373,7 @@ def predict_train_set(mlp_model,
     scores_train = []
 
     for i, pred in enumerate(X_pred):
-        scores_train.append(anomaly_score(X_train[i], pred, similarity_score))
+        scores_train.append(anomaly_score(Y_train[i], pred, similarity_score))
 
     # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
     threshold = get_threshold(scores_train, threshold)
@@ -348,13 +384,20 @@ def predict_train_set(mlp_model,
         data['features'] = features_list
         data['target_features'] = target_features_list
         data['threshold'] = threshold
-        with open(f'{results_path}/model_data.json', 'w') as outfile:
+
+        model_results_path = os.path.join(results_path, "model_data")
+        create_directories(model_results_path)
+
+        with open(f'{model_results_path}/model_data.json', 'w') as outfile:
             json.dump(data, outfile)
-        save_model_file_path = os.path.join(results_path, flight_route + "_model.pkl")
+        save_model_file_path = os.path.join(model_results_path, flight_route + "_model.pkl")
         with open(save_model_file_path, 'wb') as file:
             pickle.dump(mlp_model, file)
-        save_scalar_file_path = os.path.join(results_path, flight_route + "_scalar.pkl")
-        with open(save_scalar_file_path, 'wb') as file:
-            pickle.dump(scalar, file)
+        save_input_scaler_file_path = os.path.join(model_results_path, flight_route + "_train_scaler.pkl")
+        with open(save_input_scaler_file_path, 'wb') as file:
+            pickle.dump(X_train_scaler, file)
+        save_target_scaler_file_path = os.path.join(model_results_path, flight_route + "_target_scaler.pkl")
+        with open(save_target_scaler_file_path, 'wb') as file:
+            pickle.dump(Y_train_scaler, file)
 
     return threshold
