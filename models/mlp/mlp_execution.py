@@ -137,7 +137,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                                target_features_list=target_features_list,
                                                                                save_model=save_model,
                                                                                Y_train_scaler=Y_train_scaler,
-                                                                               Y_train=Y_train)
+                                                                               Y_train=Y_train,
+                                                                               window_size=window_size)
 
             df = pd.DataFrame(tpr_scores)
             df.to_csv(f'{current_results_path}/{flight_route}_tpr.csv', index=False)
@@ -199,10 +200,10 @@ def execute_train(flight_route,
 
     # Step 2: Normalize the data
     X_train, X_train_scaler = normalize_data(data=input_df_train,
-                                             scaler="power_transform")
+                                             scaler="min_max")
 
     Y_train, Y_train_scaler = normalize_data(data=target_df_train,  # target data
-                                             scaler="power_transform")
+                                             scaler="min_max")
 
     # Get the model which is created by user's parameters
     mlp_model = get_mlp_model(hidden_layer_sizes=hidden_layer_sizes,
@@ -231,7 +232,8 @@ def execute_predict(flight_route,
                     target_features_list=None,
                     save_model=False,
                     Y_train_scaler=None,
-                    Y_train=None):
+                    Y_train=None,
+                    window_size=None):
     """
     Execute predictions function for a specific flight route
     :param flight_route: current flight route we should train on
@@ -249,6 +251,7 @@ def execute_predict(flight_route,
     :param save_model: indicator whether the user want to save the model or not
     :param Y_train_scaler: normalization train target scalar
     :param Y_train: train target data frame
+    :param window_size: window size for each instance in training
     :return: tpr scores, fpr scores, acc scores, delay scores
     """
 
@@ -299,7 +302,7 @@ def execute_predict(flight_route,
             X_test = X_train_scaler.transform(input_clean_df_test)
 
             # Y_test = normalize_data(data=target_clean_df_test,
-            #                         scaler="power_transform")[0]
+            #                         scaler="min_max")[0]
 
             Y_test = Y_train_scaler.transform(target_clean_df_test)
 
@@ -330,7 +333,7 @@ def execute_predict(flight_route,
             attack_start, attack_end = get_attack_boundaries(df_test_source[ATTACK_COLUMN])
 
             method_scores = get_method_scores(predictions, attack_start, attack_end,
-                                              add_window_size=False, window_size=None)
+                                              add_window_size=True, window_size=window_size)
 
             tpr_scores[attack].append(method_scores[0])
             fpr_scores[attack].append(method_scores[1])

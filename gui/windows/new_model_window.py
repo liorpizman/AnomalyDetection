@@ -151,7 +151,7 @@ class NewModel(tk.Frame):
         set_copyright_configuration(self.copyright)
 
         # -------------------------------should be replaced at final submission  -------------------------------------
-        self.set_inputs_second_permutation()
+        self.set_inputs_third_permutation()
         # ------------------------------- end ------------------------------------------------------------------------
 
     def reset_widgets(self):
@@ -247,9 +247,9 @@ class NewModel(tk.Frame):
 
     def set_inputs_third_permutation(self):
         self.set_permutations(
-            training_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\data_set_1\\train",
-            test_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\data_set_1\\test",
-            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\data_set_1\\results"
+            training_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\train",
+            test_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\test",
+            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\results"
         )
 
     def set_inputs_fourth_permutation(self):
