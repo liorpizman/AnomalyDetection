@@ -181,7 +181,8 @@ def execute_train(flight_route,
     :param solver: The solver for weight optimization.
     :param alpha: L2 penalty (regularization term) parameter.
     :param random_state: If int, random_state is the seed used by the random number generator
-    :param features_list: list of selected features
+    :param features_list: the list of features which the user chose for the train
+    :param window_size: window size for each instance in training
     :param target_features_list: the list of features which the user chose for the target
     :return: MLP model, normalization input train scalar,normalization input target scalar, X_train data frame,Y_train data frame
     """
@@ -305,6 +306,7 @@ def execute_predict(flight_route,
             Y_test_preprocessed = mlp_model._preprocess(Y_test, Y_test)[1]
 
             X_pred = mlp_model.predict(X_test)
+            assert len(Y_test_preprocessed) == len(X_pred)
 
             scores_test = []
             for i, pred in enumerate(X_pred):
@@ -372,8 +374,11 @@ def predict_train_set(mlp_model,
     X_pred = mlp_model.predict(X_train)
     scores_train = []
 
+    Y_train_preprocessed = mlp_model._preprocess(Y_train, Y_train)[1]
+    assert len(Y_train_preprocessed) == len(X_pred)
+
     for i, pred in enumerate(X_pred):
-        scores_train.append(anomaly_score(Y_train[i], pred, similarity_score))
+        scores_train.append(anomaly_score(Y_train_preprocessed[i], pred, similarity_score))
 
     # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
     threshold = get_threshold(scores_train, threshold)
@@ -390,12 +395,15 @@ def predict_train_set(mlp_model,
 
         with open(f'{model_results_path}/model_data.json', 'w') as outfile:
             json.dump(data, outfile)
+
         save_model_file_path = os.path.join(model_results_path, flight_route + "_model.pkl")
         with open(save_model_file_path, 'wb') as file:
             pickle.dump(mlp_model, file)
+
         save_input_scaler_file_path = os.path.join(model_results_path, flight_route + "_train_scaler.pkl")
         with open(save_input_scaler_file_path, 'wb') as file:
             pickle.dump(X_train_scaler, file)
+
         save_target_scaler_file_path = os.path.join(model_results_path, flight_route + "_target_scaler.pkl")
         with open(save_target_scaler_file_path, 'wb') as file:
             pickle.dump(Y_train_scaler, file)
