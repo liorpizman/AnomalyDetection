@@ -205,7 +205,8 @@ class ModelsExecution:
                       threshold,
                       features_list,
                       target_features_list,
-                      scalar_path):
+                      train_scaler_path,
+                      target_scaler_path):
         """
         executes Support Vector Regression algorithm
         :param test_data_path: path of test data set directory
@@ -218,7 +219,8 @@ class ModelsExecution:
         :param threshold: which was calculated in an existing model
         :param features_list: all the features in the test data set
         :param target_features_list: all the features in the test data set for the target
-        :param scalar_path: path of existing scalar directory
+        :param train_scaler_path: path of existing train scaler directory
+        :param target_scaler_path: path of existing target scaler directory
         :return: results after model prediction
         """
 
@@ -233,7 +235,8 @@ class ModelsExecution:
                       threshold,
                       features_list,
                       target_features_list,
-                      scalar_path)
+                      train_scaler_path,
+                      target_scaler_path)
 
     @staticmethod
     def Random_Forest_execution(test_data_path,

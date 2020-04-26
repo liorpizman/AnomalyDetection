@@ -69,7 +69,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :param new_model_running: indicator whether we are in new model creation flow or not
     :param algorithm_path: path of existing algorithm
     :param threshold: saved threshold for load model flow
-    :param features_list:  saved chosen features for load model flow
+    :param features_list:  the list of features which the user chose for the train
     :param target_features_list: all the features in the test data set for the target
     :param train_scaler_path: path of existing input train scaler directory
     :param target_scaler_path: path of existing input target scaler directory
@@ -232,7 +232,7 @@ def execute_predict(flight_route,
     :param results_path: the path of results directory
     :param add_plots: indicator whether to add plots or not
     :param run_new_model: indicator whether current flow is new model creation or not
-    :param X_train: data frame
+    :param X_train: train input data frame
     :param features_list: the list of features which the user chose for the input
     :param target_features_list: the list of features which the user chose for the target
     :param save_model: indicator whether the user want to save the model or not
