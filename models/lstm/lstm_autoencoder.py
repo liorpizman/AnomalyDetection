@@ -18,7 +18,8 @@ from keras.layers import TimeDistributed
 
 
 def get_lstm_autoencoder_model(timesteps,
-                               features,
+                               input_features,
+                               target_features,
                                encoding_dimension,
                                activation,
                                loss,
@@ -26,7 +27,8 @@ def get_lstm_autoencoder_model(timesteps,
     """
     Create linear stack of layers using keras in order to create LSTM auto encoder model
     :param timesteps: window size
-    :param features: data frame's columns
+    :param input_features: train input data frame columns
+    :param target_features: train target data frame columns
     :param encoding_dimension: encoding_dimension
     :param activation: user's choice for activation function
     :param loss: user's choice for loss function
@@ -35,10 +37,10 @@ def get_lstm_autoencoder_model(timesteps,
     """
 
     model = Sequential()
-    model.add(LSTM(encoding_dimension, activation=activation, input_shape=(timesteps, features)))
+    model.add(LSTM(encoding_dimension, activation=activation, input_shape=(timesteps, input_features)))
     model.add(RepeatVector(timesteps))
     model.add(LSTM(encoding_dimension, activation=activation, return_sequences=True))
-    model.add(TimeDistributed(Dense(features)))
+    model.add(TimeDistributed(Dense(target_features)))
     model.compile(optimizer=optimizer, loss=loss)
 
     return model

@@ -286,7 +286,7 @@ def execute_predict(flight_route,
             df_test_source = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
 
             Y_test_labels = df_test_source[[ATTACK_COLUMN]].values
-            Y_test_target = mlp_model._preprocess(Y_test_labels, Y_test_labels)[1]
+            Y_test_labels_preprocessed = mlp_model._preprocess(Y_test_labels, Y_test_labels)[1]
 
             input_df_test = df_test_source[features_list]
             target_df_test = df_test_source[target_features_list]
@@ -315,7 +315,7 @@ def execute_predict(flight_route,
             # Add reconstruction error scatter if plots indicator is true
             if add_plots:
                 plot_reconstruction_error_scatter(scores=scores_test,
-                                                  labels=Y_test_target,
+                                                  labels=Y_test_labels_preprocessed,
                                                   threshold=threshold,
                                                   plot_dir=figures_results_path,
                                                   title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')

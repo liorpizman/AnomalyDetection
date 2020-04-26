@@ -168,7 +168,7 @@ def execute_train(flight_route,
     :param features_list: the list of features which the user chose for the train
     :param window_size: window size for each instance in training
     :param target_features_list: the list of features which the user chose for the target
-    :return: svr model, normalization scalar, X_train data frame
+    :return: svr model, normalization input train scalar,normalization input target scalar, X_train data frame,Y_train data frame
     """
 
     df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
@@ -268,7 +268,7 @@ def execute_predict(flight_route,
             df_test_source = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
 
             Y_test_labels = df_test_source[[ATTACK_COLUMN]].values
-            Y_test_target = svr_model._preprocess(Y_test_labels, Y_test_labels)[1]
+            Y_test_labels_preprocessed = svr_model._preprocess(Y_test_labels, Y_test_labels)[1]
 
             input_df_test = df_test_source[features_list]
             target_df_test = df_test_source[target_features_list]
@@ -297,7 +297,7 @@ def execute_predict(flight_route,
             # Add reconstruction error scatter if plots indicator is true
             if add_plots:
                 plot_reconstruction_error_scatter(scores=scores_test,
-                                                  labels=Y_test_target,
+                                                  labels=Y_test_labels_preprocessed,
                                                   threshold=threshold,
                                                   plot_dir=figures_results_path,
                                                   title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
