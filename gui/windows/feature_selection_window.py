@@ -189,7 +189,7 @@ class FeatureSelectionWindow(tk.Frame):
         :return: previous window
         """
 
-        self.controller.show_frame("ParametersOptionsWindow")
+        self.controller.show_frame("AlgorithmsWindow")
 
     def reinitialize(self):
         """

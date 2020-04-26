@@ -150,17 +150,18 @@ def get_model_path(path):
     return ""
 
 
-def get_scalar_path(path):
+def get_scaler_path(path, scaler_name):
     """
-    Get the full path of an existing scalar (pkl file)
+    Get the full path of an existing scaler (pkl file)
     :param path: scalar directory path
+    :param scaler_name: can be 'train' or 'target'
     :return: full path of the file
     """
 
     files = os.listdir(path)
 
     for file in files:
-        if file.endswith('.h5') or file.endswith('_scalar.pkl'):
+        if file.endswith('.h5') or file.endswith(scaler_name + '_scaler.pkl'):
             return os.path.join(path, file)
 
     return ""
