@@ -187,11 +187,11 @@ def execute_train(flight_route,
 
     # Step 2: Normalize the data
     X_train, X_train_scaler = normalize_data(data=input_df_train,
-                                             scaler="power_transform")
+                                             scaler="min_max")
     X_train_preprocessed = get_training_data_lstm(X_train, window_size)
 
     Y_train, Y_train_scaler = normalize_data(data=target_df_train,  # target data
-                                             scaler="power_transform")
+                                             scaler="min_max")
     Y_train_preprocessed = get_training_data_lstm(Y_train, window_size)
 
     # Get the model which is created by user's parameters

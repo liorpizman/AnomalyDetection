@@ -191,10 +191,10 @@ def execute_train(flight_route,
 
     # Step 2: Normalize the data
     X_train, X_train_scaler = normalize_data(data=input_df_train,
-                                             scaler="power_transform")
+                                             scaler="min_max")
 
     Y_train, Y_train_scaler = normalize_data(data=target_df_train,  # target data
-                                             scaler="power_transform")
+                                             scaler="min_max")
 
     # Get the model which is created by user's parameters
     random_forest_model = get_random_forest_model(n_estimators=n_estimators,
