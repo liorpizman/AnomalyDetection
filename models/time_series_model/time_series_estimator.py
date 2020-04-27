@@ -136,3 +136,39 @@ class TimeSeriesRegressor(TimeSeriesEstimator, RegressorMixin):
             return np.transpose(np.array(results))
         else:
             return self.base_estimator.predict(X_new)
+
+
+def cascade_cv(n, n_folds, data_size=.8, test_size=.15, number=False):
+    '''
+    Splits the dataset into n_folds of overlapping but temporally contiguous
+    data.
+    :param n: the size of the dataset
+    :param n_folds: number of train, test pairs to generate
+    :param data_size: the proportion of data used in each train,test pair
+    :param test_size: the relative size of each testing dataset
+    :return:
+    '''
+    pairs = []
+    shift = int(round((1 - data_size) * n / float(n_folds)))
+    if shift < 4:
+        raise (UserWarning("Small Shift warning: Consider less folds, "
+                           "or a smaller data size"))
+    for i in range(n_folds):
+        start = shift * i
+        end = min(start + int(data_size * n), n)
+
+        if test_size <= 1 and not number:
+            # line below from master branch but seem to be breaking the code
+            # filed issue on github.
+            # ntrn = int(n * (1 - test_size))
+            ntrn = int((end - start) * (1 - test_size))
+        elif test_size > 1 and number:
+            ntrn = int(n * data_size - test_size)
+        else:
+            raise ValueError(
+                "test_size: (frac or Int) and number:(True or False) "
+                "should be set correctly")
+
+        pairs.append((list(range(start, start + ntrn)),
+                      list(range(start + ntrn, end))))
+    return pairs

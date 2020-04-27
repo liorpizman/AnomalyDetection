@@ -1,0 +1,334 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+Sklearn models tuning class
+'''
+import json
+
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import GridSearchCV
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.neural_network import MLPRegressor
+from sklearn.svm import SVR
+
+from gui.algorithm_frame_options.shared.helper_methods import load_algorithm_constants
+from models.data_preprocessing.data_cleaning import clean_data
+from models.data_preprocessing.data_normalization import normalize_data
+from models.time_series_model.time_series_estimator import TimeSeriesRegressor, cascade_cv
+
+
+def train_test_plot(pred_train, y_train, n_prev, title, results_path, target_features, n_ahead=1):
+    # plt.subplot(1, 2, 1)
+    for i, column in enumerate(target_features):
+        plt.plot(pred_train[i][:], 'r', label="Predicted")
+        plt.plot(y_train[i][n_prev - 1 + n_ahead:], 'b--', label="Actual")
+        # nprev: because the first predicted point needed n_prev steps of data
+        plt.title("Training performance of " + title)
+        plt.legend(loc='lower right')
+        plt.gcf().set_size_inches(15, 6)
+        feature_title = str(title) + " for " + str(column)
+
+        plt.savefig(f'{results_path}/{feature_title}.png')
+
+        plt.clf()
+
+        plt.show()
+
+
+def convert_string_to_boolean(source_dict):
+    """
+    Converts string values of array to booleans in which boolean values are presented as a string
+    :param source_dict: input value with non boolean values
+    :return: transformed dictionary with boolean values
+    """
+
+    changes = {
+        "True": True,
+        "False": False
+    }
+
+    for key in range(len(source_dict)):
+        source_dict[key] = [changes.get(x, x) for x in source_dict[key]]
+
+    return source_dict
+
+
+def get_suitable_yaml_file(model_name):
+    """
+    get the yaml file according to algorithm name
+    :param model_name: the name of the algorithm
+    :return: yaml file
+    """
+
+    switcher = {
+        "SVR": "svr_params.yaml",
+        "MLP": "mlp_params.yaml",
+        "Random Forest": "random_forest_params.yaml",
+    }
+    return switcher.get(model_name, None)
+
+
+def get_suitable_SVR_params(model_params):
+    """
+    get suitable svr params option
+    :return: svr params
+    """
+
+    for key in model_params.keys():
+        if key == "estimator__epsilon":
+            for index in range(len(model_params[key])):
+                model_params[key][index] = float(model_params[key][index])
+
+    return model_params
+
+
+def get_suitable_Random_Forest_params(model_params):
+    """
+    get suitable random forest params option
+    :return: svr params
+    """
+
+    for key in model_params.keys():
+        if key == "estimator__n_estimators":
+            for index in range(len(model_params[key])):
+                model_params[key][index] = int(model_params[key][index])
+        elif key == "estimator__random_state":
+            for index in range(len(model_params[key])):
+                model_params[key][index] = int(model_params[key][index])
+
+    return model_params
+
+
+def get_suitable_MLP_params(model_params):
+    """
+    get suitable mlp params option
+    :return: svr params
+    """
+
+    for key in model_params.keys():
+        if key == "estimator__hidden_layer_sizes":
+            for index in range(len(model_params[key])):
+                model_params[key][index] = eval(model_params[key][index])
+        elif key == "estimator__alpha":
+            for index in range(len(model_params[key])):
+                model_params[key][index] = float(model_params[key][index])
+        elif key == "estimator__random_state":
+            for index in range(len(model_params[key])):
+                model_params[key][index] = int(model_params[key][index])
+
+    return model_params
+
+
+def get_suitable_params_values(model_name, model_params):
+    """
+
+    :param model_name: algorithm name
+    :param model_params: params dict
+    :return:
+    """
+
+    switcher = {
+        "SVR": lambda model_params: get_suitable_SVR_params(model_params),
+        "MLP": lambda model_params: get_suitable_MLP_params(model_params),
+        "Random Forest": lambda model_params: get_suitable_Random_Forest_params(model_params)
+    }
+    return switcher.get(model_name, None)(model_params)
+
+
+def get_params_from_yaml(model_name, yaml_filename):
+    """
+    get model's params from yaml file
+    :param model_name: algorithm name
+    :param yaml_filename: yaml filename
+    :return:
+    """
+
+    yaml_params = load_algorithm_constants(yaml_filename)
+    parameters_lists_keys = list(yaml_params.keys())
+
+    # Set values for frame construction
+    values_lists = []
+    for key in parameters_lists_keys:
+        values_lists.append(yaml_params.get(key))
+
+    # Pop keys of each list
+    values_lists.pop(0)  # remove first element
+    tmp_params_keys = values_lists.pop(0)  # remove first element
+
+    for i in range(2):  # remove threshold and window size elements
+        values_lists.pop()  # threshold element
+        tmp_params_keys.pop()
+
+    params_keys_lists = []
+    for param_key in tmp_params_keys:
+        params_keys_lists.append("estimator__" + param_key)
+        # params_keys_lists.append(param_key)
+
+    params_values = convert_string_to_boolean(values_lists)
+
+    params_dict = dict(zip(params_keys_lists, params_values))
+
+    return get_suitable_params_values(model_name, params_dict)
+
+
+def get_SVR_params():
+    """
+    get svr params option
+    :return: svr params
+    """
+
+    current_yaml_name = get_suitable_yaml_file("SVR")
+
+    return get_params_from_yaml("SVR", current_yaml_name)
+
+
+def get_Random_Forest_params():
+    """
+    get random forest params option
+    :return: svr params
+    """
+
+    current_yaml_name = get_suitable_yaml_file("Random Forest")
+
+    return get_params_from_yaml("Random Forest", current_yaml_name)
+
+
+def get_MLP_params():
+    """
+    get mlp params option
+    :return: svr params
+    """
+
+    current_yaml_name = get_suitable_yaml_file("MLP")
+
+    return get_params_from_yaml("MLP", current_yaml_name)
+
+
+def get_model(model_name):
+    """
+    get the model
+    :param model_name: model name
+    :return: sklearn model
+    """
+
+    switcher = {
+        "SVR": lambda: MultiOutputRegressor(SVR()),
+        "MLP": lambda: MultiOutputRegressor(MLPRegressor(shuffle=False)),
+        "Random Forest": lambda: MultiOutputRegressor(RandomForestRegressor())
+    }
+    return switcher.get(model_name, lambda: MultiOutputRegressor(SVR()))()
+
+
+def get_model_params(model_name):
+    """
+    get the model params
+    :param model_name: model name
+    :return: model params
+    """
+
+    switcher = {
+        "SVR": lambda: get_SVR_params(),
+        "MLP": lambda: get_MLP_params(),
+        "Random Forest": lambda: get_Random_Forest_params()
+    }
+    return [switcher.get(model_name, lambda: MultiOutputRegressor(SVR()))()]
+
+
+def model_tuning(model_name, directory_file_path, input_features,
+                 target_features, window_size, scaler, results_path):
+    """
+    model's tuning process by using GridSearchCV
+    :param model_name: model name
+    :param directory_file_path: data file directory path
+    :param input_features: the list of features which the user chose for the train
+    :param target_features: the list of features which the user chose for the test
+    :param window_size: window size variable
+    :param scaler: scaler name
+    :param results_path: results path
+    :return: model name , best models params
+    """
+
+    df_train = pd.read_csv(f'{directory_file_path}/without_anom.csv')
+
+    input_df_train = df_train[input_features]
+    target_df_train = df_train[target_features]
+
+    # Step 1 : Clean train data set
+    input_df_train = clean_data(input_df_train)
+
+    target_df_train = clean_data(target_df_train)
+
+    # Step 2: Normalize the data
+    X_train, X_train_scaler = normalize_data(data=input_df_train,
+                                             scaler=scaler)
+
+    Y_train, Y_train_scaler = normalize_data(data=target_df_train,  # target data
+                                             scaler=scaler)
+
+    model = get_model(model_name)
+
+    model_grid_params = get_model_params(model_name)
+
+    tsr = TimeSeriesRegressor(model, n_prev=window_size)
+
+    cv = cascade_cv(len(X_train), n_folds=5)
+
+    grid_search = GridSearchCV(model, model_grid_params)
+
+    grid_search.fit(X_train, Y_train)
+    prediction = grid_search.predict(X_train)  # outputs a numpy array of length: len(X_train)-n_prev
+
+    plot_title = "Optimized Time Series " + model_name + " model"
+    print(str(model_name) + " " + str(grid_search.best_params_))
+
+    data = {}
+    data['model'] = model_name
+    data["input_features"] = input_features
+    data["target_features"] = target_features
+    data['params'] = grid_search.best_params_
+
+    with open(f'{results_path}/model_data.json', 'w') as outfile:
+        json.dump(data, outfile)
+
+    train_test_plot(pred_train=prediction,
+                    y_train=Y_train,
+                    n_prev=window_size,
+                    title=plot_title,
+                    results_path=results_path,
+                    target_features=target_features
+                    )
+
+    a = 4
+
+
+path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\train\\Route_0"
+input_features = [
+    "Drone Climb",
+    "Latitude",
+    "Drone Speed"
+]
+target_features = [
+    "Drone Altitude",
+    "Barometer Altitude",
+    "Longitude",
+    "Accelerometer"
+]
+window_size = 2
+scaler = "max_abs"
+results_path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\results\\Tuning"
+
+# model_tuning(model_name="SVR",
+#              directory_file_path=path,
+#              input_features=input_features,
+#              target_features=target_features,
+#              window_size=window_size,
+#              scaler=scaler,
+#              results_path=results_path)
