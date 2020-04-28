@@ -14,7 +14,7 @@ import json
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
@@ -23,18 +23,20 @@ from gui.algorithm_frame_options.shared.helper_methods import load_algorithm_con
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
 from models.time_series_model.time_series_estimator import TimeSeriesRegressor, cascade_cv
+from utils.helper_methods import get_current_time
 
 
-def train_test_plot(pred_train, y_train, n_prev, title, results_path, target_features, n_ahead=1):
+def train_test_plot(pred_train, y_train, title, results_path, target_features):
     # plt.subplot(1, 2, 1)
     for i, column in enumerate(target_features):
-        plt.plot(pred_train[i][:], 'r', label="Predicted")
-        plt.plot(y_train[i][n_prev - 1 + n_ahead:], 'b--', label="Actual")
+        feature_title = str(title) + " for " + str(column)
+        plt.plot(pred_train[i], 'r', label="Predicted")
+        plt.plot(pred_train[i], 'r', label="Predicted")
+        plt.plot(y_train[i], 'b--', label="Actual")
         # nprev: because the first predicted point needed n_prev steps of data
-        plt.title("Training performance of " + title)
+        plt.title("Test performance of " + feature_title)
         plt.legend(loc='lower right')
         plt.gcf().set_size_inches(15, 6)
-        feature_title = str(title) + " for " + str(column)
 
         plt.savefig(f'{results_path}/{feature_title}.png')
 
@@ -93,7 +95,7 @@ def get_suitable_SVR_params(model_params):
 def get_suitable_Random_Forest_params(model_params):
     """
     get suitable random forest params option
-    :return: svr params
+    :return: Random Forest params
     """
 
     for key in model_params.keys():
@@ -104,13 +106,17 @@ def get_suitable_Random_Forest_params(model_params):
             for index in range(len(model_params[key])):
                 model_params[key][index] = int(model_params[key][index])
 
+    # del model_params["estimator__n_estimators"]
+    # del model_params["estimator__random_state"]
+    # del model_params["estimator__max_features"]
+
     return model_params
 
 
 def get_suitable_MLP_params(model_params):
     """
     get suitable mlp params option
-    :return: svr params
+    :return: MLP params
     """
 
     for key in model_params.keys():
@@ -169,7 +175,7 @@ def get_params_from_yaml(model_name, yaml_filename):
 
     params_keys_lists = []
     for param_key in tmp_params_keys:
-        params_keys_lists.append("estimator__" + param_key)
+        params_keys_lists.append("base_estimator__estimator__" + param_key)
         # params_keys_lists.append(param_key)
 
     params_values = convert_string_to_boolean(values_lists)
@@ -193,7 +199,7 @@ def get_SVR_params():
 def get_Random_Forest_params():
     """
     get random forest params option
-    :return: svr params
+    :return: Random Forest params
     """
 
     current_yaml_name = get_suitable_yaml_file("Random Forest")
@@ -204,12 +210,14 @@ def get_Random_Forest_params():
 def get_MLP_params():
     """
     get mlp params option
-    :return: svr params
+    :return: MLP params
     """
 
     current_yaml_name = get_suitable_yaml_file("MLP")
 
-    return get_params_from_yaml("MLP", current_yaml_name)
+    params = get_params_from_yaml("MLP", current_yaml_name)
+
+    return params
 
 
 def get_model(model_name):
@@ -239,7 +247,7 @@ def get_model_params(model_name):
         "MLP": lambda: get_MLP_params(),
         "Random Forest": lambda: get_Random_Forest_params()
     }
-    return [switcher.get(model_name, lambda: MultiOutputRegressor(SVR()))()]
+    return [switcher.get(model_name, None)()]
 
 
 def model_tuning(model_name, directory_file_path, input_features,
@@ -267,11 +275,14 @@ def model_tuning(model_name, directory_file_path, input_features,
     target_df_train = clean_data(target_df_train)
 
     # Step 2: Normalize the data
-    X_train, X_train_scaler = normalize_data(data=input_df_train,
-                                             scaler=scaler)
 
-    Y_train, Y_train_scaler = normalize_data(data=target_df_train,  # target data
-                                             scaler=scaler)
+    X = normalize_data(data=input_df_train,
+                       scaler=scaler)[0]
+
+    Y = normalize_data(data=target_df_train,
+                       scaler=scaler)[0]
+
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y)
 
     model = get_model(model_name)
 
@@ -281,32 +292,32 @@ def model_tuning(model_name, directory_file_path, input_features,
 
     cv = cascade_cv(len(X_train), n_folds=5)
 
-    grid_search = GridSearchCV(model, model_grid_params)
+    grid_search = GridSearchCV(tsr, model_grid_params)
 
     grid_search.fit(X_train, Y_train)
-    prediction = grid_search.predict(X_train)  # outputs a numpy array of length: len(X_train)-n_prev
+    prediction = grid_search.predict(X_test)  # outputs a numpy array of length: len(X_train)-n_prev
 
     plot_title = "Optimized Time Series " + model_name + " model"
     print(str(model_name) + " " + str(grid_search.best_params_))
 
+    current_time = get_current_time()
+    file_name = str(current_time) + "-" + str(model_name) + "-model_data.json"
     data = {}
     data['model'] = model_name
     data["input_features"] = input_features
     data["target_features"] = target_features
     data['params'] = grid_search.best_params_
+    data['score'] = grid_search.best_score_
 
-    with open(f'{results_path}/model_data.json', 'w') as outfile:
+    with open(f'{results_path}/{file_name}', 'w') as outfile:
         json.dump(data, outfile)
 
     train_test_plot(pred_train=prediction,
-                    y_train=Y_train,
-                    n_prev=window_size,
+                    y_train=tsr._preprocess(Y_train, Y_train)[1],
                     title=plot_title,
                     results_path=results_path,
                     target_features=target_features
                     )
-
-    a = 4
 
 
 path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\train\\Route_0"
@@ -325,10 +336,10 @@ window_size = 2
 scaler = "max_abs"
 results_path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\results\\Tuning"
 
-# model_tuning(model_name="SVR",
-#              directory_file_path=path,
-#              input_features=input_features,
-#              target_features=target_features,
-#              window_size=window_size,
-#              scaler=scaler,
-#              results_path=results_path)
+model_tuning(model_name="SVR",
+             directory_file_path=path,
+             input_features=input_features,
+             target_features=target_features,
+             window_size=window_size,
+             scaler=scaler,
+             results_path=results_path)
