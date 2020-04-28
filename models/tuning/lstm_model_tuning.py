@@ -174,7 +174,7 @@ def model_tuning(model_name, directory_file_path, input_features,
     best_score = list(total_sorted_1.items())[0][1]
     print(best_config)
     print(best_score)
-    scores
+
     current_time = get_current_time()
     file_name = str(current_time) + "-LSTM-model_data.json"
     data = {}
