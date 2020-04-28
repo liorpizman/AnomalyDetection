@@ -147,7 +147,7 @@ def model_tuning(model_name, directory_file_path, input_features,
     params_configurations = get_lstm_params_configurations()
 
     total_scores = dict()
-    j = 0
+    
     for config in params_configurations:
         encoding_dimension, activation, loss, optimizer, epochs = config
 
@@ -167,10 +167,6 @@ def model_tuning(model_name, directory_file_path, input_features,
             scores.append(anomaly_score_multi(Y_test_preprocessed[i], pred, 'MSE'))
 
         total_scores[str(config)] = mean(scores)
-        j += 1
-
-        if (j == 4):
-            break
 
     total_sorted_1 = {k: v for k, v in sorted(total_scores.items(), key=lambda item: item[1])}
 
