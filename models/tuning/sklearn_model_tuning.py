@@ -295,7 +295,7 @@ def model_tuning(model_name, directory_file_path, input_features,
     grid_search = GridSearchCV(tsr, model_grid_params)
 
     grid_search.fit(X_train, Y_train)
-    prediction = grid_search.predict(X_test)  # outputs a numpy array of length: len(X_train)-n_prev
+    prediction = grid_search.predict(X_test)
 
     plot_title = "Optimized Time Series " + model_name + " model"
     print(str(model_name) + " " + str(grid_search.best_params_))
@@ -313,7 +313,7 @@ def model_tuning(model_name, directory_file_path, input_features,
         json.dump(data, outfile)
 
     train_test_plot(pred_train=prediction,
-                    y_train=tsr._preprocess(Y_train, Y_train)[1],
+                    y_train=tsr._preprocess(Y_test, Y_test)[1],
                     title=plot_title,
                     results_path=results_path,
                     target_features=target_features
