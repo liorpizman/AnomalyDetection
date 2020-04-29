@@ -14,6 +14,7 @@ from tkinter import font as tkfont
 from gui.windows.algorithms_window import AlgorithmsWindow
 from gui.windows.existing_algorithms_window import ExistingAlgorithmsWindow
 from gui.windows.feature_selection_window import FeatureSelectionWindow
+from gui.windows.tune_model_window import TuneModel
 from gui.windows.load_model_window import LoadModel
 from gui.windows.loading_window import LoadingWindow
 from gui.windows.parameters_options_window import ParametersOptionsWindow
@@ -197,6 +198,7 @@ class AnomalyDetectionGUI(tk.Tk):
         for F in (MainWindow,
                   NewModel,
                   LoadModel,
+                  TuneModel,
                   AlgorithmsWindow,
                   FeatureSelectionWindow,
                   SimilarityFunctionsWindow,
