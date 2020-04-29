@@ -31,6 +31,17 @@ class TimeSeriesEstimator(BaseEstimator):
         self._fit_estimators = None
         self._is_autocor = None
 
+    def set_params(self, **params):
+        # for param, value in params.iteritems():
+        # for param in params.keys():
+        # value = params.get(param)
+        for param, value in params.items():
+            if param in self.get_params():
+                super(TimeSeriesEstimator, self).set_params(**{param: value})
+            else:
+                self.base_estimator.set_params(**{param: value})
+        return self
+
     def __repr__(self):
         return "TimeSeriesEstimator: " + repr(self.base_estimator)
 
@@ -83,6 +94,18 @@ class TimeSeriesEstimator(BaseEstimator):
                 dlist.append(data[i, :, :].ravel())
         return np.array(dlist)
 
+    def offset_data(self, Y):
+        '''
+        Automatically calculates the correct offset of data in order to match
+        the regressed data resulting from the predict function
+        :param Y:
+        :return:
+        '''
+        if len(Y.shape) > 1:
+            return Y[self.n_prev - 1 + self.n_ahead:, :]
+        else:
+            return Y[self.n_prev - 1 + self.n_ahead:]
+
     def _preprocess(self, X, Y):
         '''
         Converts the data into a format so that it can be fed into any sklearn
@@ -120,8 +143,10 @@ class TimeSeriesRegressor(TimeSeriesEstimator, RegressorMixin):
     """
     A wrapper object for any scikit learn regressor. This object is designed
     to turn any regressor into a time series regressor.
-
     """
+
+    def score(self, X, Y, **kwargs):
+        return self.base_estimator.score(*self._preprocess(X, Y), **kwargs)
 
     def predict(self, X, preprocessed=False):
         if not preprocessed:
@@ -136,6 +161,97 @@ class TimeSeriesRegressor(TimeSeriesEstimator, RegressorMixin):
             return np.transpose(np.array(results))
         else:
             return self.base_estimator.predict(X_new)
+
+    def forecast(self, X, n_steps, noise=0, n_paths=1, combine=None):
+        '''
+        Forecast using a training dataset, n_steps into the future
+        This is acchomplished by feeding the output data back into the
+        regressor
+        aka stepping time forward by one step
+        :param X:
+        :param n_steps:
+        :return:
+        '''
+        if not (
+                self._is_autocor and self.n_ahead == 1):
+            # TODO generalize and add exponential weighting on older
+            # predictions
+            raise ValueError(
+                "Need to be an auto-correlation predictor with n_ahead=1")
+
+        is_pandas = isinstance(X, pd.DataFrame) or isinstance(X, pd.Series)
+        if is_pandas:
+            X = X.as_matrix()
+
+        outs = []
+        for i in range(n_paths):
+            out = np.empty((n_steps, X.shape[1]))
+            previous = X[-self.n_prev:]
+            for i in range(n_steps):
+                next_step = self.predict(
+                    np.array([previous.ravel()]), preprocessed=True)
+                out[i, :] = next_step + next_step * \
+                            np.random.randn(*next_step.shape) * noise
+                previous = np.vstack((previous[1:], next_step))
+            outs.append(out)
+
+        if combine == 'mean' and n_paths > 1:
+            return np.array(outs).mean(axis=0)
+        elif n_paths > 1:
+            return np.array(outs)
+        else:
+            return out
+
+
+def time_series_split(X, test_size=.2, number=False, output_numpy=True):
+    """
+    Splits a dataset according to the time the data was taken
+    :param X:
+    :param test_size:
+    :param output_numpy:
+    :return:
+    """
+    is_pandas = isinstance(X, pd.DataFrame) or isinstance(X, pd.Series)
+    if test_size <= 1 and not number:
+        ntrn = int(len(X) * (1 - test_size))
+    elif test_size > 1 and number:
+        ntrn = int(len(X) - test_size)
+    else:
+        raise ValueError(
+            "test_size: (frac or Int) and number:(True or False) "
+            "should be set correctly")
+
+    if is_pandas:
+        X_train = X.iloc[0:ntrn]
+        X_test = X.iloc[ntrn:]
+    else:
+        X_train = X[0:ntrn]
+        X_test = X[ntrn:]
+
+    if output_numpy and is_pandas:
+        return X_train.as_matrix(), X_test.as_matrix()
+    else:
+        return X_train, X_test
+
+
+def time_series_cv(n, n_folds, test_size=.2):
+    '''
+    Splits the dataset into n_folds sections of temporally contiguous data
+    with a test set proportion of test_size.
+    :param n:
+    :param n_folds:
+    :param test_size:
+    :return:
+    '''
+    out = []
+    split_points = [(n * i / float(n_folds), n * (i + 1) / float(n_folds))
+                    for i in range(n_folds)]
+    split_points = [(int(start), int(end)) for (start, end) in split_points]
+    for start, end in split_points:
+        ntrn = int((end - start) * (1 - test_size))
+        out.append((list(range(start, start + ntrn)),
+                    list(range(start + ntrn, end))))
+    return out
 
 
 def time_series_split(X, test_size=.2, number=False, output_numpy=True):
