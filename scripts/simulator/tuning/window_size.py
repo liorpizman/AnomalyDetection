@@ -17,17 +17,19 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 
 from models.data_preprocessing.data_normalization import normalize_data
-from models.time_series_model.time_series_estimator import TimeSeriesRegressor
-from models.time_series_model.utils import safe_shape, mse
-from utils.helper_methods import create_directories, get_current_time
+from models.lstm.lstm_autoencoder import get_lstm_autoencoder_model
+from models.time_series_model.time_series_estimator import TimeSeriesRegressor, time_series_split
+from models.time_series_model.utils import safe_shape, mse, multi_mse
+from utils.helper_methods import create_directories, get_current_time, get_training_data_lstm, anomaly_score_multi
 
 
-def window_size_parameter_tuning_sklearn(ml_model, train_path, input_features, target_features, scaler):
+def window_size_parameter_tuning_sklearn(ml_model, train_path, input_features, target_features, scaler, max_look_back):
     """
     Tune window size parameter over a constant range to get the optimal window size
     :param ml_model: machine learning model
@@ -35,7 +37,8 @@ def window_size_parameter_tuning_sklearn(ml_model, train_path, input_features, t
     :param input_features: input features list
     :param target_features: target features list
     :param scaler: scaler string
-    :return: mse_test
+    :param max_look_back: maximum window size
+    :return: MSEs test
     """
 
     df = pd.read_csv(train_path)
@@ -50,16 +53,86 @@ def window_size_parameter_tuning_sklearn(ml_model, train_path, input_features, t
     target_df, Y_train_scaler = normalize_data(data=original_target_df,
                                                scaler=scaler)
 
-    n_prevs = range(1, 25)
-    mses_train = np.empty((len(n_prevs), safe_shape(target_df, 1)))
+    x_train, x_test, y_train, y_test = train_test_split(input_df, target_df, shuffle=False)
+
+    n_prevs = range(1, max_look_back)
+    mses_test = np.empty((len(n_prevs), safe_shape(y_test, 1)))
 
     for i, n_prev in enumerate(n_prevs):
         tsr = TimeSeriesRegressor(ml_model, n_prev=n_prev)
-        tsr.fit(input_df, target_df)
+        tsr.fit(x_train, y_train)
         # get the (i+1)-th row
-        mses_train[i, :] = mse(tsr.predict(input_df), target_df[n_prev:])
+        mses_test[i, :] = mse(tsr.predict(x_test), y_test[n_prev:])
 
-    return mses_train
+    return mses_test
+
+
+def window_size_parameter_tuning_keras(train_path, input_features, target_features, scaler, max_look_back):
+    """
+    Tune window size parameter over a constant range to get the optimal window size - lstm
+    :param train_path: train set path
+    :param input_features: input features list
+    :param target_features: target features list
+    :param scaler: scaler string
+    :param max_look_back: maximum window size
+    :return: MSEs test
+    """
+
+    df = pd.read_csv(train_path)
+
+    original_input_df = df[input_features]
+
+    input_df, X_train_scaler = normalize_data(data=original_input_df,
+                                              scaler=scaler)
+
+    original_target_df = df[target_features]
+
+    target_df, Y_train_scaler = normalize_data(data=original_target_df,
+                                               scaler=scaler)
+
+    x_train, x_test, y_train, y_test = train_test_split(input_df, target_df, shuffle=False)
+
+    n_prevs = range(1, max_look_back)
+    mses_test = np.empty((len(n_prevs), safe_shape(y_test, 1)))
+
+    for i, n_prev in enumerate(n_prevs):
+        X_train_preprocessed = get_training_data_lstm(x_train, n_prev)
+        Y_train_preprocessed = get_training_data_lstm(y_train, n_prev)
+        X_test_preprocessed = get_training_data_lstm(x_test, n_prev)
+        y_test_preprocessed = get_training_data_lstm(y_test, n_prev)
+
+        tsr = get_lstm_autoencoder_model(timesteps=n_prev,
+                                         input_features=original_input_df.shape[1],
+                                         target_features=original_target_df.shape[1],
+                                         encoding_dimension=10,
+                                         activation='relu',
+                                         loss='mse',
+                                         optimizer='adam')
+
+        tsr.fit(X_train_preprocessed, Y_train_preprocessed, epochs=10, verbose=0)
+
+        lstm = get_lstm_autoencoder_model(timesteps=n_prev,
+                                          input_features=original_input_df.shape[1],
+                                          target_features=original_target_df.shape[1],
+                                          encoding_dimension=10,
+                                          activation='relu',
+                                          loss='mse',
+                                          optimizer='adam')
+
+        lstm.fit(X_train_preprocessed, Y_train_preprocessed, epochs=10, verbose=0)
+
+        predicted = tsr.predict(X_test_preprocessed)
+        lstm_predicted = lstm.predict(X_test_preprocessed)
+
+        assert predicted == lstm_predicted
+
+        actual = y_test_preprocessed
+
+        assert predicted.shape == actual.shape
+
+        mses_test[i, :] = multi_mse(predicted, y_test_preprocessed)
+
+    return mses_test
 
 
 def plot_tuning_results(mses_train, ml_name, input_path, scaler, factor):
@@ -73,7 +146,14 @@ def plot_tuning_results(mses_train, ml_name, input_path, scaler, factor):
     :return: plot displayed
     """
 
-    plt.boxplot(np.transpose(mses_train) * factor)
+    c2 = "blue"
+    c1 = "lightblue"
+    p_color = "black"
+    box_plot = plt.boxplot(np.transpose(mses_train) * factor, patch_artist=True)
+    for item in ['boxes', 'whiskers', 'fliers', 'medians', 'caps']:
+        plt.setp(box_plot[item], color=p_color)
+    plt.setp(box_plot["boxes"], facecolor=c1)
+    plt.setp(box_plot["fliers"], markeredgecolor=c2)
     # plt.boxplot(np.log(np.transpose(mses_train)))
     # plt.yscale('log')
     plt.title("Anomaly prediction over the simulator data set - {0} Model".format(ml_name))
@@ -93,6 +173,7 @@ def plot_tuning_results(mses_train, ml_name, input_path, scaler, factor):
     create_directories(plot_directory_route)
     current_time = get_current_time()
     plt.savefig(f'{plot_directory_route}/{ml_name}_{scaler}_{current_time}.png')
+    plt.clf()
 
 
 _input_features = [
@@ -120,23 +201,41 @@ _target_features = [
 
 _train_path = 'C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\Scripts\\tuning\\without_anom.csv'
 _tuning_path = 'C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\Scripts\\tuning'
+_scaler = "min_max"
 
-_ml_model = MultiOutputRegressor(RandomForestRegressor())
-_ml_name = "Random Forest"
+for i in range(1, 10):
+    _ml_model = MultiOutputRegressor(SVR())
+    _ml_name = "SVR"
 
-_scaler = "power_transform"
-factor = 10
+    _max_look_back = 25
+    _factor = 1
 
-# - End -
+    _mses_train = window_size_parameter_tuning_sklearn(ml_model=_ml_model,
+                                                       train_path=_train_path,
+                                                       input_features=_input_features,
+                                                       target_features=_target_features,
+                                                       scaler=_scaler,
+                                                       max_look_back=_max_look_back)
 
-_mses_train = window_size_parameter_tuning_sklearn(ml_model=_ml_model,
-                                                   train_path=_train_path,
-                                                   input_features=_input_features,
-                                                   target_features=_target_features,
-                                                   scaler=_scaler)
+    plot_tuning_results(mses_train=_mses_train,
+                        ml_name=_ml_name,
+                        input_path=_tuning_path,
+                        scaler=_scaler,
+                        factor=_factor)
 
-plot_tuning_results(mses_train=_mses_train,
-                    ml_name=_ml_name,
-                    input_path=_tuning_path,
-                    scaler=_scaler,
-                    factor=factor)
+# for i in range(1, 10):
+lstm_ml_name = "LSTM"
+lstm_factor = 1
+lstm_max_look_back = 25
+
+# lstm_mses_train = window_size_parameter_tuning_keras(train_path=_train_path,
+#                                                      input_features=_input_features,
+#                                                      target_features=_target_features,
+#                                                      scaler=_scaler,
+#                                                      max_look_back=lstm_max_look_back)
+#
+# plot_tuning_results(mses_train=lstm_mses_train,
+#                     ml_name=lstm_ml_name,
+#                     input_path=_tuning_path,
+#                     scaler=_scaler,
+#                     factor=lstm_factor)

@@ -45,3 +45,25 @@ def mse(X1, X2, multi_output='raw_values'):
         return np.mean((X1 - X2) ** 2, axis=0) ** .5
     if multi_output == 'uniform_average':
         return np.mean(np.mean((X1 - X2) ** 2, axis=0) ** .5)
+
+
+def multi_mse(X1, X2, multi_output='raw_values'):
+    """
+    Calculate MSE between two 3D arrays
+    :param X1: first data frame
+    :param X2: second data frame
+    :param multi_output: method to return
+    :return: calculated MSE
+    """
+
+    transformed_X1 = np.zeros((X1.shape[0], X1.shape[2]))
+    transformed_X2 = np.zeros((X1.shape[0], X2.shape[2]))
+
+    for i, (pred, test) in enumerate(zip(X1, X2)):
+        transformed_X1[i] = pred.mean(axis=0)
+        transformed_X2[i] = test.mean(axis=0)
+
+    if multi_output == 'raw_values':
+        return np.mean((transformed_X1 - transformed_X2) ** 2, axis=0) ** .5
+    if multi_output == 'uniform_average':
+        return np.mean(np.mean((transformed_X1 - transformed_X2) ** 2, axis=0) ** .5)

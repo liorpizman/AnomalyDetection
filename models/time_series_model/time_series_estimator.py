@@ -138,6 +138,37 @@ class TimeSeriesRegressor(TimeSeriesEstimator, RegressorMixin):
             return self.base_estimator.predict(X_new)
 
 
+def time_series_split(X, test_size=.2, number=False, output_numpy=True):
+    """
+    Splits a dataset according to the time the data was taken
+    :param X:
+    :param test_size:
+    :param output_numpy:
+    :return:
+    """
+    is_pandas = isinstance(X, pd.DataFrame) or isinstance(X, pd.Series)
+    if test_size <= 1 and not number:
+        ntrn = int(len(X) * (1 - test_size))
+    elif test_size > 1 and number:
+        ntrn = int(len(X) - test_size)
+    else:
+        raise ValueError(
+            "test_size: (frac or Int) and number:(True or False) "
+            "should be set correctly")
+
+    if is_pandas:
+        X_train = X.iloc[0:ntrn]
+        X_test = X.iloc[ntrn:]
+    else:
+        X_train = X[0:ntrn]
+        X_test = X[ntrn:]
+
+    if output_numpy and is_pandas:
+        return X_train.as_matrix(), X_test.as_matrix()
+    else:
+        return X_train, X_test
+
+
 def cascade_cv(n, n_folds, data_size=.8, test_size=.15, number=False):
     '''
     Splits the dataset into n_folds of overlapping but temporally contiguous
