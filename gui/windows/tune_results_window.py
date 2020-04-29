@@ -7,7 +7,7 @@ Authors: Lior Pizman & Yehuda Pashay
 GitHub: https://github.com/liorpizman/AnomalyDetection
 DataSets: 1. ADS-B dataset 2. simulated data
 ---
-Results table window which is part of GUI application
+Parameters results after tuning - window which is part of GUI application
 '''
 
 import os
