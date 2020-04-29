@@ -33,6 +33,7 @@ class InputSettings:
     NEW_MODEL_RUNNING = False
     EXISTING_ALGORITHMS = dict()
     FEATURES_COLUMNS_OPTIONS = []
+    TUNE_MODEL_FEATURES = []
     USERS_SELECTED_FEATURES = dict()
     USERS_SELECTED_TARGET_FEATURES = dict()
     THREADS = []
@@ -42,6 +43,12 @@ class InputSettings:
     RESULTS_TABLE_ALGORITHM = ""
     RESULTS_TABLE_FLIGHT_ROUTE = ""
     RESULTS_TABLE_SIMILARITY_FUNCTION = ""
+
+    TUNE_MODEL_PATH = ""
+    TUNE_MODEL_INPUT_FEATURES = []
+    TUNE_MODEL_TARGET_FEATURES = []
+    TUNE_MODEL_WINDOW_SIZE = []
+    TUNE_MODEL_ALGORITHM = ""
 
     """
     Attributes
@@ -64,6 +71,8 @@ class InputSettings:
     EXISTING_ALGORITHMS                  : dict
             
     FEATURES_COLUMNS_OPTIONS             : list
+    
+    TUNE_MODEL_FEATURES                  : list
             
     USERS_SELECTED_FEATURES              : dict
     
@@ -80,6 +89,16 @@ class InputSettings:
     RESULTS_TABLE_FLIGHT_ROUTE           : str
     
     RESULTS_TABLE_SIMILARITY_FUNCTION    : str
+        
+    TUNE_MODEL_PATH                      : str
+    
+    TUNE_MODEL_INPUT_FEATURES            : list
+    
+    TUNE_MODEL_TARGET_FEATURES           : list
+    
+    TUNE_MODEL_WINDOW_SIZE               : list
+    
+    TUNE_MODEL_ALGORITHM                 : str
 
     Methods
     -------
@@ -225,6 +244,33 @@ class InputSettings:
             Description | Get the variable which indicates which similarity function should be shown in the results 
                           table at this moment
 
+    set_tune_model_input_path(input_path)
+            Description | Set the path for data for tuning a model
+
+    get_tune_model_input_path()
+            Description | Get the path for data for tuning a model
+            
+    set_tune_model_features()
+            Description | Set features list for tune model flow
+            
+    get_tune_model_features()
+            Description | Get features list for tune model flow
+            
+    set_tune_model_configuration(input_features, target_features, window_size, algorithm)
+         Description | Set full configuration for tune model flow
+         
+    get_tune_flow_input_features()
+            Description | Get input features for tune model flow
+
+    get_tune_flow_target_features()
+            Description | Get target features for tune model flow
+            
+    get_tune_flow_window_size()
+            Description | Get window sizes for tune model flow
+
+    get_tune_flow_algorithm()
+            Description | Get algorithm for tune model flow
+         
     """
 
     @staticmethod
@@ -468,6 +514,7 @@ class InputSettings:
         InputSettings.NEW_MODEL_RUNNING = False
         InputSettings.EXISTING_ALGORITHMS = dict()
         InputSettings.FEATURES_COLUMNS_OPTIONS = []
+        InputSettings.TUNE_MODEL_FEATURES = []
         InputSettings.USERS_SELECTED_FEATURES = dict()
         InputSettings.THREADS = []
         InputSettings.RESULTS_METRICS_DATA = dict()
@@ -476,6 +523,12 @@ class InputSettings:
         InputSettings.RESULTS_TABLE_ALGORITHM = ""
         InputSettings.RESULTS_TABLE_FLIGHT_ROUTE = ""
 
+        InputSettings.TUNE_MODEL_PATH = ""
+        InputSettings.TUNE_MODEL_INPUT_FEATURES = []
+        InputSettings.TUNE_MODEL_TARGET_FEATURES = []
+        InputSettings.TUNE_MODEL_WINDOW_SIZE = []
+        InputSettings.TUNE_MODEL_ALGORITHM = ""
+
     @staticmethod
     def set_results_selected_similarity_function(similarity_function):
         InputSettings.RESULTS_TABLE_SIMILARITY_FUNCTION = similarity_function
@@ -483,3 +536,52 @@ class InputSettings:
     @staticmethod
     def get_results_selected_similarity_function():
         return InputSettings.RESULTS_TABLE_SIMILARITY_FUNCTION
+
+    @staticmethod
+    def set_tune_model_input_path(input_path):
+        InputSettings.TUNE_MODEL_PATH = input_path
+
+    @staticmethod
+    def get_tune_model_input_path():
+        return InputSettings.TUNE_MODEL_PATH
+
+    @staticmethod
+    def set_tune_model_features():
+
+        # Get the columns in the data set in order to do feature selection by the user
+        df_input = pd.read_csv(f'{InputSettings.TUNE_MODEL_PATH}')
+        columns = list(df_input.columns)
+
+        # Cleaning meta-data - Remove columns from a yaml file, such as: index, flight_id etc.
+        for column in COLUMNS_TO_REMOVE:
+            if column in columns:
+                columns.remove(column)
+
+        InputSettings.TUNE_MODEL_FEATURES = columns
+
+    @staticmethod
+    def get_tune_model_features():
+        return InputSettings.TUNE_MODEL_FEATURES
+
+    @staticmethod
+    def set_tune_model_configuration(input_features, target_features, window_size, algorithm):
+        InputSettings.TUNE_MODEL_INPUT_FEATURES = input_features
+        InputSettings.TUNE_MODEL_TARGET_FEATURES = target_features
+        InputSettings.TUNE_MODEL_WINDOW_SIZE = window_size
+        InputSettings.TUNE_MODEL_ALGORITHM = algorithm
+
+    @staticmethod
+    def get_tune_flow_input_features():
+        return InputSettings.TUNE_MODEL_INPUT_FEATURES
+
+    @staticmethod
+    def get_tune_flow_target_features():
+        return InputSettings.TUNE_MODEL_TARGET_FEATURES
+
+    @staticmethod
+    def get_tune_flow_window_size():
+        return InputSettings.TUNE_MODEL_WINDOW_SIZE
+
+    @staticmethod
+    def get_tune_flow_algorithm():
+        return InputSettings.TUNE_MODEL_ALGORITHM

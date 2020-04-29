@@ -7,7 +7,7 @@ Authors: Lior Pizman & Yehuda Pashay
 GitHub: https://github.com/liorpizman/AnomalyDetection
 DataSets: 1. ADS-B dataset 2. simulated data
 ---
-Loading window which is part of GUI application
+Tuning koading window which is part of GUI application
 '''
 
 import os
@@ -39,9 +39,9 @@ except ImportError:
     py3 = True
 
 
-class LoadingWindow(tk.Frame):
+class TuningLoadingWindow(tk.Frame):
     """
-    A Class used to be presented while the models are running in the background of the application
+    A Class used to be presented tuning model process is running in the background of the application
 
     Methods
     -------
@@ -94,7 +94,7 @@ class LoadingWindow(tk.Frame):
 
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
-        self.instructions.configure(text='''Loading model, please wait...''')
+        self.instructions.configure(text='''Tuning parameters, please wait...''')
         set_widget_to_left(self.instructions)
 
         # Page body
@@ -140,7 +140,7 @@ class LoadingWindow(tk.Frame):
         :return: previous window
         """
 
-        self.controller.reinitialize_frame("SimilarityFunctionsWindow")
+        self.controller.reinitialize_frame("TuneModel")
 
     def stop_model_process(self):
         """
@@ -179,9 +179,9 @@ class LoadingWindow(tk.Frame):
 
     def loading_process(self):
         """
-        Run chosen models and move to results window
+        Run tuning parameters process and move to results window
         :return: results window
         """
 
-        self.controller.run_models()
-        self.controller.reinitialize_frame("ResultsWindow")
+        # self.controller.run_tuning()
+        self.controller.reinitialize_frame("TuneResultsWindow")

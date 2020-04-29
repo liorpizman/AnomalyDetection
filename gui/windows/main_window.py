@@ -84,12 +84,16 @@ class MainWindow(tk.Frame):
 
         # Page body
         self.create_model_btn = tk.Button(self, command=self.new_flow)
-        self.create_model_btn.place(relx=0.41, rely=0.5, height=42, width=120)
+        self.create_model_btn.place(relx=0.41, rely=0.35, height=42, width=120)
         set_button_configuration(self.create_model_btn, text='''Create model''')
 
         self.load_model_btn = tk.Button(self, command=self.load_flow)
-        self.load_model_btn.place(relx=0.41, rely=0.7, height=42, width=120)
+        self.load_model_btn.place(relx=0.41, rely=0.55, height=42, width=120)
         set_button_configuration(self.load_model_btn, text='''Load model''')
+
+        self.tune_model_btn = tk.Button(self, command=self.tune_flow)
+        self.tune_model_btn.place(relx=0.395, rely=0.75, height=42, width=140)
+        set_button_configuration(self.tune_model_btn, text='''Tune model parameters''')
 
         # Page footer
         self.copyright = tk.Label(self)
@@ -121,3 +125,12 @@ class MainWindow(tk.Frame):
 
         self.controller.set_new_model_running(True)
         self.controller.show_frame("NewModel")
+
+    def tune_flow(self):
+        """
+        Move to tune model flow
+        :return: tune model window
+        """
+
+        self.controller.set_new_model_running(False)
+        self.controller.show_frame("PreTuneModel")
