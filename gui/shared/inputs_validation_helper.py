@@ -247,3 +247,13 @@ def get_json_required_fields():
     """
 
     return ['features', 'threshold']
+
+
+def pre_tune_model_path_validation(input_path):
+    """
+    Validation for tune model path in order to handle next step
+    :param input_path: file path
+    :return: return true if valid, otherwise false
+    """
+
+    return os.path.isfile(input_path) and input_path.endswith('without_anom.csv')

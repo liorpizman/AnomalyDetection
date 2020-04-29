@@ -132,5 +132,5 @@ class MainWindow(tk.Frame):
         :return: tune model window
         """
 
-        self.controller.set_new_model_running(True)
-        self.controller.show_frame("TuneModel")
+        self.controller.set_new_model_running(False)
+        self.controller.show_frame("PreTuneModel")

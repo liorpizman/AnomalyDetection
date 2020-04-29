@@ -14,12 +14,15 @@ from tkinter import font as tkfont
 from gui.windows.algorithms_window import AlgorithmsWindow
 from gui.windows.existing_algorithms_window import ExistingAlgorithmsWindow
 from gui.windows.feature_selection_window import FeatureSelectionWindow
+from gui.windows.pre_tune_window import PreTuneModel
 from gui.windows.tune_model_window import TuneModel
 from gui.windows.load_model_window import LoadModel
 from gui.windows.loading_window import LoadingWindow
 from gui.windows.parameters_options_window import ParametersOptionsWindow
 from gui.windows.main_window import MainWindow
 from gui.windows.results_table_window import ResultsTableWindow
+from gui.windows.tune_results_window import TuneResultsWindow
+from gui.windows.tuning_loading_window import TuningLoadingWindow
 from utils.model_controller import ModelController
 from gui.windows.new_model_window import NewModel
 from gui.windows.results_window import ResultsWindow
@@ -161,6 +164,33 @@ class AnomalyDetectionGUI(tk.Tk):
     get_results_metrics_data()
             Description |  Get the dictionary which includes all the metrics for the current flow
 
+    set_tune_model_input_path(input_path)
+            Description | Set the path for data for tuning a model
+
+    get_tune_model_input_path()
+            Description | Get the path for data for tuning a model
+
+    set_tune_model_features()
+            Description | Set features list for tune model flow
+
+    get_tune_model_features()
+            Description | Get features list for tune model flow
+
+     set_tune_model_configuration(input_features, target_features, window_size, algorithm)
+         Description | Set full configuration for tune model flow
+
+    get_tune_flow_input_features()
+            Description | Get input features for tune model flow
+
+    get_tune_flow_target_features()
+            Description | Get target features for tune model flow
+
+    get_tune_flow_window_size()
+            Description | Get window sizes for tune model flow
+
+    get_tune_flow_algorithm()
+            Description | Get algorithm for tune model flow
+
     """
 
     def __init__(self, *args, **kwargs):
@@ -198,6 +228,7 @@ class AnomalyDetectionGUI(tk.Tk):
         for F in (MainWindow,
                   NewModel,
                   LoadModel,
+                  PreTuneModel,
                   TuneModel,
                   AlgorithmsWindow,
                   FeatureSelectionWindow,
@@ -206,7 +237,9 @@ class AnomalyDetectionGUI(tk.Tk):
                   LoadingWindow,
                   ResultsWindow,
                   ParametersOptionsWindow,
-                  ResultsTableWindow):
+                  ResultsTableWindow,
+                  TuningLoadingWindow,
+                  TuneResultsWindow):
             page_name = F.__name__
 
             # Init each frame
@@ -341,6 +374,33 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def get_results_metrics_data(self):
         return self.model_controller.get_results_metrics_data()
+
+    def set_tune_model_input_path(self, input_path):
+        self.model_controller.set_tune_model_input_path(input_path)
+
+    def get_tune_model_input_path(self):
+        return self.model_controller.get_tune_model_input_path()
+
+    def set_tune_model_features(self):
+        self.model_controller.set_tune_model_features()
+
+    def get_tune_model_features(self):
+        return self.model_controller.get_tune_model_features()
+
+    def set_tune_model_configuration(self, input_features, target_features, window_size, algorithm):
+        self.model_controller.set_tune_model_configuration(input_features, target_features, window_size, algorithm)
+
+    def get_tune_flow_input_features(self):
+        return self.model_controller.get_tune_flow_input_features()
+
+    def get_tune_flow_target_features(self):
+        return self.model_controller.get_tune_flow_target_features()
+
+    def get_tune_flow_window_size(self):
+        return self.model_controller.get_tune_flow_window_size()
+
+    def get_tune_flow_algorithm(self):
+        return self.model_controller.get_tune_flow_algorithm()
 
 
 # Main loop of the Anomaly Detection application

@@ -12,6 +12,8 @@ Tune model window which is part of GUI application
 
 import os
 
+import win32api
+
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, set_path, load_anomaly_detection_list
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
@@ -54,10 +56,14 @@ class TuneModel(tk.Frame):
             Description | Reinitialize frame values and view
 
     get_selected_features()
-        Description | Get selected features by the user
+            Description | Get selected features by the user
 
     browse_command()
             Description | Set the path to entry widget
+
+    validate_next_step()
+            Description | Validation before passing to next step
+
     """
 
     def __init__(self, parent, controller):
@@ -151,7 +157,20 @@ class TuneModel(tk.Frame):
         :return: if validations pass move to next window
         """
 
-        pass
+        if not self.validate_next_step():
+            return
+        else:
+            current_features, target_features, chosen_window_sizes = self.get_selected_features()
+            self.controller.set_tune_model_configuration(current_features,
+                                                         target_features,
+                                                         chosen_window_sizes,
+                                                         self.algorithm_combo.get())
+            a = self.controller.get_tune_flow_input_features()
+            b = self.controller.get_tune_flow_target_features()
+            c = self.controller.get_tune_flow_window_size()
+            d = self.controller.get_tune_flow_algorithm()
+            e = self.controller.get_tune_model_input_path()
+            self.controller.reinitialize_frame("TuningLoadingWindow")
 
     def get_features_columns_options(self):
         """
@@ -159,25 +178,13 @@ class TuneModel(tk.Frame):
         :return: selected columns
         """
 
-        return self.controller.get_features_columns_options()
+        return self.controller.get_tune_model_features()
 
     def reinitialize(self):
         """
         Reinitialize frame values and view
         :return: new frame view
         """
-
-        self.path_label = tk.Label(self)
-        self.path_label.place(relx=0.015, rely=0.35, height=32, width=146)
-        self.path_label.configure(text='''Input directory:''')
-        set_widget_to_left(self.path_label)
-
-        self.path_input = tk.Entry(self)
-        self.path_input.place(relx=0.195, rely=0.35, height=25, relwidth=0.624)
-
-        self.browse_btn = tk.Button(self, command=self.browse_command)
-        self.browse_btn.place(relx=0.833, rely=0.35, height=25, width=60)
-        set_button_configuration(self.browse_btn, text='''Browse''')
 
         self.features_columns_options = {}
         self.features_columns_options = self.get_features_columns_options()
@@ -208,9 +215,12 @@ class TuneModel(tk.Frame):
                                                   selectbackground='sandy brown')
         self.target_features_listbox.place(relx=0.3, rely=0.45, height=200, width=140)
 
+        window_options = tk.StringVar()
+        numbers = list(range(1, 16))
+        window_options.set([str(i) for i in numbers])
+
         self.window_size_listbox = tk.Listbox(self,
-                                              listvariable=tk.StringVar().set(
-                                                  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]),
+                                              listvariable=window_options,
                                               selectmode=tk.MULTIPLE,
                                               exportselection=0,
                                               # Fix : ComboBox clears unrelated ListBox selection
@@ -239,7 +249,7 @@ class TuneModel(tk.Frame):
 
         selection = self.features_listbox.curselection()
         target_selection = self.target_features_listbox.curselection()
-        window_selectioo = self.window_size_listbox.curselection()
+        window_selection = self.window_size_listbox.curselection()
 
         for i in selection:
             selected = self.features_listbox.get(i)
@@ -249,18 +259,29 @@ class TuneModel(tk.Frame):
             target_selected = self.target_features_listbox.get(i)
             target_features.append(target_selected)
 
-        for i in window_selectioo:
+        for i in window_selection:
             window_selected = self.window_size_listbox.get(i)
             window_sizes.append(window_selected)
 
         return features, target_features, window_sizes
 
-    def browse_command(self):
+    def validate_next_step(self):
         """
-        Set the path to entry widget
-        :return: updated path
+        Validation before passing to next step
+        :return: True in case validation passed, otherwise False
         """
 
-        self.path_input.delete(0, tk.END)
-        path = set_path()
-        self.path_input.insert(0, path)
+        current_features, target_features, chosen_window_sizes = self.get_selected_features()
+        if not current_features \
+                or not target_features \
+                or not chosen_window_sizes \
+                or len(chosen_window_sizes) < 1 \
+                or len(current_features) < 2 \
+                or len(target_features) < 2:
+            win32api.MessageBox(0,
+                                'Please select at least two features for input, two features for output and window size before the next step.',
+                                'Invalid Feature',
+                                0x00001000)
+            return False
+
+        return True
