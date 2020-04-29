@@ -165,11 +165,6 @@ class TuneModel(tk.Frame):
                                                          target_features,
                                                          chosen_window_sizes,
                                                          self.algorithm_combo.get())
-            a = self.controller.get_tune_flow_input_features()
-            b = self.controller.get_tune_flow_target_features()
-            c = self.controller.get_tune_flow_window_size()
-            d = self.controller.get_tune_flow_algorithm()
-            e = self.controller.get_tune_model_input_path()
             self.controller.reinitialize_frame("TuningLoadingWindow")
 
     def get_features_columns_options(self):
