@@ -23,7 +23,7 @@ from utils.constants import ATTACK_COLUMN
 from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
     create_directories, get_current_time, \
-    plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score
+    plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score, plot_prediction_performance
 from collections import defaultdict
 
 
@@ -279,8 +279,11 @@ def execute_predict(flight_route,
     flight_dir = os.path.join(test_data_path, flight_route)
     ATTACKS = get_subdirectories(flight_dir)
 
-    figures_results_path = os.path.join(results_path, "figures")
+    figures_results_path = os.path.join(results_path, "Figures")
     create_directories(figures_results_path)
+
+    attacks_figures_results_path = os.path.join(figures_results_path, "Attacks")
+    create_directories(attacks_figures_results_path)
 
     # Iterate over all attacks in order to find anomalies
     for attack in ATTACKS:
@@ -320,8 +323,15 @@ def execute_predict(flight_route,
                 plot_reconstruction_error_scatter(scores=scores_test,
                                                   labels=Y_test_labels_preprocessed,
                                                   threshold=threshold,
-                                                  plot_dir=figures_results_path,
+                                                  plot_dir=attacks_figures_results_path,
                                                   title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
+
+                for i, target_feature in enumerate(target_features_list):
+                    title = "Test performance of SVR for " + target_feature + " in " + flight_csv
+                    plot_prediction_performance(Y_train=Y_test_preprocessed[:, i],
+                                                X_pred=X_pred[:, i],
+                                                results_path=attacks_figures_results_path,
+                                                title=title)
 
             predictions = [1 if x >= threshold else 0 for x in scores_test]
 
@@ -385,6 +395,21 @@ def predict_train_set(mlp_model,
 
     # choose threshold for which <MODEL_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
     threshold = get_threshold(scores_train, threshold)
+
+    figures_results_path = os.path.join(results_path, "Figures")
+    create_directories(figures_results_path)
+
+    if add_plots:
+
+        train_figures_results_path = os.path.join(figures_results_path, "Train")
+        create_directories(train_figures_results_path)
+
+        for i, target_feature in enumerate(target_features_list):
+            title = "Training performance of SVR for " + target_feature + " in " + flight_route
+            plot_prediction_performance(Y_train=Y_train_preprocessed[:, i],
+                                        X_pred=X_pred[:, i],
+                                        results_path=train_figures_results_path,
+                                        title=title)
 
     # Save created model if the indicator is true
     if save_model:

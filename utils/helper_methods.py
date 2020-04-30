@@ -539,3 +539,27 @@ def plot_roc(y_true, y_pred, plot_dir, title="ROC Curve"):
 
     plt.clf()
     # plt.show()
+
+
+def plot_prediction_performance(Y_train, X_pred, results_path, title):
+    """
+    plot training performance of model
+    :param Y_train: actual data
+    :param X_pred: predicted data
+    :param results_path: results path
+    :param title: plot title
+    :return:
+    """
+
+    # mean_x = X_pred.mean(axis=1)
+    # mean_y = Y_train.mean(axis=1)
+    plt.plot(X_pred, 'darkorange', label="Predicted")
+    plt.plot(Y_train, 'navy', label="Actual")
+    plt.title(title)
+    plt.legend(loc='lower right')
+    plt.gcf().set_size_inches(15, 6)
+
+    plt.savefig(f'{results_path}/{title}.png')
+
+    plt.clf()
+    # plt.show()

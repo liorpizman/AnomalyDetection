@@ -23,7 +23,7 @@ from gui.algorithm_frame_options.shared.helper_methods import load_algorithm_con
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
 from models.time_series_model.time_series_estimator import TimeSeriesRegressor, cascade_cv
-from utils.helper_methods import get_current_time
+from utils.helper_methods import get_current_time, plot_prediction_performance
 
 
 def train_test_plot(pred_train, y_train, title, results_path, target_features):
@@ -289,8 +289,6 @@ def model_tuning(file_path, input_features, target_features, window_size, scaler
 
     tsr = TimeSeriesRegressor(model, n_prev=window_size)
 
-    cv = cascade_cv(len(X_train), n_folds=5)
-
     grid_search = GridSearchCV(tsr, model_grid_params)
 
     grid_search.fit(X_train, Y_train)
@@ -310,12 +308,22 @@ def model_tuning(file_path, input_features, target_features, window_size, scaler
     with open(f'{results_path}/{file_name}', 'w') as outfile:
         json.dump(data, outfile)
 
-    train_test_plot(pred_train=prediction,
-                    y_train=tsr._preprocess(Y_test, Y_test)[1],
-                    title=plot_title,
-                    results_path=results_path,
-                    target_features=target_features
-                    )
+    # train_test_plot(pred_train=prediction,
+    #                 y_train=tsr._preprocess(Y_test, Y_test)[1],
+    #                 title=plot_title,
+    #                 results_path=results_path,
+    #                 target_features=target_features
+    #                 )
+
+    Y_test_preprocessed = tsr._preprocess(X_test, Y_test)[1]
+
+    for i, target_feature in enumerate(target_features):
+        title = "Grid search test performance of " + model_name + " for window size: " + \
+                str(window_size) + " and " + target_feature + " feature"
+        plot_prediction_performance(Y_train=Y_test_preprocessed[:, i],
+                                    X_pred=prediction[:, i],
+                                    results_path=results_path,
+                                    title=title)
 
     return data['params'], data['score']
 
