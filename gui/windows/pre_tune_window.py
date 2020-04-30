@@ -16,7 +16,7 @@ import win32api
 
 from gui.shared.inputs_validation_helper import pre_tune_model_path_validation
 from gui.widgets.menubar import Menubar
-from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, clear_text, set_file_path
+from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, clear_text, set_file_path, set_path
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
     set_copyright_configuration, set_button_configuration
 
@@ -128,8 +128,9 @@ class PreTuneModel(tk.Frame):
         :return: if validations pass move to next window
         """
 
-        if pre_tune_model_path_validation(self.path_input.get()):
+        if pre_tune_model_path_validation(self.path_input.get(), self.results_path_input.get()):
             self.controller.set_tune_model_input_path(self.path_input.get())
+            self.controller.set_tune_model_results_path(self.results_path_input.get())
             self.controller.set_tune_model_features()
             self.controller.reinitialize_frame("TuneModel")
         else:
@@ -153,6 +154,19 @@ class PreTuneModel(tk.Frame):
         self.browse_btn.place(relx=0.833, rely=0.4, height=25, width=60)
         set_button_configuration(self.browse_btn, text='''Browse''')
 
+        # Results output directory
+        self.results_path_label = tk.Label(self)
+        self.results_path_label.place(relx=0.015, rely=0.5, height=32, width=146)
+        self.results_path_label.configure(text='''Input directory:''')
+        set_widget_to_left(self.results_path_label)
+
+        self.results_path_input = tk.Entry(self)
+        self.results_path_input.place(relx=0.195, rely=0.5, height=25, relwidth=0.624)
+
+        self.results_browse_btn = tk.Button(self, command=self.results_browse_command)
+        self.results_browse_btn.place(relx=0.833, rely=0.5, height=25, width=60)
+        set_button_configuration(self.results_browse_btn, text='''Browse''')
+
     def browse_command(self):
         """
         Set the path to entry widget
@@ -162,3 +176,13 @@ class PreTuneModel(tk.Frame):
         self.path_input.delete(0, tk.END)
         path = set_file_path()
         self.path_input.insert(0, path)
+
+    def results_browse_command(self):
+        """
+        Set the results path to entry widget
+        :return: updated path
+        """
+
+        self.results_path_input.delete(0, tk.END)
+        path = set_path()
+        self.results_path_input.insert(0, path)

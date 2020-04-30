@@ -49,6 +49,7 @@ class InputSettings:
     TUNE_MODEL_TARGET_FEATURES = []
     TUNE_MODEL_WINDOW_SIZE = []
     TUNE_MODEL_ALGORITHM = ""
+    TUNE_MODEL_RESULTS_PATH = ""
 
     """
     Attributes
@@ -270,6 +271,12 @@ class InputSettings:
 
     get_tune_flow_algorithm()
             Description | Get algorithm for tune model flow
+            
+    set_tune_model_results_path_path(self, results_path):
+        Description | Set the path for results for tuning a model
+
+    get_tune_model_results_path_path(self):
+        Description | Get the path for results for tuning a model
          
     """
 
@@ -585,3 +592,11 @@ class InputSettings:
     @staticmethod
     def get_tune_flow_algorithm():
         return InputSettings.TUNE_MODEL_ALGORITHM
+
+    @staticmethod
+    def set_tune_model_results_path(results_path):
+        InputSettings.TUNE_MODEL_RESULTS_PATH = results_path
+
+    @staticmethod
+    def get_tune_model_results_path():
+        return InputSettings.TUNE_MODEL_RESULTS_PATH

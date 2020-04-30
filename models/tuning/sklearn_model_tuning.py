@@ -106,9 +106,9 @@ def get_suitable_Random_Forest_params(model_params):
             for index in range(len(model_params[key])):
                 model_params[key][index] = int(model_params[key][index])
 
-    # del model_params["estimator__n_estimators"]
-    # del model_params["estimator__random_state"]
-    # del model_params["estimator__max_features"]
+    # del model_params["base_estimator__estimator__n_estimators"]
+    # del model_params["base_estimator__estimator__random_state"]
+    # del model_params["base_estimator__estimator__max_features"]
 
     return model_params
 
