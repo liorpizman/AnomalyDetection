@@ -108,12 +108,11 @@ def get_lstm_params_configurations():
     return get_params_from_yaml()
 
 
-def model_tuning(model_name, directory_file_path, input_features,
-                 target_features, window_size, scaler, results_path):
+def model_tuning(file_path, input_features, target_features, window_size, scaler, results_path):
     """
     model's tuning process by using GridSearchCV
     :param model_name: model name
-    :param directory_file_path: data file directory path
+    :param file_path: data file  path
     :param input_features: the list of features which the user chose for the train
     :param target_features: the list of features which the user chose for the test
     :param window_size: window size variable
@@ -122,7 +121,7 @@ def model_tuning(model_name, directory_file_path, input_features,
     :return: model name , best models params
     """
 
-    df_train = pd.read_csv(f'{directory_file_path}/without_anom.csv')
+    df_train = pd.read_csv(f'{file_path}')
 
     input_df_train = df_train[input_features]
     target_df_train = df_train[target_features]
@@ -147,7 +146,7 @@ def model_tuning(model_name, directory_file_path, input_features,
     params_configurations = get_lstm_params_configurations()
 
     total_scores = dict()
-    
+
     for config in params_configurations:
         encoding_dimension, activation, loss, optimizer, epochs = config
 
@@ -168,10 +167,10 @@ def model_tuning(model_name, directory_file_path, input_features,
 
         total_scores[str(config)] = mean(scores)
 
-    total_sorted_1 = {k: v for k, v in sorted(total_scores.items(), key=lambda item: item[1])}
+    total_sorted = {k: v for k, v in sorted(total_scores.items(), key=lambda item: item[1])}
 
-    best_config = list(total_sorted_1.items())[0][0]
-    best_score = list(total_sorted_1.items())[0][1]
+    best_config = list(total_sorted.items())[0][0]
+    best_score = list(total_sorted.items())[0][1]
     print(best_config)
     print(best_score)
 
@@ -181,33 +180,24 @@ def model_tuning(model_name, directory_file_path, input_features,
     data['model'] = 'LSTM'
     data["input_features"] = input_features
     data["target_features"] = target_features
+    data["window_size"] = window_size
     data['params'] = best_config
     data['score'] = best_score
 
     with open(f'{results_path}/{file_name}', 'w') as outfile:
         json.dump(data, outfile)
 
+    return data['params'], data['score']
 
-path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\train\\Route_0"
-input_features = [
-    "Drone Climb",
-    "Latitude",
-    "Drone Speed"
-]
-target_features = [
-    "Drone Altitude",
-    "Barometer Altitude",
-    "Longitude",
-    "Accelerometer"
-]
-window_size = 2
-scaler = "max_abs"
-results_path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\results\\Tuning"
 
-# model_tuning(model_name="LSTM",
-#              directory_file_path=path,
-#              input_features=input_features,
-#              target_features=target_features,
-#              window_size=window_size,
-#              scaler=scaler,
-#              results_path=results_path)
+def run_tuning(file_path, input_features, target_features, window_size, results_path):
+    results = dict()
+    for window in window_size:
+        results[window] = model_tuning(file_path,
+                                       input_features,
+                                       target_features,
+                                       int(window),
+                                       "min_max",
+                                       results_path)
+
+    # return results

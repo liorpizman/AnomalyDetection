@@ -191,6 +191,16 @@ class AnomalyDetectionGUI(tk.Tk):
     get_tune_flow_algorithm()
             Description | Get algorithm for tune model flow
 
+    set_tune_model_results_path(input_path)
+            Description | Set the path for results for tuning a model
+
+    get_tune_model_results_path()
+            Description | Get the path for results for tuning a model
+
+    run_tuning()
+            Description | Execute models tuning process
+
+
     """
 
     def __init__(self, *args, **kwargs):
@@ -401,6 +411,16 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def get_tune_flow_algorithm(self):
         return self.model_controller.get_tune_flow_algorithm()
+
+    def set_tune_model_results_path(self, results_path):
+        self.model_controller.set_tune_model_results_path_path(results_path)
+
+    def get_tune_model_results_path_path(self):
+        return self.model_controller.get_tune_model_results_path_path()
+
+    def run_tuning(self):
+        self.model_controller.run_tuning()
+
 
 
 # Main loop of the Anomaly Detection application

@@ -183,5 +183,5 @@ class TuningLoadingWindow(tk.Frame):
         :return: results window
         """
 
-        # self.controller.run_tuning()
+        self.controller.run_tuning()
         self.controller.reinitialize_frame("TuneResultsWindow")

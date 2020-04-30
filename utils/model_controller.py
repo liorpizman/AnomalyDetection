@@ -6,7 +6,7 @@ DataSets: 1. ADS-B dataset 2. simulated data
 ---
 Controller which mapping all the actions between the setting in the input and the user interface
 '''
-
+from models.tuning.tuning_execution import TuningExecution
 from utils.input_settings import InputSettings
 from utils.models_execution import ModelsExecution
 
@@ -150,6 +150,15 @@ class ModelController:
     get_tune_flow_algorithm()
             Description | Get algorithm for tune model flow
 
+     set_tune_model_results_path_path(self, results_path):
+        Description | Set the path for results for tuning a model
+
+    get_tune_model_results_path_path(self):
+        Description | Get the path for results for tuning a model
+
+    run_tuning()
+            Description | Execute models tuning process
+
      """
 
     def __init__(self, gui_controller):
@@ -283,3 +292,12 @@ class ModelController:
 
     def get_tune_flow_algorithm(self):
         return InputSettings.get_tune_flow_algorithm()
+
+    def set_tune_model_results_path_path(self, results_path):
+        InputSettings.set_tune_model_results_path(results_path)
+
+    def get_tune_model_results_path_path(self):
+        return InputSettings.get_tune_model_results_path()
+
+    def run_tuning(self):
+        TuningExecution.run_tuning()
