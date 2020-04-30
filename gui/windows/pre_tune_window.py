@@ -53,8 +53,12 @@ class PreTuneModel(tk.Frame):
     reinitialize()
             Description | Reinitialize frame values and view
 
-    browse_command()
-            Description | Set the path to entry widget
+    input_file_browse_command()
+            Description | Set the input file path to entry widget
+
+    results_browse_command()
+            Description | Set the results path to entry widget
+
     """
 
     def __init__(self, parent, controller):
@@ -144,20 +148,20 @@ class PreTuneModel(tk.Frame):
 
         self.path_label = tk.Label(self)
         self.path_label.place(relx=0.015, rely=0.4, height=32, width=146)
-        self.path_label.configure(text='''Input directory:''')
+        self.path_label.configure(text='''Input file:''')
         set_widget_to_left(self.path_label)
 
         self.path_input = tk.Entry(self)
         self.path_input.place(relx=0.195, rely=0.4, height=25, relwidth=0.624)
 
-        self.browse_btn = tk.Button(self, command=self.browse_command)
+        self.browse_btn = tk.Button(self, command=self.input_file_browse_command)
         self.browse_btn.place(relx=0.833, rely=0.4, height=25, width=60)
         set_button_configuration(self.browse_btn, text='''Browse''')
 
         # Results output directory
         self.results_path_label = tk.Label(self)
         self.results_path_label.place(relx=0.015, rely=0.5, height=32, width=146)
-        self.results_path_label.configure(text='''Input directory:''')
+        self.results_path_label.configure(text='''Results directory:''')
         set_widget_to_left(self.results_path_label)
 
         self.results_path_input = tk.Entry(self)
@@ -167,7 +171,7 @@ class PreTuneModel(tk.Frame):
         self.results_browse_btn.place(relx=0.833, rely=0.5, height=25, width=60)
         set_button_configuration(self.results_browse_btn, text='''Browse''')
 
-    def browse_command(self):
+    def input_file_browse_command(self):
         """
         Set the path to entry widget
         :return: updated path
