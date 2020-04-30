@@ -167,8 +167,6 @@ def model_tuning(file_path, input_features, target_features, window_size, scaler
 
         total_scores[str(config)] = mean(scores)
 
-        break
-
     total_sorted = {k: v for k, v in sorted(total_scores.items(), key=lambda item: item[1])}
 
     best_config = list(total_sorted.items())[0][0]
@@ -201,6 +199,5 @@ def run_tuning(file_path, input_features, target_features, window_size, results_
                                        int(window),
                                        "min_max",
                                        results_path)
-        break;
 
     # return results

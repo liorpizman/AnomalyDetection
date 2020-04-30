@@ -7,6 +7,7 @@ DataSets: 1. ADS-B dataset 2. simulated data
 Switcher between tuning models execution in the system
 '''
 from models.tuning.lstm_model_tuning import run_tuning as run_LSTM_tuning
+from models.tuning.sklearn_model_tuning import run_tuning as run_sklearn_tuning
 from utils.input_settings import InputSettings
 
 
@@ -93,7 +94,8 @@ class TuningExecution:
         :param target_features: target features
         :param window_size: window size
         :param results_path: results path
+        :param algorithm: algorithm name
         :return:
         """
 
-        pass
+        run_sklearn_tuning(input_path, input_features, target_features, window_size, results_path, algorithm)
