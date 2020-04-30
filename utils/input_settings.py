@@ -100,6 +100,8 @@ class InputSettings:
     TUNE_MODEL_WINDOW_SIZE               : list
     
     TUNE_MODEL_ALGORITHM                 : str
+    
+    TUNE_MODEL_RESULTS_PATH              : str
 
     Methods
     -------
@@ -600,3 +602,5 @@ class InputSettings:
     @staticmethod
     def get_tune_model_results_path():
         return InputSettings.TUNE_MODEL_RESULTS_PATH
+
+
