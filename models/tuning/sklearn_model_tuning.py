@@ -308,22 +308,15 @@ def model_tuning(file_path, input_features, target_features, window_size, scaler
     with open(f'{results_path}/{file_name}', 'w') as outfile:
         json.dump(data, outfile)
 
-    # train_test_plot(pred_train=prediction,
-    #                 y_train=tsr._preprocess(Y_test, Y_test)[1],
-    #                 title=plot_title,
-    #                 results_path=results_path,
-    #                 target_features=target_features
-    #                 )
-
-    Y_test_preprocessed = tsr._preprocess(X_test, Y_test)[1]
-
-    for i, target_feature in enumerate(target_features):
-        title = "Grid search test performance of " + model_name + " for window size: " + \
-                str(window_size) + " and " + target_feature + " feature"
-        plot_prediction_performance(Y_train=Y_test_preprocessed[:, i],
-                                    X_pred=prediction[:, i],
-                                    results_path=results_path,
-                                    title=title)
+    # Y_test_preprocessed = tsr._preprocess(X_test, Y_test)[1]
+    #
+    # for i, target_feature in enumerate(target_features):
+    #     title = "Grid search test performance of " + model_name + " for window size: " + \
+    #             str(window_size) + " and " + target_feature + " feature"
+    #     plot_prediction_performance(Y_train=Y_test_preprocessed[:, i],
+    #                                 X_pred=prediction[:, i],
+    #                                 results_path=results_path,
+    #                                 title=title)
 
     return data['params'], data['score']
 
