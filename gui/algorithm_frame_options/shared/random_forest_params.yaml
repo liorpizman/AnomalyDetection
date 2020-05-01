@@ -14,7 +14,7 @@ widget_names:
   - "Max features"
   - "Random state"
   - "Window size"
-  - "Threshold"
+  - "Threshold percent"
 
 # The values are the keys of the parameters in the helper method file
 # For example: 'frame.parameters[param_key] = frame.algorithm_param_combo'  (param_key is each value in the list)
@@ -31,6 +31,10 @@ widget_param_keys:
 # All the lists in the bottom represent the values in each combobox which will be displayed.
 # Should be: It is better that the keys of the lists will be informative but they can be every string you want
 random_forest_n_estimators:
+  - 10
+  - 20
+  - 50
+  - 70
   - 100
   - 120
   - 140
@@ -38,21 +42,6 @@ random_forest_n_estimators:
   - 180
   - 200
   - 250
-  - 300
-  - 350
-  - 400
-  - 450
-  - 500
-  - 550
-  - 600
-  - 650
-  - 700
-  - 750
-  - 800
-  - 850
-  - 900
-  - 950
-  - 1000
 
 random_forest_criterion:
   - "mse"

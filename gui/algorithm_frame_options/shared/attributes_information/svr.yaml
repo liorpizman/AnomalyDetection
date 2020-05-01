@@ -20,8 +20,8 @@ Epsilon: "Parameter information : Epsilon in the epsilon-SVR model. It specifies
 penalty is associated in the training loss function with points predicted within a distance epsilon from the actual
 value."
 
-Window size: "Parameter information : The amount of records to look back while calculation a prediction for a current
-record."
+Window size: "Parameter information : The amount of records to look back for a prediction of one sample."
 
-Threshold: "Parameter information : An 'X' value which represents the value that X% records has a lower value than it.
-It is used to detect anomalies."
+Threshold percent: "Parameter information : A value between 0 and 1. The value defines a percentage which is used to
+find a numeric value of a threshold. The threshold is set to be a value greater than X% (chosen percentage) from
+the total training prediction scores."

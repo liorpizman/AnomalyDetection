@@ -13,7 +13,7 @@ widget_names:
   - "Gamma"
   - "Epsilon"
   - "Window size"
-  - "Threshold"
+  - "Threshold percent"
 
 # The values are the keys of the parameters in the helper method file
 # For example: 'frame.parameters[param_key] = frame.algorithm_param_combo'  (param_key is each value in the list)
