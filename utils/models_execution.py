@@ -7,6 +7,8 @@ DataSets: 1. ADS-B dataset 2. simulated data
 Switcher between models execution in the system
 '''
 
+import os
+
 from gui.shared.helper_methods import read_json_file, get_model_path, load_anomaly_detection_list, get_scaler_path
 from models.lstm.lstm_execution import run_model as run_lstm_model
 from models.svr.svr_execution import run_model as run_svr_model
@@ -130,7 +132,8 @@ class ModelsExecution:
                 target_scaler_path = None
             else:
                 algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
-                algorithm_json_file = read_json_file(f'{algorithm_path}/model_data.json')
+                model_data_json_path = os.path.join(*[str(algorithm_path), 'model_data.json'])
+                algorithm_json_file = read_json_file(f"{model_data_json_path}")
                 algorithm_features_list = algorithm_json_file['features']
                 algorithm_target_features_list = algorithm_json_file['target_features']
                 threshold = algorithm_json_file['threshold']

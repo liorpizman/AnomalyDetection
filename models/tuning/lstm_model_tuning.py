@@ -1,9 +1,21 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+
+'''
+Anomaly Detection of GPS Spoofing Attacks on UAVs
+Authors: Lior Pizman & Yehuda Pashay
+GitHub: https://github.com/liorpizman/AnomalyDetection
+DataSets: 1. ADS-B dataset 2. simulated data
+---
+LSTM keras model tuning class
+'''
+
 import json
-from statistics import mean
-
+import os
 import pandas as pd
-from sklearn.model_selection import train_test_split
 
+from statistics import mean
+from sklearn.model_selection import train_test_split
 from gui.algorithm_frame_options.shared.helper_methods import load_algorithm_constants
 from models.data_preprocessing.data_normalization import normalize_data
 from models.lstm.lstm_autoencoder import get_lstm_autoencoder_model
@@ -184,7 +196,8 @@ def model_tuning(file_path, input_features, target_features, window_size, scaler
     data['params'] = best_config
     data['score'] = best_score
 
-    with open(f'{results_path}/{file_name}', 'w') as outfile:
+    file_path = os.path.join(*[str(results_path), str(file_name)])
+    with open(f"{file_path}", 'w') as outfile:
         json.dump(data, outfile)
 
     return data['params'], data['score']

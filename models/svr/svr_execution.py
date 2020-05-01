@@ -88,11 +88,13 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
     current_time = get_current_time()
 
-    create_directories(f'{results_path}/svr/{current_time}')
+    current_time_path = os.path.join(*[str(results_path), 'svr', str(current_time)])
+    create_directories(f"{current_time_path}")
 
     # Create sub directories for each similarity function
     for similarity in similarity_score:
-        create_directories(f'{results_path}/svr/{current_time}/{similarity}')
+        similarity_path = os.path.join(*[str(current_time_path), str(similarity)])
+        create_directories(f"{similarity_path}")
 
     # Train the model for each flight route
     for flight_route in FLIGHT_ROUTES:
@@ -110,8 +112,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
 
         # Get results for each similarity function
         for similarity in similarity_score:
-            current_results_path = f'{results_path}/svr/{current_time}/{similarity}/{flight_route}'
-            create_directories(current_results_path)
+            current_results_path = os.path.join(*[str(current_time_path), str(similarity), str(flight_route)])
+            create_directories(f"{current_results_path}")
             tpr_scores, fpr_scores, acc_scores, delay_scores = execute_predict(flight_route,
                                                                                test_data_path=test_data_path,
                                                                                similarity_score=similarity,
@@ -130,22 +132,27 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                                window_size=window_size)
 
             df = pd.DataFrame(tpr_scores)
-            df.to_csv(f'{current_results_path}/{flight_route}_tpr.csv', index=False)
+            tpr_path = os.path.join(*[str(current_results_path), str(flight_route) + '_tpr.csv'])
+            df.to_csv(f"{tpr_path}", index=False)
 
             df = pd.DataFrame(fpr_scores)
-            df.to_csv(f'{current_results_path}/{flight_route}_fpr.csv', index=False)
+            fpr_path = os.path.join(*[str(current_results_path), str(flight_route) + '_fpr.csv'])
+            df.to_csv(f"{fpr_path}", index=False)
 
             df = pd.DataFrame(acc_scores)
-            df.to_csv(f'{current_results_path}/{flight_route}_acc.csv', index=False)
+            acc_path = os.path.join(*[str(current_results_path), str(flight_route) + '_acc.csv'])
+            df.to_csv(f"{acc_path}", index=False)
 
             df = pd.DataFrame(delay_scores)
-            df.to_csv(f'{current_results_path}/{flight_route}_delay.csv', index=False)
+            delay_path = os.path.join(*[str(current_results_path), str(flight_route) + '_delay.csv'])
+            df.to_csv(f"{delay_path}", index=False)
 
     algorithm_name = "SVR"
 
     # Report results for training data to csv files
     for similarity in similarity_score:
-        report_results(f'{results_path}/svr/{current_time}/{similarity}',
+        report_similarity_path = os.path.join(*[str(results_path), 'svr', str(current_time), str(similarity)])
+        report_results(f"{report_similarity_path}",
                        test_data_path,
                        FLIGHT_ROUTES,
                        algorithm_name,
@@ -173,7 +180,8 @@ def execute_train(flight_route,
     :return: svr model, normalization input train scalar,normalization input target scalar, X_train data frame,Y_train data frame
     """
 
-    df_train = pd.read_csv(f'{training_data_path}/{flight_route}/without_anom.csv')
+    without_anomaly_path = os.path.join(*[str(training_data_path), str(flight_route), 'without_anom.csv'])
+    df_train = pd.read_csv(f"{without_anomaly_path}")
 
     input_df_train = df_train[features_list]
     target_df_train = df_train[target_features_list]
@@ -270,9 +278,11 @@ def execute_predict(flight_route,
 
     # Iterate over all attacks in order to find anomalies
     for attack in ATTACKS:
-        for flight_csv in os.listdir(f'{test_data_path}/{flight_route}/{attack}'):
+        attacks_path = os.path.join(*[str(test_data_path), str(flight_route), str(attack)])
+        for flight_csv in os.listdir(f"{attacks_path}"):
 
-            df_test_source = pd.read_csv(f'{test_data_path}/{flight_route}/{attack}/{flight_csv}')
+            flight_attack_path = os.path.join(*[str(attacks_path), str(flight_csv)])
+            df_test_source = pd.read_csv(f"{flight_attack_path}")
 
             Y_test_labels = df_test_source[[ATTACK_COLUMN]].values
             Y_test_labels_preprocessed = svr_model._preprocess(Y_test_labels, Y_test_labels)[1]
@@ -404,7 +414,8 @@ def predict_train_set(svr_model,
         model_results_path = os.path.join(results_path, "model_data")
         create_directories(model_results_path)
 
-        with open(f'{model_results_path}/model_data.json', 'w') as outfile:
+        model_data_path = os.path.join(*[str(model_results_path), 'model_data.json'])
+        with open(f"{model_data_path}", 'w') as outfile:
             json.dump(data, outfile)
 
         save_model_file_path = os.path.join(model_results_path, flight_route + "_model.pkl")

@@ -9,16 +9,18 @@ DataSets: 1. ADS-B dataset 2. simulated data
 ---
 Sklearn models tuning class
 '''
+
 import json
+import os
 
 import matplotlib.pyplot as plt
 import pandas as pd
+
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
-
 from gui.algorithm_frame_options.shared.helper_methods import load_algorithm_constants
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
@@ -38,11 +40,11 @@ def train_test_plot(pred_train, y_train, title, results_path, target_features):
         plt.legend(loc='lower right')
         plt.gcf().set_size_inches(15, 6)
 
-        plt.savefig(f'{results_path}/{feature_title}.png')
+        plt_path = os.path.join(*[str(results_path), str(feature_title) + '.png'])
+        plt.savefig(f"{plt_path}")
 
         plt.clf()
-
-        plt.show()
+        # plt.show()
 
 
 def convert_string_to_boolean(source_dict):
@@ -305,7 +307,8 @@ def model_tuning(file_path, input_features, target_features, window_size, scaler
     data['params'] = grid_search.best_params_
     data['score'] = grid_search.best_score_
 
-    with open(f'{results_path}/{file_name}', 'w') as outfile:
+    file_path = os.path.join(str(results_path), str(file_name))
+    with open(f"{file_path}", 'w') as outfile:
         json.dump(data, outfile)
 
     # Y_test_preprocessed = tsr._preprocess(X_test, Y_test)[1]

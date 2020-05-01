@@ -172,7 +172,10 @@ def plot_tuning_results(mses_train, ml_name, input_path, scaler, factor):
     plot_directory_route = os.path.join(ml_directory_route, scaler)
     create_directories(plot_directory_route)
     current_time = get_current_time()
-    plt.savefig(f'{plot_directory_route}/{ml_name}_{scaler}_{current_time}.png')
+    plt_path = os.path.join(
+        *[str(plot_directory_route), str(ml_name) + '_' + str(scaler) + '_' + str(current_time) + '.png']
+    )
+    plt.savefig(f"{plt_path}")
     plt.clf()
 
 
