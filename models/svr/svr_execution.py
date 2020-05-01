@@ -81,6 +81,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         svr_model = pickle.load(open(algorithm_path, 'rb'))
         X_train_scaler = pickle.load(open(train_scaler_path, 'rb'))
         Y_train_scaler = pickle.load(open(target_scaler_path, 'rb'))
+        window_size = svr_model.n_prev
         X_train = None
         Y_train = None
 
