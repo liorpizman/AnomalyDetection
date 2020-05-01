@@ -529,6 +529,9 @@ class InputSettings:
         InputSettings.RESULTS_METRICS_DATA = dict()
         InputSettings.FLIGHT_ROUTES = []
 
+        InputSettings.USERS_SELECTED_FEATURES = dict()
+        InputSettings.USERS_SELECTED_TARGET_FEATURES = dict()
+
         InputSettings.RESULTS_TABLE_ALGORITHM = ""
         InputSettings.RESULTS_TABLE_FLIGHT_ROUTE = ""
 

@@ -13,6 +13,7 @@ Feature selection window which is part of GUI application
 import os
 import win32api
 
+from tkinter import font as tkfont
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_widget_to_left, set_logo_configuration, \
@@ -63,6 +64,12 @@ class FeatureSelectionWindow(tk.Frame):
     set_users_selected_features(features_list)
             Description | Set the selected features from the test data set
 
+    select_all_features
+            Description | Select/Clear all input features
+
+    select_all_targets
+            Description | Select/Clear all target features
+
     """
 
     def __init__(self, parent, controller):
@@ -106,12 +113,13 @@ class FeatureSelectionWindow(tk.Frame):
         self.csv_features = tk.StringVar()
         self.csv_features.set(self.features_columns_options)
 
-        self.instructions = tk.Label(self)
-        self.instructions.place(relx=0.05, rely=0.35, height=32, width=100)
-        self.instructions.configure(text='''Input features:''')
-        set_widget_to_left(self.instructions)
+        self.features_instructions = tk.Label(self)
+        self.features_instructions.place(relx=0.05, rely=0.34, height=22, width=100)
+        self.features_instructions.configure(text='''Input features:''')
+        set_widget_to_left(self.features_instructions)
 
         self.features_listbox = tk.Listbox(self,
+                                           font=tkfont.Font(size=9),
                                            listvariable=self.csv_features,
                                            selectmode=tk.MULTIPLE,
                                            exportselection=0,  # Fix : ComboBox clears unrelated ListBox selection
@@ -120,14 +128,15 @@ class FeatureSelectionWindow(tk.Frame):
                                            bd=3,
                                            bg='antique white',
                                            selectbackground='sandy brown')
-        self.features_listbox.place(relx=0.05, rely=0.4, height=230, width=140)
+        self.features_listbox.place(relx=0.05, rely=0.42, height=230, width=140)
 
-        self.instructions = tk.Label(self)
-        self.instructions.place(relx=0.35, rely=0.35, height=32, width=100)
-        self.instructions.configure(text='''Target features:''')
-        set_widget_to_left(self.instructions)
+        self.target_instructions = tk.Label(self)
+        self.target_instructions.place(relx=0.35, rely=0.34, height=22, width=100)
+        self.target_instructions.configure(text='''Target features:''')
+        set_widget_to_left(self.target_instructions)
 
         self.target_features_listbox = tk.Listbox(self,
+                                                  font=tkfont.Font(size=9),
                                                   listvariable=self.csv_features,
                                                   selectmode=tk.MULTIPLE,
                                                   exportselection=0,
@@ -137,7 +146,7 @@ class FeatureSelectionWindow(tk.Frame):
                                                   bd=3,
                                                   bg='antique white',
                                                   selectbackground='sandy brown')
-        self.target_features_listbox.place(relx=0.35, rely=0.4, height=230, width=140)
+        self.target_features_listbox.place(relx=0.35, rely=0.42, height=230, width=140)
 
         # Side logo
         feature_selection_logo = CROSS_WINDOWS_SETTINGS.get('FEATURE_SELECTION')
@@ -168,7 +177,8 @@ class FeatureSelectionWindow(tk.Frame):
         :return: empty values in the widgets
         """
 
-        pass
+        self.features_listbox.selection_clear(0, tk.END)
+        self.target_features_listbox.selection_clear(0, tk.END)
 
     def next_window(self):
         """
@@ -203,7 +213,16 @@ class FeatureSelectionWindow(tk.Frame):
         self.csv_features = tk.StringVar()
         self.csv_features.set(self.features_columns_options)
 
+        self.input_indicator = False
+        self.target_indicator = False
+
+        self.select_all_features_button = tk.Button(self, command=self.select_all_features)
+        self.select_all_features_button.place(relx=0.17, rely=0.38, height=18, width=55)
+        set_button_configuration(self.select_all_features_button, text='''Select all''')
+        self.select_all_features_button.configure(bg='pale green')
+
         self.features_listbox = tk.Listbox(self,
+                                           font=tkfont.Font(size=9),
                                            listvariable=self.csv_features,
                                            selectmode=tk.MULTIPLE,
                                            exportselection=0,  # Fix : ComboBox clears unrelated ListBox selection
@@ -212,10 +231,16 @@ class FeatureSelectionWindow(tk.Frame):
                                            bd=3,
                                            bg='antique white',
                                            selectbackground='sandy brown')
-        self.features_listbox.place(relx=0.05, rely=0.4, height=230, width=140)
+        self.features_listbox.place(relx=0.05, rely=0.42, height=230, width=140)
+
+        self.select_all_target_button = tk.Button(self, bg='sky blue', command=self.select_all_target)
+        self.select_all_target_button.place(relx=0.47, rely=0.38, height=18, width=55)
+        set_button_configuration(self.select_all_target_button, text='''Select all''')
+        self.select_all_target_button.configure(bg='pale green')
 
         self.target_features_listbox = tk.Listbox(self,
                                                   listvariable=self.csv_features,
+                                                  font=tkfont.Font(size=9),
                                                   selectmode=tk.MULTIPLE,
                                                   exportselection=0,
                                                   # Fix : ComboBox clears unrelated ListBox selection
@@ -224,7 +249,7 @@ class FeatureSelectionWindow(tk.Frame):
                                                   bd=3,
                                                   bg='antique white',
                                                   selectbackground='sandy brown')
-        self.target_features_listbox.place(relx=0.35, rely=0.4, height=230, width=140)
+        self.target_features_listbox.place(relx=0.35, rely=0.42, height=230, width=140)
 
     def get_selected_features(self):
         """
@@ -281,3 +306,33 @@ class FeatureSelectionWindow(tk.Frame):
         """
 
         self.controller.set_users_selected_features(features_list, target_features_list)
+
+    def select_all_features(self):
+        """
+        Select/Clear all input features
+        :return: selected/cleared listbox
+        """
+
+        if self.input_indicator:
+            self.features_listbox.selection_clear(0, tk.END)
+            self.select_all_features_button.configure(bg='pale green', text='''Select all''')
+        else:
+            self.features_listbox.select_set(0, tk.END)
+            self.select_all_features_button.configure(bg='firebrick1', text='''Clear all''')
+
+        self.input_indicator = not self.input_indicator
+
+    def select_all_target(self):
+        """
+        Select/Clear all target features
+        :return: selected/cleared listbox
+        """
+
+        if self.target_indicator:
+            self.target_features_listbox.selection_clear(0, tk.END)
+            self.select_all_target_button.configure(bg='pale green', text='''Select all''')
+        else:
+            self.target_features_listbox.select_set(0, tk.END)
+            self.select_all_target_button.configure(bg='firebrick1', text='''Clear all''')
+
+        self.target_indicator = not self.target_indicator
