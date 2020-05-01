@@ -21,8 +21,8 @@ Random state: "Parameter information : If int, random_state is the seed used by 
 RandomState instance, random_state is the random number generator; If None, the random number generator is the
 RandomState instance used by np.random."
 
-Window size: "Parameter information : The amount of records to look back while calculation a prediction for a current
-record."
+Window size: "Parameter information : The amount of records to look back for a prediction of one sample."
 
-Threshold: "Parameter information : An 'X' value which represents the value that X% records has a lower value than it.
-It is used to detect anomalies."
+Threshold percent: "Parameter information : A value between 0 and 1. The value defines a percentage which is used to
+find a numeric value of a threshold. The threshold is set to be a value greater than X% (chosen percentage) from
+the total training prediction scores."
