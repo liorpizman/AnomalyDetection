@@ -28,5 +28,9 @@ CROSS_WINDOWS_SETTINGS = {
     'FEATURE_SELECTION': './images/feature_selection.png',
     'PARAMETERS_OPTIONS': './images/parameters_options.png',
     'INFORMATION_DIR': 'images',
-    'INFORMATION_FILE': 'info.png'
+    'INFORMATION_FILE': 'info.png',
+    'BGU': './images/BGU.png',
+    'ISRAEL_INNOVATION_AUTHORITY': './images/Israel_Innovation_Authority.png',
+    'MINISTRY_OF_DEFENSE': './images/Ministry_of_Defense.png',
+    'MOBILICOM': './images/Mobilicom.png'
 }
