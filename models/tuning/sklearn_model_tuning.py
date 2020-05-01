@@ -85,7 +85,7 @@ def get_suitable_SVR_params(model_params):
     """
 
     for key in model_params.keys():
-        if key == "estimator__epsilon":
+        if key == "base_estimator__estimator__epsilon":
             for index in range(len(model_params[key])):
                 model_params[key][index] = float(model_params[key][index])
 
@@ -99,10 +99,10 @@ def get_suitable_Random_Forest_params(model_params):
     """
 
     for key in model_params.keys():
-        if key == "estimator__n_estimators":
+        if key == "base_estimator__estimator__n_estimators":
             for index in range(len(model_params[key])):
                 model_params[key][index] = int(model_params[key][index])
-        elif key == "estimator__random_state":
+        elif key == "base_estimator__estimator__random_state":
             for index in range(len(model_params[key])):
                 model_params[key][index] = int(model_params[key][index])
 
@@ -120,13 +120,13 @@ def get_suitable_MLP_params(model_params):
     """
 
     for key in model_params.keys():
-        if key == "estimator__hidden_layer_sizes":
+        if key == "base_estimator__estimator__hidden_layer_sizes":
             for index in range(len(model_params[key])):
                 model_params[key][index] = eval(model_params[key][index])
-        elif key == "estimator__alpha":
+        elif key == "base_estimator__estimator__alpha":
             for index in range(len(model_params[key])):
                 model_params[key][index] = float(model_params[key][index])
-        elif key == "estimator__random_state":
+        elif key == "base_estimator__estimator__random_state":
             for index in range(len(model_params[key])):
                 model_params[key][index] = int(model_params[key][index])
 
