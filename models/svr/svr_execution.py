@@ -81,6 +81,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         svr_model = pickle.load(open(algorithm_path, 'rb'))
         X_train_scaler = pickle.load(open(train_scaler_path, 'rb'))
         Y_train_scaler = pickle.load(open(target_scaler_path, 'rb'))
+        window_size = svr_model.n_prev
         X_train = None
         Y_train = None
 
@@ -278,6 +279,14 @@ def execute_predict(flight_route,
 
     # Iterate over all attacks in order to find anomalies
     for attack in ATTACKS:
+        attack_name = attack
+
+        if "_" in attack_name:
+            attack_name = attack_name.split("_")[0]
+
+        current_attack_figures_results_path = os.path.join(attacks_figures_results_path, attack_name)
+        create_directories(current_attack_figures_results_path)
+
         attacks_path = os.path.join(*[str(test_data_path), str(flight_route), str(attack)])
         for flight_csv in os.listdir(f"{attacks_path}"):
 
@@ -316,14 +325,14 @@ def execute_predict(flight_route,
                 plot_reconstruction_error_scatter(scores=scores_test,
                                                   labels=Y_test_labels_preprocessed,
                                                   threshold=threshold,
-                                                  plot_dir=attacks_figures_results_path,
+                                                  plot_dir=current_attack_figures_results_path,
                                                   title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
 
                 for i, target_feature in enumerate(target_features_list):
-                    title = "Test performance of SVR for " + target_feature + " in " + flight_csv
+                    title = "Test performance of SVR for " + target_feature + " feature in " + flight_csv
                     plot_prediction_performance(Y_train=Y_test_preprocessed[:, i],
                                                 X_pred=X_pred[:, i],
-                                                results_path=attacks_figures_results_path,
+                                                results_path=current_attack_figures_results_path,
                                                 title=title)
 
             predictions = [1 if x >= threshold else 0 for x in scores_test]
