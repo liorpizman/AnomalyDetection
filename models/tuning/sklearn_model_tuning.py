@@ -85,7 +85,7 @@ def get_suitable_SVR_params(model_params):
     """
 
     for key in model_params.keys():
-        if key == "estimator__epsilon":
+        if key == "base_estimator__estimator__epsilon":
             for index in range(len(model_params[key])):
                 model_params[key][index] = float(model_params[key][index])
 
@@ -99,10 +99,10 @@ def get_suitable_Random_Forest_params(model_params):
     """
 
     for key in model_params.keys():
-        if key == "estimator__n_estimators":
+        if key == "base_estimator__estimator__n_estimators":
             for index in range(len(model_params[key])):
                 model_params[key][index] = int(model_params[key][index])
-        elif key == "estimator__random_state":
+        elif key == "base_estimator__estimator__random_state":
             for index in range(len(model_params[key])):
                 model_params[key][index] = int(model_params[key][index])
 
@@ -120,13 +120,13 @@ def get_suitable_MLP_params(model_params):
     """
 
     for key in model_params.keys():
-        if key == "estimator__hidden_layer_sizes":
+        if key == "base_estimator__estimator__hidden_layer_sizes":
             for index in range(len(model_params[key])):
                 model_params[key][index] = eval(model_params[key][index])
-        elif key == "estimator__alpha":
+        elif key == "base_estimator__estimator__alpha":
             for index in range(len(model_params[key])):
                 model_params[key][index] = float(model_params[key][index])
-        elif key == "estimator__random_state":
+        elif key == "base_estimator__estimator__random_state":
             for index in range(len(model_params[key])):
                 model_params[key][index] = int(model_params[key][index])
 
@@ -308,22 +308,15 @@ def model_tuning(file_path, input_features, target_features, window_size, scaler
     with open(f'{results_path}/{file_name}', 'w') as outfile:
         json.dump(data, outfile)
 
-    # train_test_plot(pred_train=prediction,
-    #                 y_train=tsr._preprocess(Y_test, Y_test)[1],
-    #                 title=plot_title,
-    #                 results_path=results_path,
-    #                 target_features=target_features
-    #                 )
-
-    Y_test_preprocessed = tsr._preprocess(X_test, Y_test)[1]
-
-    for i, target_feature in enumerate(target_features):
-        title = "Grid search test performance of " + model_name + " for window size: " + \
-                str(window_size) + " and " + target_feature + " feature"
-        plot_prediction_performance(Y_train=Y_test_preprocessed[:, i],
-                                    X_pred=prediction[:, i],
-                                    results_path=results_path,
-                                    title=title)
+    # Y_test_preprocessed = tsr._preprocess(X_test, Y_test)[1]
+    #
+    # for i, target_feature in enumerate(target_features):
+    #     title = "Grid search test performance of " + model_name + " for window size: " + \
+    #             str(window_size) + " and " + target_feature + " feature"
+    #     plot_prediction_performance(Y_train=Y_test_preprocessed[:, i],
+    #                                 X_pred=prediction[:, i],
+    #                                 results_path=results_path,
+    #                                 title=title)
 
     return data['params'], data['score']
 

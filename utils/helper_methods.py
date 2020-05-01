@@ -551,8 +551,6 @@ def plot_prediction_performance(Y_train, X_pred, results_path, title):
     :return:
     """
 
-    # mean_x = X_pred.mean(axis=1)
-    # mean_y = Y_train.mean(axis=1)
     plt.plot(X_pred, 'darkorange', label="Predicted")
     plt.plot(Y_train, 'navy', label="Actual")
     plt.title(title)
