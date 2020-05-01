@@ -9,6 +9,7 @@ Methods to handle repeatable actions which are done by the model controller
 
 import os
 import warnings
+import math
 import numpy as np
 import pandas as pd
 import yaml
@@ -19,7 +20,6 @@ from numpy.linalg import norm
 from scipy.spatial import distance
 from datetime import datetime
 from sklearn.metrics import pairwise, mean_squared_error, roc_curve, auc
-from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 from utils.constants import NON_ATTACK_VALUE, ATTACK_VALUE
 
 
@@ -386,10 +386,18 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
 
         # Iterate over all the flight routes in order to save each results' permutation in a csv file
         for i, flight_route in enumerate(FLIGHT_ROUTES):
-            df = pd.read_csv(f'{results_dir_path}/{flight_route}/{flight_route}_{metric}.csv')
+            flight_route_metric_path = os.path.join(
+                *[str(results_dir_path), str(flight_route), str(flight_route) + '_' + str(metric) + '.csv']
+            )
+            df = pd.read_csv(f"{flight_route_metric_path}")
             mean = df.mean(axis=0).values
             std = df.std(axis=0).values
-            output = [f'{round(x, 2)}±{round(y, 2)}%' for x, y in zip(mean, std)]
+            output = []
+            for x, y in zip(mean, std):
+                if math.isnan(y):
+                    output.append(f"{round(x, 2)}")
+                else:
+                    output.append(f"{round(x, 2)}±{round(y, 2)}%")
             results.loc[i] = output
 
             results_data[algorithm_name][flight_route][similarity_function][metric] = dict()
@@ -407,7 +415,8 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
         # Update evaluated evaluation metric for each attack according to the current algorithm and metric
         InputSettings.update_results_metrics_data(results_data)
 
-        results.to_csv(f'{results_dir_path}/final_{metric}.csv')
+        final_metric_path = os.path.join(*[str(results_dir_path), 'final_' + str(metric) + '.csv'])
+        results.to_csv(f"{final_metric_path}")
 
 
 def is_excluded_flight(route, csv):
@@ -479,7 +488,8 @@ def plot(data, xlabel, ylabel, title, plot_dir):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
-    plt.savefig(f'{plot_dir}/{title}.png')
+    plt_path = os.path.join(*[str(plot_dir), str(title) + '.png'])
+    plt.savefig(f"{plt_path}")
 
     plt.clf()
 
@@ -505,8 +515,8 @@ def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title
     plt.title(title)
 
     plt.hlines(y=threshold, xmin=plt.xlim()[0], xmax=plt.xlim()[1], colors='r')
-
-    plt.savefig(f'{plot_dir}/{title}.png')
+    plt_path = os.path.join(*[str(plot_dir), str(title) + '.png'])
+    plt.savefig(f"{plt_path}")
 
     plt.clf()
     # plt.show()
@@ -535,7 +545,8 @@ def plot_roc(y_true, y_pred, plot_dir, title="ROC Curve"):
     plt.xlabel("FPR")
     plt.ylabel("TPR")
 
-    plt.savefig(f'{plot_dir}/{title}.png')
+    plt_path = os.path.join(*[str(plot_dir), str(title) + '.png'])
+    plt.savefig(f"{plt_path}")
 
     plt.clf()
     # plt.show()
@@ -557,7 +568,8 @@ def plot_prediction_performance(Y_train, X_pred, results_path, title):
     plt.legend(loc='lower right')
     plt.gcf().set_size_inches(15, 6)
 
-    plt.savefig(f'{results_path}/{title}.png')
+    results_plt_path = os.path.join(*[str(results_path), str(title) + '.png'])
+    plt.savefig(f"{results_plt_path}")
 
     plt.clf()
     # plt.show()
