@@ -102,6 +102,7 @@ class Checkbar(Frame):
                                      command=algorithm_show_function)
 
                 edit_button.place(relx=relX + 0.35, rely=relY, height=30, width=220)
+                edit_button.configure(cursor="hand2")
                 self.buttons.append(edit_button)
             self.vars.append(var)
             self.checks.append(check_button)

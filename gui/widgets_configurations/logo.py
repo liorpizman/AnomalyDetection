@@ -15,7 +15,7 @@ LOGO_CONFIG_INIT = {
     "activeforeground": "#eeeeee",
     "background": "#eeeeee",
     "borderwidth": '0',
-    "cursor": "fleur",
+    # "cursor": "hand2",
     "disabledforeground": "#eeeeee",
     "foreground": "#eeeeee",
     "highlightbackground": "#eeeeee",
