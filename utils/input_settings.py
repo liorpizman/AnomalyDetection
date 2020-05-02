@@ -279,7 +279,10 @@ class InputSettings:
 
     get_tune_model_results_path_path(self):
         Description | Get the path for results for tuning a model
-         
+
+     get_window_size(algorithm)
+        Description | Get the chosen window size for a specific algorithm
+
     """
 
     @staticmethod
@@ -606,4 +609,14 @@ class InputSettings:
     def get_tune_model_results_path():
         return InputSettings.TUNE_MODEL_RESULTS_PATH
 
+    @staticmethod
+    def get_window_size(algorithm):
 
+        switcher = {
+            "LSTM": lstm_hyper_parameters.get_window_size(),
+            "SVR": svr_hyper_parameters.get_window_size(),
+            "MLP": mlp_hyper_parameters.get_window_size(),
+            "Random Forest": random_forest_hyper_parameters.get_window_size()
+        }
+
+        return switcher.get(algorithm, 1)

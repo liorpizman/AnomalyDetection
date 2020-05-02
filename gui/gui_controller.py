@@ -200,6 +200,8 @@ class AnomalyDetectionGUI(tk.Tk):
     run_tuning()
             Description | Execute models tuning process
 
+    get_window_size(algorithm)
+            Description | Get the chosen window size for a specific algorithm
 
     """
 
@@ -421,6 +423,8 @@ class AnomalyDetectionGUI(tk.Tk):
     def run_tuning(self):
         self.model_controller.run_tuning()
 
+    def get_window_size(self, algorithm):
+        return self.model_controller.get_window_size(algorithm)
 
 
 # Main loop of the Anomaly Detection application

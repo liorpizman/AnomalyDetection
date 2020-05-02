@@ -159,6 +159,9 @@ class ModelController:
     run_tuning()
             Description | Execute models tuning process
 
+    get_window_size(algorithm)
+            Description | Get the chosen window size for a specific algorithm
+
      """
 
     def __init__(self, gui_controller):
@@ -301,3 +304,6 @@ class ModelController:
 
     def run_tuning(self):
         TuningExecution.run_tuning()
+
+    def get_window_size(self, algorithm):
+        return InputSettings.get_window_size(algorithm)
