@@ -13,6 +13,7 @@ Feature selection window which is part of GUI application
 import os
 import win32api
 
+from tkinter.font import Font, BOLD
 from tkinter import font as tkfont
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS
@@ -155,7 +156,7 @@ class FeatureSelectionWindow(tk.Frame):
         fs_logo_img = tk.PhotoImage(file=feature_selection_photo_location)
 
         self.features_logo_png = tk.Button(self)
-        self.features_logo_png.place(relx=0.6, rely=0.35, height=200, width=200)
+        self.features_logo_png.place(relx=0.6, rely=0.28, height=200, width=200)
         set_logo_configuration(self.features_logo_png, image=fs_logo_img)
 
         # Page footer
@@ -250,6 +251,33 @@ class FeatureSelectionWindow(tk.Frame):
                                                   bg='antique white',
                                                   selectbackground='sandy brown')
         self.target_features_listbox.place(relx=0.35, rely=0.42, height=230, width=140)
+
+        title_styling = Font(size=11,
+                             weight=BOLD)
+
+        self.previous_choice_label = tk.Label(self)
+        self.previous_choice_label.place(relx=0.58, rely=0.62, height=25, width=300)
+        self.previous_choice_label.configure(
+            text="Your previous selections:",
+            font=title_styling,
+            fg='blue')
+        set_widget_to_left(self.previous_choice_label)
+
+        chosen_algorithms = self.controller.get_algorithms()
+
+        y_coordinate = 0.66
+        for algorithm in chosen_algorithms:
+            window_size = self.controller.get_window_size(algorithm)
+
+            self.algorithm_label = tk.Label(self)
+            self.algorithm_label.place(relx=0.58, rely=y_coordinate, height=25, width=300)
+            self.algorithm_label.configure(
+                text="{0} window size: {1}".format(algorithm, window_size),
+                font=Font(size=10),
+                fg='blue')
+            set_widget_to_left(self.algorithm_label)
+
+            y_coordinate += 0.04
 
     def get_selected_features(self):
         """
