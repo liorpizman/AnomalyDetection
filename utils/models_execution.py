@@ -96,18 +96,13 @@ class ModelsExecution:
                 InputSettings.get_new_model_running(),)
 
     @staticmethod
-    def run_models():
+    def init_models():
         """
         executes all the algorithms which were chosen - suitable for both flows
         :return:
         """
 
         similarity_score, test_data_path, results_path, new_model_running = ModelsExecution.get_parameters()
-
-        if new_model_running:
-            training_data_path, save_model, algorithms, threshold, features_list, target_features_list = ModelsExecution.get_new_model_parameters()
-        else:
-            training_data_path, save_model, algorithms, threshold = ModelsExecution.get_load_model_parameters()
 
         # Init evaluation metrics data which will be presented in the results table
         InputSettings.init_results_metrics_data()
@@ -116,45 +111,62 @@ class ModelsExecution:
         flight_routes = get_subdirectories(test_data_path)
         InputSettings.set_flight_routes(flight_routes)
 
-        for algorithm in algorithms:
+        return similarity_score, test_data_path, results_path, new_model_running
 
-            # Set new nested dictionary for a chosen algorithm
-            results_data = InputSettings.get_results_metrics_data()
-            results_data[algorithm] = dict()
-            InputSettings.update_results_metrics_data(results_data)
+    @staticmethod
+    def run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running):
+        """
 
-            # Checks whether the current flow in the system is new model creation or loading an existing model
-            if new_model_running:
-                algorithm_model_path = None
-                algorithm_features_list = features_list[algorithm]
-                algorithm_target_features_list = target_features_list[algorithm]
-                train_scaler_path = None
-                target_scaler_path = None
-            else:
-                algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
-                model_data_json_path = os.path.join(*[str(algorithm_path), 'model_data.json'])
-                algorithm_json_file = read_json_file(f"{model_data_json_path}")
-                algorithm_features_list = algorithm_json_file['features']
-                algorithm_target_features_list = algorithm_json_file['target_features']
-                threshold = algorithm_json_file['threshold']
-                algorithm_model_path = get_model_path(algorithm_path)
-                train_scaler_path = get_scaler_path(algorithm_path, 'train')
-                target_scaler_path = get_scaler_path(algorithm_path, 'target')
+        :param algorithm:
+        :param similarity_score:
+        :param test_data_path:
+        :param results_path:
+        :param new_model_running:
+        :return:
+        """
 
-            # Dynamic execution for each chosen model
-            model_execution_function = ModelsExecution.get_algorithm_execution_function(algorithm)
-            model_execution_function(test_data_path,
-                                     results_path,
-                                     similarity_score,
-                                     training_data_path,
-                                     save_model,
-                                     new_model_running,
-                                     algorithm_model_path,
-                                     threshold,
-                                     algorithm_features_list,
-                                     algorithm_target_features_list,
-                                     train_scaler_path,
-                                     target_scaler_path)
+        if new_model_running:
+            training_data_path, save_model, algorithms, threshold, features_list, target_features_list = ModelsExecution.get_new_model_parameters()
+        else:
+            training_data_path, save_model, algorithms, threshold = ModelsExecution.get_load_model_parameters()
+
+        # Set new nested dictionary for a chosen algorithm
+        results_data = InputSettings.get_results_metrics_data()
+        results_data[algorithm] = dict()
+        InputSettings.update_results_metrics_data(results_data)
+
+        # Checks whether the current flow in the system is new model creation or loading an existing model
+        if new_model_running:
+            algorithm_model_path = None
+            algorithm_features_list = features_list[algorithm]
+            algorithm_target_features_list = target_features_list[algorithm]
+            train_scaler_path = None
+            target_scaler_path = None
+        else:
+            algorithm_path = InputSettings.get_existing_algorithm_path(algorithm)
+            model_data_json_path = os.path.join(*[str(algorithm_path), 'model_data.json'])
+            algorithm_json_file = read_json_file(f"{model_data_json_path}")
+            algorithm_features_list = algorithm_json_file['features']
+            algorithm_target_features_list = algorithm_json_file['target_features']
+            threshold = algorithm_json_file['threshold']
+            algorithm_model_path = get_model_path(algorithm_path)
+            train_scaler_path = get_scaler_path(algorithm_path, 'train')
+            target_scaler_path = get_scaler_path(algorithm_path, 'target')
+
+        # Dynamic execution for each chosen model
+        model_execution_function = ModelsExecution.get_algorithm_execution_function(algorithm)
+        model_execution_function(test_data_path,
+                                 results_path,
+                                 similarity_score,
+                                 training_data_path,
+                                 save_model,
+                                 new_model_running,
+                                 algorithm_model_path,
+                                 threshold,
+                                 algorithm_features_list,
+                                 algorithm_target_features_list,
+                                 train_scaler_path,
+                                 target_scaler_path)
 
     @staticmethod
     def LSTM_execution(test_data_path,
