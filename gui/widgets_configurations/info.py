@@ -15,7 +15,7 @@ INFO_CONFIG_INIT = {
     "activeforeground": "#eeeeee",
     "background": "#eeeeee",
     "borderwidth": '0',
-    "cursor": "fleur",
+    # "cursor": "fleur",
     "disabledforeground": "#eeeeee",
     "foreground": "#eeeeee",
     "highlightbackground": "#eeeeee",

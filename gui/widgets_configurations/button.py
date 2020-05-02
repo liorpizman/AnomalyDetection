@@ -12,7 +12,7 @@ Button configuration through all the application
 
 BUTTON_CONFIG = {
     "background": "#ececec",
-    "cursor": "fleur",
+    "cursor": "hand2",
     "highlightbackground": "#ececec",
     "highlightcolor": "black",
     "pady": "0"

@@ -83,6 +83,7 @@ def set_widget_for_param(frame, text, combobox_values, param_key, y_coordinate, 
                                                                                                '_params',
                                                                                                ''))
                                                       )
+        frame.algorithm_param_info_button.configure(cursor="hand2")
         frame.algorithm_param_info_button.place(relx=relative_x + 0.25, rely=y_coordinate, height=25, width=25)
         # frame.algorithm_param_info_button.configure(image=info_photo)
         # set_info_configuration(frame.algorithm_param_info_button, image=info_photo)

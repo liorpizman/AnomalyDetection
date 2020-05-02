@@ -8,12 +8,11 @@ Methods to handle repeatable actions which are done by the gui controller
 '''
 
 import os
-from string import Template
-
 import yaml
 import tkinter
 import json
 
+from string import Template
 from tkinter.filedialog import askdirectory, askopenfilename
 from gui.shared.constants import *
 from gui.shared.mappers.algorithms import algorithms_mapper
