@@ -13,8 +13,7 @@ Loading window which is part of GUI application
 import os
 import threading
 
-from tkinter.font import Font
-
+from tkinter.font import Font, BOLD
 from gui.shared.helper_methods import strfdelta
 from gui.widgets.animated_gif import AnimatedGif
 from datetime import timedelta
@@ -63,6 +62,8 @@ class LoadingWindow(tk.Frame):
     loading_process()
             Description | Run chosen models and move to results window
 
+    show_model_process_label(y_coordinate, algorithm):
+            Description | Show model process label on the screen
     """
 
     def __init__(self, parent, controller):
@@ -94,7 +95,8 @@ class LoadingWindow(tk.Frame):
 
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
-        self.instructions.configure(text='''Creating models and runs them, please wait...''')
+        self.instructions.configure(text='''Creating models and runs them, please wait...''',
+                                    font=Font(size=9, weight=BOLD))
         set_widget_to_left(self.instructions)
 
         # Page body
@@ -183,5 +185,41 @@ class LoadingWindow(tk.Frame):
         :return: results window
         """
 
-        self.controller.run_models()
+        similarity_score, test_data_path, results_path, new_model_running = self.controller.init_models()
+
+        chosen_algorithms = self.controller.get_algorithms()
+        y_coordinate = 0.34
+
+        enumerate_details = 0
+
+        for algorithm in chosen_algorithms:
+            self.controller.run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
+
+            if enumerate_details < 3:
+                self.algorithm_process_finished = tk.Label(self)
+                self.algorithm_process_finished.place(relx=0.015, rely=y_coordinate, height=22, width=250)
+                self.algorithm_process_finished.configure(text='''{0} model already created...'''.format(algorithm))
+                set_widget_to_left(self.algorithm_process_finished)
+
+                y_coordinate += 0.04
+
+                self.after(1500, self.show_model_process_label(y_coordinate, algorithm))
+
+                y_coordinate += 0.04
+
+            enumerate_details += 1
+
         self.controller.reinitialize_frame("ResultsWindow")
+
+    def show_model_process_label(self, y_coordinate, algorithm):
+        """
+        Show model process label on the screen
+        :param y_coordinate: y place coordinate
+        :param algorithm: which algorithm to display
+        :return: new label
+        """
+
+        self.model_process_finished = tk.Label(self)
+        self.model_process_finished.place(relx=0.015, rely=y_coordinate, height=22, width=200)
+        self.model_process_finished.configure(text='''{0} model is active now...'''.format(algorithm))
+        set_widget_to_left(self.model_process_finished)

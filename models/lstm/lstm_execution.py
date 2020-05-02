@@ -211,7 +211,7 @@ def execute_train(flight_route,
                                       activation=activation,
                                       loss=loss,
                                       optimizer=optimizer)
-    history = lstm.fit(X_train_preprocessed, Y_train_preprocessed, epochs=epochs, verbose=1).history
+    history = lstm.fit(X_train_preprocessed, Y_train_preprocessed, epochs=epochs, verbose=0).history
 
     # Add plots if the indicator is true
     if add_plots:
@@ -312,7 +312,7 @@ def execute_predict(flight_route,
 
             Y_test_preprocessed = get_training_data_lstm(Y_test, window_size)
 
-            X_pred = lstm.predict(X_test_preprocessed, verbose=1)
+            X_pred = lstm.predict(X_test_preprocessed, verbose=0)
             assert len(Y_test_preprocessed) == len(X_pred)
 
             scores_test = []
@@ -379,7 +379,7 @@ def predict_train_set(lstm,
     :return: threshold
     """
 
-    X_pred = lstm.predict(X_train, verbose=1)
+    X_pred = lstm.predict(X_train, verbose=0)
 
     scores_train = []
 

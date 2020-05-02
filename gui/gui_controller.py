@@ -83,7 +83,7 @@ class AnomalyDetectionGUI(tk.Tk):
     set_saving_model(save_model)
             Description | Set the variable which indicates whether the user want to save the current model or not
 
-    run_models()
+    run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
             Description | Execute models creation/loading process
 
     set_new_model_running(new_model_running)
@@ -203,6 +203,9 @@ class AnomalyDetectionGUI(tk.Tk):
     get_window_size(algorithm)
             Description | Get the chosen window size for a specific algorithm
 
+    init_models()
+            Description | Init models dictionary
+
     """
 
     def __init__(self, *args, **kwargs):
@@ -315,8 +318,8 @@ class AnomalyDetectionGUI(tk.Tk):
     def set_saving_model(self, save_model):
         self.model_controller.set_saving_model(save_model)
 
-    def run_models(self):
-        self.model_controller.run_models()
+    def run_models(self, algorithm, similarity_score, test_data_path, results_path, new_model_running):
+        self.model_controller.run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
 
     def set_new_model_running(self, new_model_running):
         self.model_controller.set_new_model_running(new_model_running)
@@ -425,6 +428,9 @@ class AnomalyDetectionGUI(tk.Tk):
 
     def get_window_size(self, algorithm):
         return self.model_controller.get_window_size(algorithm)
+
+    def init_models(self):
+        return self.model_controller.init_models()
 
 
 # Main loop of the Anomaly Detection application

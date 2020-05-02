@@ -48,7 +48,7 @@ class ModelController:
     set_saving_model(save_model)
             Description | Set the variable which indicates whether the user want to save the current model or not
 
-    run_models()
+    run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
             Description | Execute models creation/loading process
 
     set_new_model_running(new_model_running)
@@ -162,6 +162,9 @@ class ModelController:
     get_window_size(algorithm)
             Description | Get the chosen window size for a specific algorithm
 
+    init_models()
+            Description | Init models dictionary
+
      """
 
     def __init__(self, gui_controller):
@@ -203,8 +206,8 @@ class ModelController:
     def set_saving_model(self, save_model):
         InputSettings.set_saving_model(save_model)
 
-    def run_models(self):
-        ModelsExecution.run_models()
+    def run_models(self, algorithm, similarity_score, test_data_path, results_path, new_model_running):
+        ModelsExecution.run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
 
     def set_new_model_running(self, new_model_running):
         InputSettings.set_new_model_running(new_model_running)
@@ -307,3 +310,6 @@ class ModelController:
 
     def get_window_size(self, algorithm):
         return InputSettings.get_window_size(algorithm)
+
+    def init_models(self):
+        return ModelsExecution.init_models()
