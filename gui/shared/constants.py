@@ -32,5 +32,6 @@ CROSS_WINDOWS_SETTINGS = {
     'BGU': './images/BGU.png',
     'ISRAEL_INNOVATION_AUTHORITY': './images/Israel_Innovation_Authority.png',
     'MINISTRY_OF_DEFENSE': './images/Ministry_of_Defense.png',
-    'MOBILICOM': './images/Mobilicom.png'
+    'MOBILICOM': './images/Mobilicom.png',
+    'RESULTS': './images/results.png'
 }
