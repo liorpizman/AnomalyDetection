@@ -13,6 +13,7 @@ Results window which is part of GUI application
 import os
 
 from gui.shared.helper_methods import set_widget_for_param, transform_list
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
@@ -78,17 +79,17 @@ class ResultsWindow(tk.Frame):
         logo_img = tk.PhotoImage(file=photo_location)
 
         # Page header
-        self.logo_png = tk.Button(self)
+        self.logo_png = HoverButton(self)
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
 
         # Page body
-        self.toggle_results_button = tk.Button(self, command=self.toggle_results)
+        self.toggle_results_button = HoverButton(self, command=self.toggle_results)
         self.toggle_results_button.place(relx=0.68, rely=0.5, height=25, width=81)
         set_button_configuration(self.toggle_results_button, text='''Show results''')
 
         # Page footer
-        self.back_button = tk.Button(self, command=self.back_window)
+        self.back_button = HoverButton(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Home page''')
 

@@ -12,6 +12,7 @@ Main window which is part of GUI application
 
 import os
 
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_button_configuration, set_logo_configuration, \
@@ -102,15 +103,15 @@ class MainWindow(tk.Frame):
         set_logo_configuration(self.logo_png, image=logo_img)
 
         # Page body
-        self.create_model_btn = tk.Button(self, command=self.new_flow)
+        self.create_model_btn = HoverButton(self, command=self.new_flow)
         self.create_model_btn.place(relx=0.41, rely=0.35, height=42, width=120)
         set_button_configuration(self.create_model_btn, text='''Create model''')
 
-        self.load_model_btn = tk.Button(self, command=self.load_flow)
+        self.load_model_btn = HoverButton(self, command=self.load_flow)
         self.load_model_btn.place(relx=0.41, rely=0.5, height=42, width=120)
         set_button_configuration(self.load_model_btn, text='''Load model''')
 
-        self.tune_model_btn = tk.Button(self, command=self.tune_flow)
+        self.tune_model_btn = HoverButton(self, command=self.tune_flow)
         self.tune_model_btn.place(relx=0.395, rely=0.65, height=42, width=140)
         set_button_configuration(self.tune_model_btn, text='''Tune model parameters''')
 

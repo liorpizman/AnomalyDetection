@@ -14,6 +14,8 @@ import os
 import win32api
 
 from tkinter import END
+
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, set_path, clear_text
 from gui.shared.inputs_validation_helper import is_valid_model_paths, is_valid_model_data_file
@@ -118,7 +120,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.lstm_input.place(relx=0.195, rely=0.38, height=25, relwidth=0.624)
         self.lstm_input.configure(state='disabled')
 
-        self.lstm_btn = tk.Button(self, command=lambda: self.set_algorithm_path("LSTM"))
+        self.lstm_btn = HoverButton(self, command=lambda: self.set_algorithm_path("LSTM"))
         self.lstm_btn.place(relx=0.833, rely=0.38, height=25, width=60)
         self.lstm_btn.configure(state='disabled')
         set_button_configuration(self.lstm_btn, text='''Browse''')
@@ -139,7 +141,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.svr_input.place(relx=0.195, rely=0.47, height=25, relwidth=0.624)
         self.svr_input.configure(state='disabled')
 
-        self.svr_btn = tk.Button(self, command=lambda: self.set_algorithm_path("SVR"))
+        self.svr_btn = HoverButton(self, command=lambda: self.set_algorithm_path("SVR"))
         self.svr_btn.place(relx=0.833, rely=0.47, height=25, width=60)
         self.svr_btn.configure(state='disabled')
         set_button_configuration(self.svr_btn, text='''Browse''')
@@ -161,7 +163,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.mlp_input.place(relx=0.195, rely=0.56, height=25, relwidth=0.624)
         self.mlp_input.configure(state='disabled')
 
-        self.mlp_btn = tk.Button(self, command=lambda: self.set_algorithm_path("MLP"))
+        self.mlp_btn = HoverButton(self, command=lambda: self.set_algorithm_path("MLP"))
         self.mlp_btn.place(relx=0.833, rely=0.56, height=25, width=60)
         self.mlp_btn.configure(state='disabled')
         set_button_configuration(self.mlp_btn, text='''Browse''')
@@ -183,7 +185,7 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.random_forest_input.place(relx=0.195, rely=0.65, height=25, relwidth=0.624)
         self.random_forest_input.configure(state='disabled')
 
-        self.random_forest_btn = tk.Button(self, command=lambda: self.set_algorithm_path("Random Forest"))
+        self.random_forest_btn = HoverButton(self, command=lambda: self.set_algorithm_path("Random Forest"))
         self.random_forest_btn.place(relx=0.833, rely=0.65, height=25, width=60)
         self.random_forest_btn.configure(state='disabled')
         set_button_configuration(self.random_forest_btn, text='''Browse''')
@@ -192,11 +194,11 @@ class ExistingAlgorithmsWindow(tk.Frame):
         self.input_entries["Random Forest"] = self.random_forest_input
 
         # Page footer
-        self.next_button = tk.Button(self, command=self.next_window)
+        self.next_button = HoverButton(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')
 
-        self.back_button = tk.Button(self, command=self.back_window)
+        self.back_button = HoverButton(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
 

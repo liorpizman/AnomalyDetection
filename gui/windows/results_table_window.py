@@ -16,6 +16,7 @@ from tkinter.font import Font, BOLD
 from ipython_genutils.py3compat import xrange
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
 from gui.shared.helper_methods import trim_unnecessary_chars, transform_list
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.widgets.table.table import Table
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_button_configuration, \
@@ -104,7 +105,7 @@ class ResultsTableWindow(tk.Frame):
         set_logo_configuration(self.comparison_png, image=comparison_img)
 
         # Page footer
-        self.back_button = tk.Button(self, command=self.back_window)
+        self.back_button = HoverButton(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
 

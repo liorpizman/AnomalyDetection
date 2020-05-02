@@ -14,6 +14,7 @@ import os
 import win32api
 
 from gui.widgets.checkbox import Checkbar
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import load_anomaly_detection_list, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_copyright_configuration, \
@@ -111,11 +112,11 @@ class AlgorithmsWindow(tk.Frame):
         self.anomaly_detection_methods.place(relx=0.1, rely=0.35, height=400, width=700)
 
         # Page footer
-        self.next_button = tk.Button(self, command=self.next_window)
+        self.next_button = HoverButton(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')
 
-        self.back_button = tk.Button(self, command=lambda: controller.show_frame("NewModel"))
+        self.back_button = HoverButton(self, command=lambda: controller.show_frame("NewModel"))
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
 

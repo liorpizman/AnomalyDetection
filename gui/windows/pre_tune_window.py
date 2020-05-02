@@ -11,10 +11,10 @@ Pre tune model window which is part of GUI application
 '''
 
 import os
-
 import win32api
 
 from gui.shared.inputs_validation_helper import pre_tune_model_path_validation
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import CROSS_WINDOWS_SETTINGS, clear_text, set_file_path, set_path
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_widget_to_left, \
@@ -97,11 +97,11 @@ class PreTuneModel(tk.Frame):
         self.reinitialize()
 
         # Page footer
-        self.next_button = tk.Button(self, command=self.next_window)
+        self.next_button = HoverButton(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')
 
-        self.back_button = tk.Button(self, command=self.back_window)
+        self.back_button = HoverButton(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
 
@@ -154,7 +154,7 @@ class PreTuneModel(tk.Frame):
         self.path_input = tk.Entry(self)
         self.path_input.place(relx=0.195, rely=0.4, height=25, relwidth=0.624)
 
-        self.browse_btn = tk.Button(self, command=self.input_file_browse_command)
+        self.browse_btn = HoverButton(self, command=self.input_file_browse_command)
         self.browse_btn.place(relx=0.833, rely=0.4, height=25, width=60)
         set_button_configuration(self.browse_btn, text='''Browse''')
 
@@ -167,7 +167,7 @@ class PreTuneModel(tk.Frame):
         self.results_path_input = tk.Entry(self)
         self.results_path_input.place(relx=0.195, rely=0.5, height=25, relwidth=0.624)
 
-        self.results_browse_btn = tk.Button(self, command=self.results_browse_command)
+        self.results_browse_btn = HoverButton(self, command=self.results_browse_command)
         self.results_browse_btn.place(relx=0.833, rely=0.5, height=25, width=60)
         set_button_configuration(self.results_browse_btn, text='''Browse''')
 

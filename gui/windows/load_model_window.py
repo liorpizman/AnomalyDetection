@@ -12,6 +12,7 @@ Load model window which is part of GUI application
 
 import os
 
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import set_path, CROSS_WINDOWS_SETTINGS, clear_text
 from tkinter import END
@@ -104,7 +105,7 @@ class LoadModel(tk.Frame):
         self.test_input = tk.Entry(self)
         self.test_input.place(relx=0.195, rely=0.4, height=25, relwidth=0.624)
 
-        self.test_btn = tk.Button(self, command=self.set_test_path)
+        self.test_btn = HoverButton(self, command=self.set_test_path)
         self.test_btn.place(relx=0.833, rely=0.4, height=25, width=60)
         set_button_configuration(self.test_btn, text='''Browse''')
 
@@ -117,16 +118,16 @@ class LoadModel(tk.Frame):
         self.results_input = tk.Entry(self)
         self.results_input.place(relx=0.195, rely=0.5, height=25, relwidth=0.624)
 
-        self.results_btn = tk.Button(self, command=self.set_results_path)
+        self.results_btn = HoverButton(self, command=self.set_results_path)
         self.results_btn.place(relx=0.833, rely=0.5, height=25, width=60)
         set_button_configuration(self.results_btn, text='''Browse''')
 
         # Page footer
-        self.next_button = tk.Button(self, command=self.next_window)
+        self.next_button = HoverButton(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Next''')
 
-        self.back_button = tk.Button(self, command=self.back_window)
+        self.back_button = HoverButton(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
 
