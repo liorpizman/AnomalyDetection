@@ -108,7 +108,7 @@ class SimilarityFunctionsWindow(tk.Frame):
                                                       command=self.set_saving_model)
 
         self.note = tk.Label(self)
-        self.note.place(relx=0.015, rely=0.75, height=32, width=635)
+        self.note.place(relx=0.015, rely=0.7, height=32, width=635)
         self.note.configure(
             text='''Note: Similarity function is used for calculating a score for each record''',
             font=Font(size=9, weight=BOLD))
