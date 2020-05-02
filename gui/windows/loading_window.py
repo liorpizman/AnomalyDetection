@@ -187,9 +187,12 @@ class LoadingWindow(tk.Frame):
 
         similarity_score, test_data_path, results_path, new_model_running = self.controller.init_models()
 
-        chosen_algorithms = self.controller.get_algorithms()
-        y_coordinate = 0.34
+        if new_model_running:
+            chosen_algorithms = self.controller.get_algorithms()
+        else:
+            chosen_algorithms = set(self.controller.get_existing_algorithms().keys())
 
+        y_coordinate = 0.34
         enumerate_details = 0
 
         for algorithm in chosen_algorithms:
