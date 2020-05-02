@@ -13,6 +13,7 @@ Parameters options window which is part of GUI application
 import os
 
 from gui.algorithm_frame_options.algorithm_frame_options import AlgorithmFrameOptions
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
 from gui.shared.helper_methods import load_anomaly_detection_list
@@ -122,11 +123,11 @@ class ParametersOptionsWindow(tk.Frame):
         set_logo_configuration(self.parameters_logo_png, image=po_logo_img)
 
         # Page footer
-        self.next_button = tk.Button(self, command=self.handle_next_button)
+        self.next_button = HoverButton(self, command=self.handle_next_button)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Save''')
 
-        self.back_button = tk.Button(self, command=lambda: self.controller.show_frame("AlgorithmsWindow"))
+        self.back_button = HoverButton(self, command=lambda: self.controller.show_frame("AlgorithmsWindow"))
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Cancel''')
 

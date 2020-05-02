@@ -13,6 +13,7 @@ Check bar which is presented in the application
 from tkinter import *
 
 from gui.shared.helper_methods import load_anomaly_detection_list
+from gui.widgets.hover_button import HoverButton
 from gui.widgets_configurations.helper_methods import set_widget_to_left
 
 
@@ -96,10 +97,10 @@ class Checkbar(Frame):
 
             if editButtons:
                 # Create a configuration button dynamically
-                edit_button = Button(self,
-                                     text=pick + " configuration",
-                                     state='disabled',
-                                     command=algorithm_show_function)
+                edit_button = HoverButton(self,
+                                          text=pick + " configuration",
+                                          state='disabled',
+                                          command=algorithm_show_function)
 
                 edit_button.place(relx=relX + 0.35, rely=relY, height=30, width=220)
                 edit_button.configure(cursor="hand2")

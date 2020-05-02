@@ -18,6 +18,7 @@ from gui.shared.helper_methods import strfdelta
 from gui.widgets.animated_gif import AnimatedGif
 from datetime import timedelta
 from timeit import default_timer as timer
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.shared.constants import LOADING_WINDOW_SETTINGS, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_copyright_configuration, \
@@ -112,11 +113,11 @@ class LoadingWindow(tk.Frame):
         self.clock_label.place(relx=0.38, rely=0.7, height=32, width=150)
 
         # Page footer
-        self.stop_button = tk.Button(self, command=self.stop_model_process)
+        self.stop_button = HoverButton(self, command=self.stop_model_process)
         self.stop_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.stop_button, text='''Stop''')
 
-        self.back_button = tk.Button(self, command=self.back_window)
+        self.back_button = HoverButton(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
         self.back_button.configure(state='disabled')

@@ -15,6 +15,7 @@ import win32api
 
 from tkinter.font import Font, BOLD
 from gui.widgets.checkbox import Checkbar
+from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.shared.helper_methods import load_similarity_list, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_widget_to_left, set_logo_configuration, \
@@ -115,11 +116,11 @@ class SimilarityFunctionsWindow(tk.Frame):
         set_widget_to_left(self.note)
 
         # Page footer
-        self.next_button = tk.Button(self, command=self.next_window)
+        self.next_button = HoverButton(self, command=self.next_window)
         self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.next_button, text='''Run''')
 
-        self.back_button = tk.Button(self, command=self.back_window)
+        self.back_button = HoverButton(self, command=self.back_window)
         self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
         set_button_configuration(self.back_button, text='''Back''')
 

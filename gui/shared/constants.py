@@ -35,3 +35,5 @@ CROSS_WINDOWS_SETTINGS = {
     'MOBILICOM': './images/Mobilicom.png',
     'RESULTS': './images/results.png'
 }
+
+ACTIVE_BACKGROUND = 'gray88'
