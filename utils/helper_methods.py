@@ -350,7 +350,8 @@ def get_current_time():
     return now.strftime("%b-%d-%Y-%H-%M-%S")
 
 
-def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_name, similarity_function, verbose=1):
+def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_name, similarity_function,
+                   routes_duration, verbose=1):
     """
     report all the results, according to the algorithm in the input
     :param results_dir_path: the path of results directory
@@ -358,6 +359,7 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
     :param FLIGHT_ROUTES: names of existing flight routes
     :param algorithm_name: the name of the algorithm that we want to report about
     :param similarity_function: the similarity function we currently report about
+    :param routes_duration: routes time duration
     :param verbose: default = 1 , otherwise = can be changed to 0
     :return: all the reports are saved to suitable csv files
     """
@@ -406,6 +408,10 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
             for j, attack in enumerate(ATTACKS):
                 results_data[algorithm_name][flight_route][similarity_function][metric][attack] = dict()
                 results_data[algorithm_name][flight_route][similarity_function][metric][attack] = output[j]
+
+                results_data[algorithm_name][flight_route][attack + '_duration'] = dict()
+                results_data[algorithm_name][flight_route][attack + '_duration'] = \
+                    routes_duration[attack][0]
 
         results.index = FLIGHT_ROUTES
 

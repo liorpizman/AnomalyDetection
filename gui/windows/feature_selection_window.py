@@ -219,7 +219,7 @@ class FeatureSelectionWindow(tk.Frame):
         self.select_all_features_button = tk.Button(self, command=self.select_all_features)
         self.select_all_features_button.place(relx=0.17, rely=0.38, height=18, width=55)
         set_button_configuration(self.select_all_features_button, text='''Select all''')
-        self.select_all_features_button.configure(bg='pale green')
+        self.select_all_features_button.configure(bg='sandy brown')
 
         self.features_listbox = tk.Listbox(self,
                                            font=tkfont.Font(size=9),
@@ -233,10 +233,10 @@ class FeatureSelectionWindow(tk.Frame):
                                            selectbackground='sandy brown')
         self.features_listbox.place(relx=0.05, rely=0.42, height=230, width=140)
 
-        self.select_all_target_button = tk.Button(self, bg='sky blue', command=self.select_all_target)
+        self.select_all_target_button = tk.Button(self, command=self.select_all_target)
         self.select_all_target_button.place(relx=0.47, rely=0.38, height=18, width=55)
         set_button_configuration(self.select_all_target_button, text='''Select all''')
-        self.select_all_target_button.configure(bg='pale green')
+        self.select_all_target_button.configure(bg='sandy brown')
 
         self.target_features_listbox = tk.Listbox(self,
                                                   listvariable=self.csv_features,
@@ -315,7 +315,7 @@ class FeatureSelectionWindow(tk.Frame):
 
         if self.input_indicator:
             self.features_listbox.selection_clear(0, tk.END)
-            self.select_all_features_button.configure(bg='pale green', text='''Select all''')
+            self.select_all_features_button.configure(bg='sandy brown', text='''Select all''')
         else:
             self.features_listbox.select_set(0, tk.END)
             self.select_all_features_button.configure(bg='firebrick1', text='''Clear all''')
@@ -330,7 +330,7 @@ class FeatureSelectionWindow(tk.Frame):
 
         if self.target_indicator:
             self.target_features_listbox.selection_clear(0, tk.END)
-            self.select_all_target_button.configure(bg='pale green', text='''Select all''')
+            self.select_all_target_button.configure(bg='sandy brown', text='''Select all''')
         else:
             self.target_features_listbox.select_set(0, tk.END)
             self.select_all_target_button.configure(bg='firebrick1', text='''Clear all''')
