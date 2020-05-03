@@ -44,6 +44,25 @@ def get_lstm_new_model_parameters():
     )
 
 
+def get_lstm_parameters_dictionary():
+    """
+    Get LSTM hyper parameters dictionary
+    :return: LSTM hyper parameters dictionary
+    """
+
+    parameters = dict()
+
+    parameters["window size"] = lstm_hyper_parameters.get_window_size()
+    parameters["encoding_dimension"] = lstm_hyper_parameters.get_encoding_dimension()
+    parameters["activation"] = lstm_hyper_parameters.get_activation()
+    parameters["loss"] = lstm_hyper_parameters.get_loss()
+    parameters["optimizer"] = lstm_hyper_parameters.get_optimizer()
+    parameters["threshold percent"] = lstm_hyper_parameters.get_encoding_dimension()
+    parameters["epochs"] = lstm_hyper_parameters.get_epochs()
+
+    return parameters
+
+
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
               algorithm_path, threshold, features_list, target_features_list, train_scaler_path, target_scaler_path):
     """
@@ -395,6 +414,7 @@ def predict_train_set(lstm,
         data['features'] = features_list
         data['target_features'] = target_features_list
         data['threshold'] = threshold
+        data['params'] = get_lstm_parameters_dictionary()
 
         model_results_path = os.path.join(results_path, "model_data")
         create_directories(model_results_path)

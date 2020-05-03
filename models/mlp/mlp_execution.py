@@ -57,7 +57,7 @@ def get_mlp_parameters_dictionary():
     parameters["solver"] = mlp_hyper_parameters.get_solver()
     parameters["alpha"] = mlp_hyper_parameters.get_alpha()
     parameters["random_state"] = mlp_hyper_parameters.get_random_state()
-    parameters["threshold"] = mlp_hyper_parameters.get_threshold()
+    parameters["threshold percent"] = mlp_hyper_parameters.get_threshold()
     parameters["window size"] = mlp_hyper_parameters.get_window_size()
 
     return parameters
