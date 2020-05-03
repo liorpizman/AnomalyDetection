@@ -45,6 +45,24 @@ def get_random_forest_new_model_parameters():
     )
 
 
+def get_random_forest_parameters_dictionary():
+    """
+    Get SVR hyper parameters dictionary
+    :return: SVR hyper parameters
+    """
+
+    parameters = dict()
+
+    parameters["n_estimators"] = random_forest_hyper_parameters.get_n_estimators()
+    parameters["criterion"] = random_forest_hyper_parameters.get_criterion()
+    parameters["max_features"] = random_forest_hyper_parameters.get_max_features()
+    parameters["random_state"] = random_forest_hyper_parameters.get_random_state()
+    parameters["threshold percent"] = random_forest_hyper_parameters.get_threshold()
+    parameters["window size"] = random_forest_hyper_parameters.get_window_size()
+
+    return parameters
+
+
 def get_random_forest_model(n_estimators, criterion, max_features, random_state):
     """
     Get random forest model
@@ -430,6 +448,7 @@ def predict_train_set(random_forest_model,
         data['features'] = features_list
         data['target_features'] = target_features_list
         data['threshold'] = threshold
+        data['params'] = get_random_forest_parameters_dictionary()
 
         model_results_path = os.path.join(results_path, "model_data")
         create_directories(model_results_path)
