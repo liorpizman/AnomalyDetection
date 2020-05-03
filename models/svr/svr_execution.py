@@ -47,7 +47,7 @@ def get_svr_new_model_parameters():
 def get_svr_parameters_dictionary():
     """
     Get SVR hyper parameters dictionary
-    :return: SVR hyper parameters
+    :return: SVR hyper parameters dictionary
     """
 
     parameters = dict()

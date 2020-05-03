@@ -46,8 +46,8 @@ def get_mlp_new_model_parameters():
 
 def get_mlp_parameters_dictionary():
     """
-    Get mlp hyper parameters dictionary
-    :return: SVR hyper parameters
+    Get MLP hyper parameters dictionary
+    :return: MLP hyper parameters dictionary
     """
 
     parameters = dict()
