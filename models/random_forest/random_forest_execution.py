@@ -47,7 +47,7 @@ def get_random_forest_new_model_parameters():
 
 def get_random_forest_parameters_dictionary():
     """
-    Get SVR hyper parameters dictionary
+    Get random forest hyper parameters dictionary
     :return: SVR hyper parameters
     """
 

@@ -44,6 +44,25 @@ def get_mlp_new_model_parameters():
     )
 
 
+def get_mlp_parameters_dictionary():
+    """
+    Get mlp hyper parameters dictionary
+    :return: SVR hyper parameters
+    """
+
+    parameters = dict()
+
+    parameters["hidden_layer_sizes"] = mlp_hyper_parameters.get_hidden_layer_sizes()
+    parameters["activation"] = mlp_hyper_parameters.get_activation()
+    parameters["solver"] = mlp_hyper_parameters.get_solver()
+    parameters["alpha"] = mlp_hyper_parameters.get_alpha()
+    parameters["random_state"] = mlp_hyper_parameters.get_random_state()
+    parameters["threshold"] = mlp_hyper_parameters.get_threshold()
+    parameters["window size"] = mlp_hyper_parameters.get_window_size()
+
+    return parameters
+
+
 def get_mlp_model(hidden_layer_sizes, activation, solver, alpha, random_state):
     """
     Get MLP model
@@ -441,6 +460,7 @@ def predict_train_set(mlp_model,
         data['features'] = features_list
         data['target_features'] = target_features_list
         data['threshold'] = threshold
+        data['params'] = get_mlp_parameters_dictionary()
 
         model_results_path = os.path.join(results_path, "model_data")
         create_directories(model_results_path)
