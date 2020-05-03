@@ -52,11 +52,11 @@ def get_svr_parameters_dictionary():
 
     parameters = dict()
 
-    parameters["Kernel"] = svr_hyper_parameters.get_kernel()
-    parameters["Gamma"] = svr_hyper_parameters.get_gamma()
-    parameters["Epsilon"] = svr_hyper_parameters.get_epsilon()
-    parameters["Threshold percent"] = svr_hyper_parameters.get_threshold()
-    parameters["Window size"] = svr_hyper_parameters.get_window_size()
+    parameters["kernel"] = svr_hyper_parameters.get_kernel()
+    parameters["gamma"] = svr_hyper_parameters.get_gamma()
+    parameters["epsilon"] = svr_hyper_parameters.get_epsilon()
+    parameters["threshold percent"] = svr_hyper_parameters.get_threshold()
+    parameters["window size"] = svr_hyper_parameters.get_window_size()
 
     return parameters
 
