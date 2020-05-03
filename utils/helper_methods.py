@@ -558,19 +558,24 @@ def plot_roc(y_true, y_pred, plot_dir, title="ROC Curve"):
     # plt.show()
 
 
-def plot_prediction_performance(Y_train, X_pred, results_path, title):
+def plot_prediction_performance(Y_train, X_pred, results_path,
+                                title, x_label="Index [Second]", y_label="Sensor's Value"):
     """
     plot training performance of model
     :param Y_train: actual data
     :param X_pred: predicted data
     :param results_path: results path
     :param title: plot title
+    :param x_label: plot x axis label
+    :param y_label: plot y axis label
     :return:
     """
 
     plt.plot(X_pred, 'darkorange', label="Predicted")
     plt.plot(Y_train, 'navy', label="Actual")
     plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
     plt.legend(loc='lower right')
     plt.gcf().set_size_inches(15, 6)
 
