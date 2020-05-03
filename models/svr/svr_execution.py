@@ -44,6 +44,23 @@ def get_svr_new_model_parameters():
     )
 
 
+def get_svr_parameters_dictionary():
+    """
+    Get SVR hyper parameters dictionary
+    :return: SVR hyper parameters
+    """
+
+    parameters = dict()
+
+    parameters["Kernel"] = svr_hyper_parameters.get_kernel()
+    parameters["Gamma"] = svr_hyper_parameters.get_gamma()
+    parameters["Epsilon"] = svr_hyper_parameters.get_epsilon()
+    parameters["Threshold percent"] = svr_hyper_parameters.get_threshold()
+    parameters["Window size"] = svr_hyper_parameters.get_window_size()
+
+    return parameters
+
+
 def get_svr_model(kernel, gamma, epsilon):
     """
     Get SVR model
@@ -424,6 +441,7 @@ def predict_train_set(svr_model,
         data['features'] = features_list
         data['target_features'] = target_features_list
         data['threshold'] = threshold
+        data['params'] = get_svr_parameters_dictionary()
 
         model_results_path = os.path.join(results_path, "model_data")
         create_directories(model_results_path)
