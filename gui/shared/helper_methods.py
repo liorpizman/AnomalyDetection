@@ -162,7 +162,7 @@ def get_scaler_path(path, scaler_name):
     files = os.listdir(path)
 
     for file in files:
-        if file.endswith('.h5') or file.endswith(scaler_name + '_scaler.pkl'):
+        if file.endswith(scaler_name + '_scaler.pkl'):
             return os.path.join(path, file)
 
     return ""
