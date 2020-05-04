@@ -174,7 +174,6 @@ class LoadingWindow(tk.Frame):
         """
 
         self.event.clear()
-        self.back_button.configure(state='disabled')
         self.controller.reset_frame()
         self.controller.reset_input_settings_params()
         self.controller.show_frame("MainWindow")
@@ -186,6 +185,7 @@ class LoadingWindow(tk.Frame):
         """
 
         self.stop_button.configure(text='Stop')
+        self.back_button.configure(state='disabled')
         self.event = threading.Event()
         self.model_process_thread = threading.Thread(name='model_process', target=self.loading_process)
         self.model_process_thread.start()
