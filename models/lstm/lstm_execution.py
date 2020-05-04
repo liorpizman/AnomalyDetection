@@ -64,7 +64,8 @@ def get_lstm_parameters_dictionary():
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
-              algorithm_path, threshold, features_list, target_features_list, train_scaler_path, target_scaler_path):
+              algorithm_path, threshold, features_list, target_features_list, train_scaler_path, target_scaler_path,
+              event):
     """
     Run LSTM model process
     :param training_data_path: train data set directory path
@@ -79,6 +80,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :param target_features_list: all the features in the test data set for the target
     :param train_scaler_path: path of existing input train scaler directory
     :param target_scaler_path: path of existing input target scaler directory
+    :param event: running state flag
     :return: reported results for LSTM execution
     """
 
@@ -121,7 +123,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                                    add_plots=True,
                                                                                    features_list=features_list,
                                                                                    epochs=epochs,
-                                                                                   target_features_list=target_features_list)
+                                                                                   target_features_list=target_features_list,
+                                                                                   event=event)
 
         # Get results for each similarity function
         for similarity in similarity_score:
@@ -142,7 +145,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                                                                                                 target_features_list=target_features_list,
                                                                                                 save_model=save_model,
                                                                                                 Y_train_scaler=Y_train_scaler,
-                                                                                                Y_train=Y_train)
+                                                                                                Y_train=Y_train,
+                                                                                                event=event)
 
             df = pd.DataFrame(tpr_scores)
             tpr_path = os.path.join(*[str(current_results_path), str(flight_route) + '_tpr.csv'])
@@ -184,7 +188,8 @@ def execute_train(flight_route,
                   add_plots=True,
                   features_list=None,
                   epochs=10,
-                  target_features_list=None):
+                  target_features_list=None,
+                  event=None):
     """
     Execute train function for a specific flight route
     :param flight_route: current flight route we should train on
@@ -199,6 +204,7 @@ def execute_train(flight_route,
     :param features_list: the list of features which the user chose
     :param epochs: num of epochs that was chosen by the user
     :param target_features_list: the list of features which the user chose for the target
+    :param event: running state flag
     :return: LSTM model, normalization input train scalar,normalization input target scalar, X_train data frame,Y_train data frame
     """
 
@@ -230,6 +236,9 @@ def execute_train(flight_route,
                                       activation=activation,
                                       loss=loss,
                                       optimizer=optimizer)
+
+    event.wait()
+
     history = lstm.fit(X_train_preprocessed, Y_train_preprocessed, epochs=epochs, verbose=0).history
 
     # Add plots if the indicator is true
@@ -254,7 +263,8 @@ def execute_predict(flight_route,
                     target_features_list=None,
                     save_model=False,
                     Y_train_scaler=None,
-                    Y_train=None):
+                    Y_train=None,
+                    event=None):
     """
     Execute predictions function for a specific flight route
     :param flight_route: current flight route we should train on
@@ -273,6 +283,7 @@ def execute_predict(flight_route,
     :param save_model: indicator whether the user want to save the model or not
     :param Y_train_scaler: normalization train target scalar
     :param Y_train: train target data frame
+    :param event: running state flag
     :return: tpr scores, fpr scores, acc scores, delay scores, routes duration
     """
 
@@ -284,6 +295,7 @@ def execute_predict(flight_route,
 
     # Set a threshold in new model creation flow
     if run_new_model:
+        event.wait()
         threshold = predict_train_set(lstm,
                                       X_train,
                                       save_model,
@@ -309,6 +321,7 @@ def execute_predict(flight_route,
 
     # Iterate over all attacks in order to find anomalies
     for attack in ATTACKS:
+        event.wait()
         attack_name = attack
 
         if "_" in attack_name:
@@ -350,6 +363,7 @@ def execute_predict(flight_route,
                 scores_test.append(anomaly_score_multi(Y_test_preprocessed[i], pred, similarity_score))
 
             # Add reconstruction error scatter if plots indicator is true
+            event.wait()
             if add_plots:
                 plot_reconstruction_error_scatter(scores=scores_test,
                                                   labels=Y_test_labels_preprocessed,

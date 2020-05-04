@@ -318,8 +318,9 @@ class AnomalyDetectionGUI(tk.Tk):
     def set_saving_model(self, save_model):
         self.model_controller.set_saving_model(save_model)
 
-    def run_models(self, algorithm, similarity_score, test_data_path, results_path, new_model_running):
-        self.model_controller.run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
+    def run_models(self, algorithm, similarity_score, test_data_path, results_path, new_model_running, event):
+        self.model_controller.run_models(algorithm, similarity_score, test_data_path,
+                                         results_path, new_model_running, event)
 
     def set_new_model_running(self, new_model_running):
         self.model_controller.set_new_model_running(new_model_running)

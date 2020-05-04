@@ -54,6 +54,9 @@ class LoadingWindow(tk.Frame):
     stop_model_process()
             Description | Handle a click on stop button
 
+    def cancel_model_process()
+            Description | Handle a click on cancel button
+
     reinitialize()
             Description | Reinitialize frame values and view
 
@@ -113,8 +116,12 @@ class LoadingWindow(tk.Frame):
         self.clock_label.place(relx=0.38, rely=0.7, height=32, width=150)
 
         # Page footer
+        self.cancel_button = HoverButton(self, command=self.cancel_model_process)
+        self.cancel_button.place(relx=0.813, rely=0.839, height=25, width=81)
+        set_button_configuration(self.cancel_button, text='''Cancel''')
+
         self.stop_button = HoverButton(self, command=self.stop_model_process)
-        self.stop_button.place(relx=0.813, rely=0.839, height=25, width=81)
+        self.stop_button.place(relx=0.663, rely=0.839, height=25, width=81)
         set_button_configuration(self.stop_button, text='''Stop''')
 
         self.back_button = HoverButton(self, command=self.back_window)
@@ -151,12 +158,25 @@ class LoadingWindow(tk.Frame):
         :return: freeze state
         """
 
-        self.back_button.configure(state='active')
-        self.stop_button.configure(state='disabled')
-        try:
-            self.model_process_thread.join()
-        except Exception:
-            pass
+        if self.event.isSet():  # check if the event flag is True or False
+            self.event.clear()
+            self.stop_button.configure(text='Continue')
+            self.back_button.configure(state='active')
+        else:
+            self.event.set()
+            self.stop_button.configure(text='Stop')
+            self.back_button.configure(state='disabled')
+
+    def cancel_model_process(self):
+        """
+        Handle cancel button click
+        :return: Home page window
+        """
+
+        self.event.clear()
+        self.controller.reset_frame()
+        self.controller.reset_input_settings_params()
+        self.controller.show_frame("MainWindow")
 
     def reinitialize(self):
         """
@@ -164,6 +184,9 @@ class LoadingWindow(tk.Frame):
         :return: new frame view
         """
 
+        self.stop_button.configure(text='Stop')
+        self.back_button.configure(state='disabled')
+        self.event = threading.Event()
         self.model_process_thread = threading.Thread(name='model_process', target=self.loading_process)
         self.model_process_thread.start()
         self.start_time = timer()
@@ -196,8 +219,11 @@ class LoadingWindow(tk.Frame):
         y_coordinate = 0.34
         enumerate_details = 0
 
+        self.event.set()
+
         for algorithm in chosen_algorithms:
-            self.controller.run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
+            self.controller.run_models(algorithm, similarity_score, test_data_path,
+                                       results_path, new_model_running, self.event)
 
             if enumerate_details < 3:
                 self.algorithm_process_finished = tk.Label(self)

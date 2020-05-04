@@ -114,7 +114,7 @@ class ModelsExecution:
         return similarity_score, test_data_path, results_path, new_model_running
 
     @staticmethod
-    def run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running):
+    def run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running, event):
         """
 
         :param algorithm:
@@ -122,6 +122,7 @@ class ModelsExecution:
         :param test_data_path:
         :param results_path:
         :param new_model_running:
+        :param event:
         :return:
         """
 
@@ -166,7 +167,8 @@ class ModelsExecution:
                                  algorithm_features_list,
                                  algorithm_target_features_list,
                                  train_scaler_path,
-                                 target_scaler_path)
+                                 target_scaler_path,
+                                 event)
 
     @staticmethod
     def LSTM_execution(test_data_path,
@@ -180,7 +182,8 @@ class ModelsExecution:
                        features_list,
                        target_features_list,
                        train_scaler_path,
-                       target_scaler_path):
+                       target_scaler_path,
+                       event):
         """
         executes Long short-term memory algorithm
         :param test_data_path: path of test data set directory
@@ -195,6 +198,7 @@ class ModelsExecution:
         :param target_features_list: all the features in the test data set for the target
         :param train_scaler_path: path of existing train scaler directory
         :param target_scaler_path: path of existing target scaler directory
+        :param event: running state flag
         :return: results after model prediction
         """
 
@@ -210,7 +214,8 @@ class ModelsExecution:
                        features_list,
                        target_features_list,
                        train_scaler_path,
-                       target_scaler_path)
+                       target_scaler_path,
+                       event)
 
     @staticmethod
     def SVR_execution(test_data_path,
@@ -224,7 +229,8 @@ class ModelsExecution:
                       features_list,
                       target_features_list,
                       train_scaler_path,
-                      target_scaler_path):
+                      target_scaler_path,
+                      event):
         """
         executes Support Vector Regression algorithm
         :param test_data_path: path of test data set directory
@@ -239,6 +245,7 @@ class ModelsExecution:
         :param target_features_list: all the features in the test data set for the target
         :param train_scaler_path: path of existing train scaler directory
         :param target_scaler_path: path of existing target scaler directory
+        :param event: running state flag
         :return: results after model prediction
         """
 
@@ -254,7 +261,8 @@ class ModelsExecution:
                       features_list,
                       target_features_list,
                       train_scaler_path,
-                      target_scaler_path)
+                      target_scaler_path,
+                      event)
 
     @staticmethod
     def Random_Forest_execution(test_data_path,
@@ -268,7 +276,8 @@ class ModelsExecution:
                                 features_list,
                                 target_features_list,
                                 train_scaler_path,
-                                target_scaler_path):
+                                target_scaler_path,
+                                event):
         """
         executes Random forest algorithm
         :param test_data_path: path of test data set directory
@@ -283,6 +292,7 @@ class ModelsExecution:
         :param target_features_list: all the features in the test data set for the target
         :param train_scaler_path: path of existing train scaler directory
         :param target_scaler_path: path of existing target scaler directory
+        :param event: running state flag
         :return: results after model prediction
         """
 
@@ -298,7 +308,8 @@ class ModelsExecution:
                                 features_list,
                                 target_features_list,
                                 train_scaler_path,
-                                target_scaler_path)
+                                target_scaler_path,
+                                event)
 
     @staticmethod
     def MLP_execution(test_data_path,
@@ -312,7 +323,8 @@ class ModelsExecution:
                       features_list,
                       target_features_list,
                       train_scaler_path,
-                      target_scaler_path):
+                      target_scaler_path,
+                      event):
         """
         executes MLP algorithm
         :param test_data_path: path of test data set directory
@@ -327,6 +339,7 @@ class ModelsExecution:
         :param target_features_list: all the features in the test data set for the target
         :param train_scaler_path: path of existing train scaler directory
         :param target_scaler_path: path of existing target scaler directory
+        :param event: running state flag
         :return: results after model prediction
         """
 
@@ -342,7 +355,8 @@ class ModelsExecution:
                       features_list,
                       target_features_list,
                       train_scaler_path,
-                      target_scaler_path)
+                      target_scaler_path,
+                      event)
 
     @staticmethod
     def get_algorithm_execution_function(algorithm_name):
