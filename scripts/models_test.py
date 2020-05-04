@@ -18,6 +18,11 @@ from sklearn.preprocessing import MaxAbsScaler
 from sklearn.linear_model import LogisticRegression, LinearRegression, SGDRegressor
 from sklearn.ensemble import RandomForestRegressor
 
+from models.data_preprocessing.data_cleaning import clean_data
+from models.data_preprocessing.data_normalization import normalize_data
+from models.lstm.lstm_autoencoder import get_lstm_autoencoder_model
+from utils.helper_methods import get_training_data_lstm, multi_mean, plot_prediction_performance
+
 
 def run_isolation_forest(file_path):
     """
@@ -158,8 +163,60 @@ def run_SGD(file_path):
     print(multi_model_predict)
 
 
-# path of the data set in the input
-path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\train\\chicago_to_guadalajara"
+def run_lstm_performance_plot(file_path, result_path):
+    df_train = pd.read_csv(f'{file_path}/without_anom.csv')
+    features_list = ['Time', 'Route Index', 'GPS Distance', 'Longitude']
 
-# run_logistic_regression(path)
-run_MLP_model(path)
+    target_features_list = ['CINR1 OMNI', 'Radio Distance', 'Barometer Altitude']
+
+    input_df_train = df_train[features_list]
+    target_df_train = df_train[target_features_list]
+
+    window_size = 2
+
+    # Step 1 : Clean train data set
+    input_df_train = clean_data(input_df_train)
+
+    target_df_train = clean_data(target_df_train)
+
+    # Step 2: Normalize the data
+    X_train, X_train_scaler = normalize_data(data=input_df_train,
+                                             scaler="min_max")
+    X_train_preprocessed = get_training_data_lstm(X_train, window_size)
+
+    Y_train, Y_train_scaler = normalize_data(data=target_df_train,  # target data
+                                             scaler="min_max")
+    Y_train_preprocessed = get_training_data_lstm(Y_train, window_size)
+
+    # Get the model which is created by user's parameters
+    lstm = get_lstm_autoencoder_model(timesteps=window_size,
+                                      input_features=input_df_train.shape[1],
+                                      target_features=target_df_train.shape[1],
+                                      encoding_dimension=8,
+                                      activation='relu',
+                                      loss='mean_squared_error',
+                                      optimizer='Adam')
+    history = lstm.fit(X_train_preprocessed, Y_train_preprocessed, epochs=5, verbose=0).history
+
+    X_pred = lstm.predict(X_train_preprocessed, verbose=0)
+
+    mean_y_train = multi_mean(Y_train_preprocessed)
+    mean_x_pred = multi_mean(X_pred)
+
+    assert mean_y_train.shape == mean_x_pred.shape
+
+    for i, target_feature in enumerate(target_features_list):
+        title = "Training performance of LSTM for " + target_feature
+        plot_prediction_performance(Y_train=mean_y_train[:, i],
+                                    X_pred=mean_x_pred[:, i],
+                                    results_path=result_path,
+                                    title=title,
+                                    y_label="Sensor's Mean Value")
+
+
+# path of the data set in the input
+path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\train\\Route_0"
+
+result_path = "C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\data_set\\simulator\\mini_set\\results\\check"
+
+run_lstm_performance_plot(path, result_path)

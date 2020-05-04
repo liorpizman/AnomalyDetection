@@ -584,3 +584,18 @@ def plot_prediction_performance(Y_train, X_pred, results_path,
 
     plt.clf()
     # plt.show()
+
+
+def multi_mean(X1):
+    """
+    Calculate mean value of 3D arrays for each sample by the column
+    :param X1: data frame
+    :return: calculated MSE
+    """
+
+    transformed_X1 = np.zeros((X1.shape[0], X1.shape[2]))
+
+    for i, value in enumerate(X1):
+        transformed_X1[i] = value.mean(axis=0)
+
+    return transformed_X1
