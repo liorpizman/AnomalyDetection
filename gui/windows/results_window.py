@@ -108,7 +108,7 @@ class ResultsWindow(tk.Frame):
     def back_window(self):
         """
         Handle back button click
-        :return: previous window
+        :return: Home page window
         """
 
         self.controller.reset_frame()
