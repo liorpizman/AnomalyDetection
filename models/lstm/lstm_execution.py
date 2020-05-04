@@ -22,7 +22,7 @@ from utils.routes import *
 from models.lstm.lstm_autoencoder import get_lstm_autoencoder_model
 from utils.helper_methods import get_training_data_lstm, get_testing_data_lstm, anomaly_score_multi, \
     get_threshold, report_results, get_method_scores, get_subdirectories, create_directories, get_current_time, plot, \
-    plot_reconstruction_error_scatter, get_attack_boundaries
+    plot_reconstruction_error_scatter, get_attack_boundaries, multi_mean, plot_prediction_performance
 from tensorflow.python.keras.models import load_model
 from collections import defaultdict
 
@@ -301,11 +301,22 @@ def execute_predict(flight_route,
     flight_dir = os.path.join(test_data_path, flight_route)
     ATTACKS = get_subdirectories(flight_dir)
 
-    figures_results_path = os.path.join(results_path, "figures")
+    figures_results_path = os.path.join(results_path, "Figures")
     create_directories(figures_results_path)
+
+    attacks_figures_results_path = os.path.join(figures_results_path, "Attacks")
+    create_directories(attacks_figures_results_path)
 
     # Iterate over all attacks in order to find anomalies
     for attack in ATTACKS:
+        attack_name = attack
+
+        if "_" in attack_name:
+            attack_name = attack_name.split("_")[0]
+
+        current_attack_figures_results_path = os.path.join(attacks_figures_results_path, attack_name)
+        create_directories(current_attack_figures_results_path)
+
         attacks_path = os.path.join(*[str(test_data_path), str(flight_route), str(attack)])
         for flight_csv in os.listdir(f"{attacks_path}"):
 
@@ -343,8 +354,21 @@ def execute_predict(flight_route,
                 plot_reconstruction_error_scatter(scores=scores_test,
                                                   labels=Y_test_labels_preprocessed,
                                                   threshold=threshold,
-                                                  plot_dir=figures_results_path,
+                                                  plot_dir=current_attack_figures_results_path,
                                                   title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
+
+                mean_y_actual = multi_mean(Y_test_preprocessed)
+                mean_y_pred = multi_mean(X_pred)
+
+                assert mean_y_actual.shape == mean_y_pred.shape
+
+                for i, target_feature in enumerate(target_features_list):
+                    title = "Test performance of LSTM for " + target_feature + " feature in " + flight_csv
+                    plot_prediction_performance(Y_train=mean_y_actual[:, i],
+                                                X_pred=mean_y_pred[:, i],
+                                                results_path=current_attack_figures_results_path,
+                                                title=title,
+                                                y_label="Sensor's Mean Value")
 
             predictions = [1 if x >= threshold else 0 for x in scores_test]
 
@@ -407,6 +431,27 @@ def predict_train_set(lstm,
 
     # choose threshold for which <LSTM_THRESHOLD_FROM_TRAINING_PERCENT> % of training were lower
     threshold = get_threshold(scores_train, threshold)
+
+    figures_results_path = os.path.join(results_path, "Figures")
+    create_directories(figures_results_path)
+
+    if add_plots:
+
+        train_figures_results_path = os.path.join(figures_results_path, "Train")
+        create_directories(train_figures_results_path)
+
+        mean_x_actual = multi_mean(Y_train)
+        mean_x_pred = multi_mean(X_pred)
+
+        assert mean_x_actual.shape == mean_x_pred.shape
+
+        for i, target_feature in enumerate(target_features_list):
+            title = "Training performance of LSTM for " + target_feature + " in " + flight_route
+            plot_prediction_performance(Y_train=mean_x_actual[:, i],
+                                        X_pred=mean_x_pred[:, i],
+                                        results_path=train_figures_results_path,
+                                        title=title,
+                                        y_label="Sensor's Mean Value")
 
     # Save created model if the indicator is true
     if save_model:
