@@ -152,7 +152,7 @@ class NewModel(tk.Frame):
         set_copyright_configuration(self.copyright)
 
         # -------------------------------should be replaced at final submission  -------------------------------------
-        self.set_inputs_third_permutation()
+        self.set_inputs_fourth_permutation()
         # ------------------------------- end ------------------------------------------------------------------------
 
     def reset_widgets(self):
