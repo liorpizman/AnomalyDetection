@@ -11,7 +11,10 @@ Menu bar which is presented in the application
 '''
 
 import tkinter
-from tkinter import ttk
+
+from tkinter import ttk, messagebox
+
+from gui.widgets.shared.messages import HELP, ABOUT, ABOUT_US
 
 
 class Menubar(ttk.Frame):
@@ -28,6 +31,9 @@ class Menubar(ttk.Frame):
 
     display_about()
             Description | Displays info about program
+
+    display_about_us()
+            Description | Displays info about the developers
 
     init_menubar()
             Description | Init menu bar parameters
@@ -60,14 +66,33 @@ class Menubar(ttk.Frame):
         Displays help document
         :return: help info
         """
-        pass
+
+        messagebox.askokcancel(
+            title=HELP.get('TITLE'),
+            message=HELP.get('MESSAGE')
+        )
 
     def display_about(self):
         """
         Displays info about program
         :return: about info
         """
-        pass
+
+        messagebox.askokcancel(
+            title=ABOUT.get('TITLE'),
+            message=ABOUT.get('MESSAGE')
+        )
+
+    def display_about_us(self):
+        """
+        Displays info about the developers
+        :return: about info
+        """
+
+        messagebox.askokcancel(
+            title=ABOUT_US.get('TITLE'),
+            message=ABOUT_US.get('MESSAGE')
+        )
 
     def init_menubar(self):
         """
@@ -89,6 +114,7 @@ class Menubar(ttk.Frame):
         self.menu_help = tkinter.Menu(self.menubar)
         self.menu_help.add_command(label='Help', command=self.display_help)
         self.menu_help.add_command(label='About', command=self.display_about)
+        self.menu_help.add_command(label='About Us', command=self.display_about_us)
         self.menubar.add_cascade(menu=self.menu_help, label='Help')
 
         self.root.config(menu=self.menubar)
