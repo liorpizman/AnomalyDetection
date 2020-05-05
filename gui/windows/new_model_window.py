@@ -152,7 +152,7 @@ class NewModel(tk.Frame):
         set_copyright_configuration(self.copyright)
 
         # -------------------------------should be replaced at final submission  -------------------------------------
-        self.set_inputs_fourth_permutation()
+        self.set_inputs_first_permutation()
         # ------------------------------- end ------------------------------------------------------------------------
 
     def reset_widgets(self):
@@ -234,9 +234,9 @@ class NewModel(tk.Frame):
 
     def set_inputs_first_permutation(self):
         self.set_permutations(
-            training_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\train",
-            test_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\test",
-            results_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\results"
+            training_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\05-05-2020-Hackathon\\train",
+            test_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\05-05-2020-Hackathon\\test",
+            results_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\05-05-2020-Hackathon\\results"
         )
 
     def set_inputs_second_permutation(self):
