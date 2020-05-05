@@ -73,7 +73,8 @@ def get_svr_model(kernel, gamma, epsilon):
 
 
 def run_model(training_data_path, test_data_path, results_path, similarity_score, save_model, new_model_running,
-              algorithm_path, threshold, features_list, target_features_list, train_scaler_path, target_scaler_path,event):
+              algorithm_path, threshold, features_list, target_features_list, train_scaler_path, target_scaler_path,
+              event):
     """
     Run SVR model process
     :param training_data_path: train data set directory path
@@ -134,23 +135,25 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         for similarity in similarity_score:
             current_results_path = os.path.join(*[str(current_time_path), str(similarity), str(flight_route)])
             create_directories(f"{current_results_path}")
-            tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration = execute_predict(flight_route,
-                                                                                                test_data_path=test_data_path,
-                                                                                                similarity_score=similarity,
-                                                                                                threshold=threshold,
-                                                                                                svr_model=svr_model,
-                                                                                                X_train_scaler=X_train_scaler,
-                                                                                                results_path=current_results_path,
-                                                                                                add_plots=True,
-                                                                                                run_new_model=new_model_running,
-                                                                                                X_train=X_train,
-                                                                                                features_list=features_list,
-                                                                                                target_features_list=target_features_list,
-                                                                                                save_model=save_model,
-                                                                                                Y_train_scaler=Y_train_scaler,
-                                                                                                Y_train=Y_train,
-                                                                                                window_size=window_size,
-                                                                                                event=event)
+            tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attacks_duration = execute_predict(
+                flight_route,
+                test_data_path=test_data_path,
+                similarity_score=similarity,
+                threshold=threshold,
+                svr_model=svr_model,
+                X_train_scaler=X_train_scaler,
+                results_path=current_results_path,
+                add_plots=True,
+                run_new_model=new_model_running,
+                X_train=X_train,
+                features_list=features_list,
+                target_features_list=target_features_list,
+                save_model=save_model,
+                Y_train_scaler=Y_train_scaler,
+                Y_train=Y_train,
+                window_size=window_size,
+                event=event
+            )
 
             df = pd.DataFrame(tpr_scores)
             tpr_path = os.path.join(*[str(current_results_path), str(flight_route) + '_tpr.csv'])
@@ -178,7 +181,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                        FLIGHT_ROUTES,
                        algorithm_name,
                        similarity,
-                       routes_duration)
+                       routes_duration,
+                       attacks_duration)
 
 
 def execute_train(flight_route,
@@ -272,7 +276,7 @@ def execute_predict(flight_route,
     :param Y_train: train target data frame
     :param window_size: window size for each instance in training
     :param event: running state flag
-    :return: tpr scores, fpr scores, acc scores, delay scores, routesduration
+    :return: tpr scores, fpr scores, acc scores, delay scores, routes duration, attack duration
     """
 
     tpr_scores = defaultdict(list)
@@ -280,6 +284,7 @@ def execute_predict(flight_route,
     acc_scores = defaultdict(list)
     delay_scores = defaultdict(list)
     routes_duration = defaultdict(list)
+    attack_duration = defaultdict(list)
 
     # Set a threshold in new model creation flow
     if run_new_model:
@@ -386,8 +391,9 @@ def execute_predict(flight_route,
             acc_scores[attack].append(method_scores[2])
             delay_scores[attack].append(method_scores[3])
             routes_duration[attack].append(attack_time)
+            attack_duration[attack].append(method_scores[4])
 
-    return tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration
+    return tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attack_duration
 
 
 def predict_train_set(svr_model,
