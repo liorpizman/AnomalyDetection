@@ -219,9 +219,11 @@ class ResultsTableWindow(tk.Frame):
                 for j, attack in enumerate(attacks_data.keys()):
                     self.results_table.cell(i, j + 1, attacks_data[attack])
 
-            self.results_table.cell(rows - 2, 0, "Is attack?")
+            self.results_table.cell(rows - 2, 0, "Attack duration [sec]")
             for i in range(1, columns + 1):
-                self.results_table.cell(rows - 2, i, "Yes!")
+                self.results_table.cell(rows - 2, i, str(float(results_data[original_algorithm][original_flight_route][
+                                                                   list(attacks_columns.keys())[
+                                                                       i - 1] + "_attack_duration"])))
 
             self.results_table.cell(rows - 1, 0, "Flight duration [sec]")
             for i in range(1, columns + 1):

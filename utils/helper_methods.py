@@ -227,11 +227,11 @@ def get_method_scores(prediction, attack_start, attack_end, add_window_size, win
     """
     get previous method scores (tpr, fpr, accuracy, detection delay)
     :param prediction: predictions
-    :param run_new_model: Indicator whether the current flow is new model creation or not
     :param attack_start: Index for the first attack raw
     :param attack_end: Index for the last attack raw
     :param add_window_size: Indicator whether to add a window size or not
-    :return: tpr, fpr, accuracy, detection delay
+    :param window_size: current chosen window size by the user
+    :return: tpr, fpr, accuracy, detection delay, attack_duration
     """
 
     fp = 0
@@ -293,7 +293,9 @@ def get_method_scores(prediction, attack_start, attack_end, add_window_size, win
     # Calculate Accuracy
     acc = (tp + tn) / (tp + tn + fp + fn)
 
-    return tpr, fpr, acc, detection_delay
+    attack_duration = upper - lower
+
+    return tpr, fpr, acc, detection_delay, attack_duration
 
 
 def get_attack_boundaries(df_label):
@@ -351,7 +353,7 @@ def get_current_time():
 
 
 def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_name, similarity_function,
-                   routes_duration, verbose=1):
+                   routes_duration, attack_duration, verbose=1):
     """
     report all the results, according to the algorithm in the input
     :param results_dir_path: the path of results directory
@@ -360,6 +362,7 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
     :param algorithm_name: the name of the algorithm that we want to report about
     :param similarity_function: the similarity function we currently report about
     :param routes_duration: routes time duration
+    :param attack_duration: attacks time duration
     :param verbose: default = 1 , otherwise = can be changed to 0
     :return: all the reports are saved to suitable csv files
     """
@@ -412,6 +415,10 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
                 results_data[algorithm_name][flight_route][attack + '_duration'] = dict()
                 results_data[algorithm_name][flight_route][attack + '_duration'] = \
                     routes_duration[attack][0]
+
+                results_data[algorithm_name][flight_route][attack + '_attack_duration'] = dict()
+                results_data[algorithm_name][flight_route][attack + '_attack_duration'] = \
+                    attack_duration[attack][0]
 
         results.index = FLIGHT_ROUTES
 
