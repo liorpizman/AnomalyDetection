@@ -223,7 +223,7 @@ class ResultsTableWindow(tk.Frame):
             for i in range(1, columns + 1):
                 self.results_table.cell(rows - 2, i, "Yes!")
 
-            self.results_table.cell(rows - 1, 0, "Duration [sec]")
+            self.results_table.cell(rows - 1, 0, "Flight duration [sec]")
             for i in range(1, columns + 1):
                 self.results_table.cell(rows - 1, i, str(float(results_data[original_algorithm][original_flight_route][
                                                                    list(attacks_columns.keys())[

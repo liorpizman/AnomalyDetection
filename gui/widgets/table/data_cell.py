@@ -76,7 +76,7 @@ class Data_Cell(Cell):
                                   pady=pady,
                                   anchor=anchor)
 
-        self._message_widget.configure(width=100, pady=1.2)
+        self._message_widget.configure(width=110, pady=1.2)
 
     # Note: This block of code causing flickering in results table window
     # Solution source: https://stackoverflow.com/questions/17747904/continuous-call-of-the-configure-event-in-tkinter

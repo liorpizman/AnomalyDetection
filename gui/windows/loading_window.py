@@ -48,14 +48,8 @@ class LoadingWindow(tk.Frame):
     reset_widgets()
             Description | Reset check bar values
 
-    back_window()
-            Description | Handle a click on back button
-
     stop_model_process()
             Description | Handle a click on stop button
-
-    def cancel_model_process()
-            Description | Handle a click on cancel button
 
     reinitialize()
             Description | Reinitialize frame values and view
@@ -88,9 +82,12 @@ class LoadingWindow(tk.Frame):
         # Disables ability to tear menu bar into own window
         self.controller.option_add('*tearOff', 'FALSE')
         system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
+        stop_logo = LOADING_WINDOW_SETTINGS.get('STOP')
         photo_location = os.path.join(system_logo)
-        global logo_img
+        stop_photo_location = os.path.join(stop_logo)
+        global logo_img, stop_img
         logo_img = tk.PhotoImage(file=photo_location)
+        stop_img = tk.PhotoImage(file=stop_photo_location)
 
         # Page header
         self.logo_png = tk.Button(self)
@@ -104,30 +101,22 @@ class LoadingWindow(tk.Frame):
         set_widget_to_left(self.instructions)
 
         # Page body
-        loading_gif = LOADING_WINDOW_SETTINGS.get('LOADING_GIF')
-        delay_between_frames = LOADING_WINDOW_SETTINGS.get('DELAY_BETWEEN_FRAMES')
+        self.stop_png = tk.Button(self)
+        self.loading_gif_animation = LOADING_WINDOW_SETTINGS.get('LOADING_GIF')
+        self.delay_between_frames = LOADING_WINDOW_SETTINGS.get('DELAY_BETWEEN_FRAMES')
 
         self.title_font = Font(family='Helvetica', size=12, weight="bold")
 
-        self.loading_gif = AnimatedGif(self, loading_gif, delay_between_frames)
-        self.loading_gif.place(relx=0.1, rely=0.35, height=330, width=600)
+        self.loading_gif = AnimatedGif(self, self.loading_gif_animation, self.delay_between_frames)
+        self.loading_gif.place(relx=0.1, rely=0.38, height=330, width=600)
 
         self.clock_label = tk.Label(self, text="", font=self.title_font)
-        self.clock_label.place(relx=0.38, rely=0.7, height=32, width=150)
+        self.clock_label.place(relx=0.38, rely=0.73, height=32, width=150)
 
         # Page footer
-        self.cancel_button = HoverButton(self, command=self.cancel_model_process)
-        self.cancel_button.place(relx=0.813, rely=0.839, height=25, width=81)
-        set_button_configuration(self.cancel_button, text='''Cancel''')
-
         self.stop_button = HoverButton(self, command=self.stop_model_process)
-        self.stop_button.place(relx=0.663, rely=0.839, height=25, width=81)
+        self.stop_button.place(relx=0.813, rely=0.839, height=25, width=81)
         set_button_configuration(self.stop_button, text='''Stop''')
-
-        self.back_button = HoverButton(self, command=self.back_window)
-        self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
-        set_button_configuration(self.back_button, text='''Back''')
-        self.back_button.configure(state='disabled')
 
         self.copyright = tk.Label(self)
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
@@ -144,14 +133,6 @@ class LoadingWindow(tk.Frame):
 
         pass
 
-    def back_window(self):
-        """
-        Handle back button click
-        :return: previous window
-        """
-
-        self.controller.reinitialize_frame("SimilarityFunctionsWindow")
-
     def stop_model_process(self):
         """
         Handle stop button click
@@ -160,23 +141,18 @@ class LoadingWindow(tk.Frame):
 
         if self.event.isSet():  # check if the event flag is True or False
             self.event.clear()
-            self.stop_button.configure(text='Continue')
-            self.back_button.configure(state='active')
+            self.stop_button.configure(text='Resume')
+            self.loading_gif.place_forget()
+            self.stop_png.place(relx=0.385, rely=0.5, height=132, width=132)
+            set_logo_configuration(self.stop_png, image=stop_img)
         else:
             self.event.set()
             self.stop_button.configure(text='Stop')
-            self.back_button.configure(state='disabled')
+            self.stop_png.place_forget()
+            self.loading_gif.place(relx=0.1, rely=0.35, height=330, width=600)
 
-    def cancel_model_process(self):
-        """
-        Handle cancel button click
-        :return: Home page window
-        """
-
-        self.event.clear()
-        self.controller.reset_frame()
-        self.controller.reset_input_settings_params()
-        self.controller.show_frame("MainWindow")
+        self.start_time = timer() - self.prev_saved_time
+        self.update_clock()
 
     def reinitialize(self):
         """
@@ -185,11 +161,11 @@ class LoadingWindow(tk.Frame):
         """
 
         self.stop_button.configure(text='Stop')
-        self.back_button.configure(state='disabled')
         self.event = threading.Event()
         self.model_process_thread = threading.Thread(name='model_process', target=self.loading_process)
         self.model_process_thread.start()
         self.start_time = timer()
+        self.event.set()
         self.update_clock()
 
     def update_clock(self):
@@ -198,8 +174,11 @@ class LoadingWindow(tk.Frame):
         :return: updated time
         """
 
+        if not self.event.isSet():
+            return
         now = timer()
         duration = timedelta(seconds=now - self.start_time)
+        self.prev_saved_time = now - self.start_time
         self.clock_label.configure(text=strfdelta(duration, '%H:%M:%S'))
         self.controller.after(200, self.update_clock)
 
@@ -219,23 +198,22 @@ class LoadingWindow(tk.Frame):
         y_coordinate = 0.34
         enumerate_details = 0
 
-        self.event.set()
-
         for algorithm in chosen_algorithms:
-            self.controller.run_models(algorithm, similarity_score, test_data_path,
-                                       results_path, new_model_running, self.event)
+            if new_model_running:
+                print_text = '''{0} : Creates a new model and runs the test data on it...'''.format(algorithm)
+            else:
+                print_text = '''{0} : Runs the test data...'''.format(algorithm)
 
-            if enumerate_details < 3:
+            if enumerate_details < 4:
                 self.algorithm_process_finished = tk.Label(self)
-                self.algorithm_process_finished.place(relx=0.015, rely=y_coordinate, height=22, width=250)
-                self.algorithm_process_finished.configure(text='''{0} model already created...'''.format(algorithm))
+                self.algorithm_process_finished.place(relx=0.015, rely=y_coordinate, height=22, width=400)
+                self.algorithm_process_finished.configure(text=print_text)
                 set_widget_to_left(self.algorithm_process_finished)
 
                 y_coordinate += 0.04
 
-                self.after(1500, self.show_model_process_label(y_coordinate, algorithm))
-
-                y_coordinate += 0.04
+            self.controller.run_models(algorithm, similarity_score, test_data_path,
+                                       results_path, new_model_running, self.event)
 
             enumerate_details += 1
 
@@ -250,6 +228,6 @@ class LoadingWindow(tk.Frame):
         """
 
         self.model_process_finished = tk.Label(self)
-        self.model_process_finished.place(relx=0.015, rely=y_coordinate, height=22, width=200)
-        self.model_process_finished.configure(text='''{0} model is active now...'''.format(algorithm))
+        self.model_process_finished.place(relx=0.015, rely=y_coordinate, height=22, width=215)
+        self.model_process_finished.configure(text='''{0} model runs on the test...'''.format(algorithm))
         set_widget_to_left(self.model_process_finished)

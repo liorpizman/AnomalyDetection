@@ -20,6 +20,7 @@ LSTM_THRESHOLD_FROM_TRAINING_PERCENT = "lstm_threshold_from_training_percent"
 
 LOADING_WINDOW_SETTINGS = {
     'LOADING_GIF': './images/loading.gif',
+    'STOP': './images/stop.png',
     'DELAY_BETWEEN_FRAMES': 0.02
 }
 
