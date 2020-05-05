@@ -57,7 +57,7 @@ def get_lstm_parameters_dictionary():
     parameters["activation"] = lstm_hyper_parameters.get_activation()
     parameters["loss"] = lstm_hyper_parameters.get_loss()
     parameters["optimizer"] = lstm_hyper_parameters.get_optimizer()
-    parameters["threshold percent"] = lstm_hyper_parameters.get_encoding_dimension()
+    parameters["threshold percent"] = lstm_hyper_parameters.get_threshold()
     parameters["epochs"] = lstm_hyper_parameters.get_epochs()
 
     return parameters
