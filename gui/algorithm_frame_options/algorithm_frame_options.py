@@ -10,7 +10,11 @@ DataSets: 1. ADS-B dataset 2. simulated data
 A frame which represents all the parameters which can be chosen by thw user for each algorithm
 '''
 
+import os
+
 from gui.algorithm_frame_options.shared.helper_methods import set_widget_for_param, load_algorithm_constants
+from gui.shared.constants import CROSS_WINDOWS_SETTINGS
+from gui.widgets_configurations.helper_methods import set_logo_configuration
 
 try:
     import Tkinter as tk
@@ -85,6 +89,16 @@ class AlgorithmFrameOptions(tk.Frame):
                                  filename=yaml_filename)
             y_val += y_delta
             index += 1
+
+        # Side logo
+        param_options_logo = CROSS_WINDOWS_SETTINGS.get('PARAMETERS_OPTIONS')
+        param_options_photo_location = os.path.join(param_options_logo)
+        global po_logo_img
+        po_logo_img = tk.PhotoImage(file=param_options_photo_location)
+
+        self.parameters_logo_png = tk.Button(self)
+        self.parameters_logo_png.place(relx=0.75, rely=0.22, height=140, width=140)
+        set_logo_configuration(self.parameters_logo_png, image=po_logo_img)
 
     def get_algorithm_parameters(self):
         """

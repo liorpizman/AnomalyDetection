@@ -104,23 +104,13 @@ class ParametersOptionsWindow(tk.Frame):
         self.current_yaml = self.set_suitable_yaml_file(self.current_algorithm)
 
         self.height_options_frame = 268
-        self.width_options_frame = 450
+        self.width_options_frame = 620
 
         self.options_to_show = AlgorithmFrameOptions(self, yaml_filename=self.current_yaml)
         self.options_to_show.place(relx=0.05,
                                    rely=0.35,
                                    height=self.height_options_frame,
                                    width=self.width_options_frame)
-
-        # Side logo
-        param_options_logo = CROSS_WINDOWS_SETTINGS.get('PARAMETERS_OPTIONS')
-        param_options_photo_location = os.path.join(param_options_logo)
-        global po_logo_img
-        po_logo_img = tk.PhotoImage(file=param_options_photo_location)
-
-        self.parameters_logo_png = tk.Button(self)
-        self.parameters_logo_png.place(relx=0.7, rely=0.35, height=140, width=140)
-        set_logo_configuration(self.parameters_logo_png, image=po_logo_img)
 
         # Page footer
         self.next_button = HoverButton(self, command=self.handle_next_button)
@@ -209,4 +199,4 @@ class ParametersOptionsWindow(tk.Frame):
 
         self.options_to_show.destroy()
         self.options_to_show = AlgorithmFrameOptions(self, yaml_filename=self.current_yaml)
-        self.options_to_show.place(relx=0.05, rely=0.35, height=268, width=450)
+        self.options_to_show.place(relx=0.05, rely=0.35, height=268, width=620)
