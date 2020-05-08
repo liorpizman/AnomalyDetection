@@ -50,7 +50,7 @@ Select the values for each of the following parameters<br/>
 <img height=350 width=370 src="utils/images/new_model/parametersOptionsWindow.JPG">
 
 Please choose both input and target features<br/>
-<img height=350 width=370 src="utils/images/new_model/featuresSelectionWindow.JPG">
+<img height=350 width=370 src="utils/images/new_model/featuresSelectionWindow.jpg">
 
 ** See next step under the title: Both Flows - similarity functions step
 
