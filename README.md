@@ -36,7 +36,7 @@ Run 'guiController.py' file in order to run the system.<br/>
 <img src="utils/images/shared/guiController.JPG">
 
 Choose Between two different option:<br/>
-<img height=300 width=320 src="utils/images/shared/mainWindow.JPG">
+<img height=350 width=370 src="utils/images/shared/mainWindow.JPG">
 
 ### First Flow - Create new machine learning model
 
@@ -48,6 +48,9 @@ Select algorithms for which you want to build anomaly detection models<br/>
 
 Select the values for each of the following parameters<br/>
 <img height=350 width=370 src="utils/images/new_model/parametersOptionsWindow.JPG">
+
+Please choose both input and target features<br/>
+<img height=350 width=370 src="utils/images/new_model/featuresSelectionWindow.JPG">
 
 ** See next step under the title: Both Flows - similarity functions step
 
