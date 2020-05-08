@@ -31,6 +31,10 @@ Various uses of drones can be found in a variety of fields:
 </br>**Kidnapped drone**</br>
 <img height=140 width=155 src="utils/images/drone/drone_stolen.jpg">
 
+## System flow
+<img height=300 width=900 src="utils/images/shared/flow.jpg">
+
+
 ### Prerequisites
 
 You should run the command (before run the system) in the console:
