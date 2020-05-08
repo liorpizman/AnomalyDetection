@@ -19,7 +19,17 @@ Various uses of drones can be found in a variety of fields:
 * **Rescue** : locating distressed people.
 * **Military** : intelligence operational activities.
 
-<img src="utils/images/drone/drone_background.jpg">
+<img height=150 width=150 src="utils/images/drone/drone_background.jpg">
+
+## What is GPS Spoofing ? And how it is harmful?
+
+* Unmanned Aerial Systems (UAS) is vulnerable to different cyber-attacks such as GPS spoofing. In GPS spoofing attack, a malicious user transmits fake signals to the GPS receiver in the UAS.
+* GPS spoofing attacks are aimed at stealing or crashing a UAV by misleading it to a different path than the original course planned by the operator.
+
+**Crashed drone**</br>
+<img height=120 width=120 src="utils/images/drone/drone_crashed.jpg">
+**Kidnapped drone**</br>
+<img height=120 width=120 src="utils/images/drone/drone_stolen.jpg">
 
 ### Prerequisites
 
