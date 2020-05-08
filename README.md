@@ -128,7 +128,7 @@ Choose an algorithm and a flight route in order to get the results<br/>
 Algorithm: Random Forest<br/>
 Similarity function: Cosine similarity<br/>
 Route: Cross route<br/>
-<img height=270 width=680 src="utils/images/results/comparison_table.jpg">
+<img height=235 width=680 src="utils/images/results/comparison_table.jpg">
 
 # Outlier Score Testing Results - Visual Illustration
 
