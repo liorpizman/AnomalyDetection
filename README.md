@@ -147,7 +147,7 @@ Choose an algorithm and a flight route in order to get the results<br/>
 
 # Time Series Regression
 
-Regression models are not intended for predicting time series. Therefore, in order for us to make a prediction of a record based on a number of previous records, we will need to change the data. The data will be changed by taking the previous n records and flattening them into a vector. </br>
+Regression algorithms are not intended for time series predicting. Therefore, in order to make a prediction of a record based on a number of previous records, we will need to change the data. The data will be changed by taking the previous n records and flattening them into a vector. </br>
 
 # Metrics Comparison Results Table
 
