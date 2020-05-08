@@ -124,7 +124,7 @@ Choose an algorithm and a flight route in order to get the results<br/>
 
 # Results - Visual Illustration
 
-**Note: Outlier score testing plot**</br>
+**Outlier score testing plot**</br>
 Normal behavior - green dots</br>
 Spoofed path - black dots
 
@@ -138,15 +138,27 @@ Spoofed path - black dots
 
 ## SVR - Outlier Score Testing -  Results Example 
 
----- to do ----
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/svr/good_score.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/svr/bad_score.png">
 
 ## Random Forest - Outlier Score Testing - Results Example 
 
----- to do ----
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/random_forest/good_score.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/random_forest/bad_score.png">
 
 ## MLP Neural Network - Outlier Score Testing - Results Example 
 
----- to do ----
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/mlp/good_score.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/mlp/bad_score.png">
 
 ## Research Risks
 
