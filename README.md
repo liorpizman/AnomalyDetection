@@ -4,7 +4,7 @@
 </p>
 
 System's main goal is to create machine learning models for anomaly detection on UAVs.
-The system allows creation and loading of machine learning models by using dynamic inputs.In the next stage, each model will classify anomalies in the test observations. <br/><br/>
+The system allows creation and loading of machine learning models by using dynamic inputs. In the next stage, each model will classify anomalies in the test observations. <br/><br/>
 Moreover, the system displays different output plots and evaluation metrics which compare between different models and the diagnosis of anomalies which were found.
 Running the system with dynamic parameters will allow us to extract many different machine learning models.
 Comparing them based on different evaluation metrics will lead to obtaining the best machine learning models for anomaly detection.<br/><br/>
@@ -144,6 +144,10 @@ Choose an algorithm and a flight route in order to get the results<br/>
 | Changing velocity attack | Changing height and constant velocity. |
 | Mixed attack | Changing height and changing velocity. |
 <br/>
+
+# Time Series Regression
+
+Regression models are not intended for predicting time series. Therefore, in order for us to make a prediction of a record based on a number of previous records, we will need to change the data. The data will be changed by taking the previous n records and flattening them into a vector. </br>
 
 # Metrics Comparison Results Table
 
