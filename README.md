@@ -4,7 +4,7 @@
 </p>
 
 System's main goal is to create machine learning models for anomaly detection on UAVs.
-The system allows creation and loading of machine learning models by using dynamic inputs. <br/><br/>
+The system allows creation and loading of machine learning models by using dynamic inputs.In the next stage, each model will classify anomalies in the test observations. <br/><br/>
 Moreover, the system displays different output plots and evaluation metrics which compare between different models and the diagnosis of anomalies which were found.
 Running the system with dynamic parameters will allow us to extract many different machine learning models.
 Comparing them based on different evaluation metrics will lead to obtaining the best machine learning models for anomaly detection.<br/><br/>
