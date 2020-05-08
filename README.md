@@ -157,14 +157,14 @@ We will define the window size to be 2 - that means, each record will be predict
 **For example**: to predict the fourth record, we need to use records 2 and 3.</br>
 In order to do it, we should combine each record with the following record - that means, combine records 1 and 2, combine records 2 and 3, and combine records 3 and 4. </br>
 </br>The following table will be used as **training vectors**: </br></br>
-<img height=270 width=580 src="utils/images/time_series/two.png"></br>
+<img height=235 width=550 src="utils/images/time_series/two.png"></br>
 
-The **training vectors** should look like this:</br>
+The **training vectors** should look like this:</br></br>
 <img height=235 width=400 src="utils/images/time_series/three.png"></br>
 
-**Another example with window size = 3** </br>
-<img height=255 width=300 src="utils/images/time_series/four.png"></br>
-<img height=235 width=600 src="utils/images/time_series/five.png"></br>
+**Another example with window size = 3** </br></br>
+<img height=255 width=300 src="utils/images/time_series/four.png"></br></br>
+<img height=235 width=600 src="utils/images/time_series/five.png"></br></br>
 <img height=205 width=300 src="utils/images/time_series/six.png">
 
 # Metrics Comparison Results Table
