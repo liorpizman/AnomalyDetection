@@ -122,13 +122,12 @@ Choose an algorithm and a flight route in order to get the results<br/>
 | Mixed attack | Changing height and changing velocity. |
 <br/>
 
-# Results - Visual Illustration
+# Outlier Score Testing Results - Visual Illustration
 
-**Outlier score testing plot**</br>
-Normal behavior - green dots</br>
-Spoofed path - black dots
+**Normal behavior - green dots**</br>
+**Spoofed path - black dots**
 
-## LSTM - Outlier Score Testing - Results Example 
+## LSTM - Results Example 
 
 **Good model prediction example:**<br/>
 <img height=350 width=920 src="utils/images/lstm/good_score.png">
@@ -136,7 +135,7 @@ Spoofed path - black dots
 **Bad model prediction example:**<br/>
 <img height=350 width=920 src="utils/images/lstm/bad_score.png">
 
-## SVR - Outlier Score Testing -  Results Example 
+## SVR -  Results Example 
 
 **Good model prediction example:**<br/>
 <img height=350 width=920 src="utils/images/svr/good_score.png">
@@ -144,7 +143,7 @@ Spoofed path - black dots
 **Bad model prediction example:**<br/>
 <img height=350 width=920 src="utils/images/svr/bad_score.png">
 
-## Random Forest - Outlier Score Testing - Results Example 
+## Random Forest - Results Example 
 
 **Good model prediction example:**<br/>
 <img height=350 width=920 src="utils/images/random_forest/good_score.png">
@@ -152,13 +151,47 @@ Spoofed path - black dots
 **Bad model prediction example:**<br/>
 <img height=350 width=920 src="utils/images/random_forest/bad_score.png">
 
-## MLP Neural Network - Outlier Score Testing - Results Example 
+## MLP Neural Network - Results Example 
 
 **Good model prediction example:**<br/>
 <img height=350 width=920 src="utils/images/mlp/good_score.png">
 
 **Bad model prediction example:**<br/>
 <img height=350 width=920 src="utils/images/mlp/bad_score.png">
+
+# Sensor value - Actual vs. Predicted - Results - Visual Illustration
+
+## LSTM - Results Example 
+
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/lstm/actual_preticted_good.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/lstm/actual_preticted_bad.png">
+
+## SVR -  Results Example 
+
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/svr/actual_preticted_good.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/svr/actual_preticted_bad.png">
+
+## Random Forest - Results Example 
+
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/random_forest/actual_preticted_good.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/random_forest/actual_preticted_bad.png">
+
+## MLP Neural Network - Results Example 
+
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/mlp/actual_preticted_good.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/mlp/actual_preticted_bad.png">
 
 ## Research Risks
 
