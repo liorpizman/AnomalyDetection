@@ -19,7 +19,7 @@ Various uses of drones can be found in a variety of fields:
 * **Rescue** : locating distressed people.
 * **Military** : intelligence operational activities.
 
-<img src="gui/images/drone/drone_background.jpg">
+<img src="utils/images/drone/drone_background.jpg">
 
 ### Prerequisites
 
