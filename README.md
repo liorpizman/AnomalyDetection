@@ -149,12 +149,12 @@ Choose an algorithm and a flight route in order to get the results<br/>
 
 Regression algorithms are not intended for time series predicting. Therefore, in order to make a prediction of a record based on N previous records, we will need to change the data. The data will be changed by taking the previous N records and flattening them into a vector. </br>
 
-<img height=235 width=200 src="utils/images/time_series/one.png">
-<img height=235 width=200 src="utils/images/time_series/two.png">
-<img height=235 width=200 src="utils/images/time_series/three.png">
-<img height=235 width=200 src="utils/images/time_series/four.png">
-<img height=235 width=200 src="utils/images/time_series/five.png">
-<img height=235 width=200 src="utils/images/time_series/six.png">
+<img height=255 width=200 src="utils/images/time_series/one.png">
+<img height=270 width=500 src="utils/images/time_series/two.png">
+<img height=235 width=400 src="utils/images/time_series/three.png">
+<img height=255 width=300 src="utils/images/time_series/four.png">
+<img height=335 width=600 src="utils/images/time_series/five.png">
+<img height=205 width=300 src="utils/images/time_series/six.png">
 
 # Metrics Comparison Results Table
 
