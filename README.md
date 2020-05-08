@@ -124,27 +124,27 @@ Choose an algorithm and a flight route in order to get the results<br/>
 
 # Results - Visual Illustration
 
-**Note: Outlier score testings plot**</br>
+**Note: Outlier score testing plot**</br>
 Normal behavior - green dots</br>
 Spoofed path - black dots
 
-## LSTM - Results Example 
+## LSTM - Outlier Score Testing - Results Example 
 
 **Good model prediction example:**<br/>
-<img height=3300 width=550 src="utils/images/lstm/good_score.png">
+<img height=300 width=550 src="utils/images/lstm/good_score.png">
 
 **Bad model prediction example:**<br/>
-<img height=300 width=550 src="utils/images/shared/bad_score.png">
+<img height=300 width=550 src="utils/images/lstm/bad_score.png">
 
-## SVR - Results Example 
-
----- to do ----
-
-## Random Forest - Results Example 
+## SVR - Outlier Score Testing -  Results Example 
 
 ---- to do ----
 
-## MLP Neural Network - Results Example 
+## Random Forest - Outlier Score Testing - Results Example 
+
+---- to do ----
+
+## MLP Neural Network - Outlier Score Testing - Results Example 
 
 ---- to do ----
 
