@@ -163,34 +163,34 @@ Choose an algorithm and a flight route in order to get the results<br/>
 
 ## LSTM - Results Example 
 
-**Good model prediction example:**<br/>
+**Good test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/lstm/actual_preticted_good.png">
 
-**Bad model prediction example:**<br/>
+**Bad test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/lstm/actual_preticted_bad.png">
 
 ## SVR -  Results Example 
 
-**Good model prediction example:**<br/>
+**Good test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/svr/actual_preticted_good.png">
 
-**Bad model prediction example:**<br/>
+**Bad test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/svr/actual_preticted_bad.png">
 
 ## Random Forest - Results Example 
 
-**Good model prediction example:**<br/>
+**Good test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/random_forest/actual_preticted_good.png">
 
-**Bad model prediction example:**<br/>
+**Bad test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/random_forest/actual_preticted_bad.png">
 
 ## MLP Neural Network - Results Example 
 
-**Good model prediction example:**<br/>
+**Good test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/mlp/actual_preticted_good.png">
 
-**Bad model prediction example:**<br/>
+**Bad test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/mlp/actual_preticted_bad.png">
 
 ## Research Risks
