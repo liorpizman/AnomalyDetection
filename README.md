@@ -163,8 +163,8 @@ The **training vectors** should look like this:</br></br>
 <img height=235 width=400 src="utils/images/time_series/three.png"></br>
 
 **Another example with window size = 3** </br></br>
-<img height=255 width=300 src="utils/images/time_series/four.png"></br></br>
-<img height=235 width=600 src="utils/images/time_series/five.png"></br></br>
+<img height=285 width=310 src="utils/images/time_series/four.png"></br></br>
+<img height=235 width=610 src="utils/images/time_series/five.png"></br></br>
 <img height=205 width=300 src="utils/images/time_series/six.png">
 
 # Metrics Comparison Results Table
