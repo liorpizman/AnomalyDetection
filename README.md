@@ -122,6 +122,14 @@ Choose an algorithm and a flight route in order to get the results<br/>
 | Mixed attack | Changing height and changing velocity. |
 <br/>
 
+# Metrics Comparison Results Table
+
+**Example:**<br/>
+Algorithm: Random Forest<br/>
+Similarity function: Cosine similarity<br/>
+Route: Cross route<br/>
+<img height=450 width=720 src="utils/images/results/comparison_table.png">
+
 # Outlier Score Testing Results - Visual Illustration
 
 **Normal behavior - green dots**</br>
