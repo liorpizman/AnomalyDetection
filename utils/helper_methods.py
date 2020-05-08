@@ -10,16 +10,16 @@ Methods to handle repeatable actions which are done by the model controller
 import os
 import warnings
 import math
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import yaml
-import matplotlib.pyplot as plt
 
+from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
 from scipy.spatial import distance
-from datetime import datetime
 from sklearn.metrics import pairwise, mean_squared_error, roc_curve, auc
+
 from utils.constants import NON_ATTACK_VALUE, ATTACK_VALUE
 
 
@@ -430,60 +430,6 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
 
         final_metric_path = os.path.join(*[str(results_dir_path), 'final_' + str(metric) + '.csv'])
         results.to_csv(f"{final_metric_path}")
-
-
-def is_excluded_flight(route, csv):
-    """
-    return if excluded flight
-    :param route: flight route
-    :param csv: csv of a flight
-    :return:  if excluded
-    """
-
-    EXCLUDE_FLIGHTS = load_exclude_flights()
-
-    return route in EXCLUDE_FLIGHTS and csv in EXCLUDE_FLIGHTS[route]
-
-
-def load_from_yaml(filename, key):
-    """
-    load all the data from a file which is suitable to a given key
-    :param filename: the file we want to load from
-    :param key: the list we want to load
-    :return: list of values according to a given key
-    """
-
-    with open(r'.\\' + filename + '.yaml') as file:
-        loaded_file = yaml.load(file, Loader=yaml.FullLoader)
-
-        return loaded_file.get(key)
-
-
-def load_exclude_flights():
-    """
-    load all the flights which are excluded
-    :return: list of the excluded flights
-    """
-
-    return load_from_yaml('lstm_model_settings', 'EXCLUDE_FLIGHTS')
-
-
-def load_attacks():
-    """
-    load all the attacks in the test set
-    :return: list of the attacks
-    """
-
-    return load_from_yaml('names', 'ATTACKS')
-
-
-def load_flight_routes():
-    """
-    load all the flight routes
-    :return: list of the flight routes
-    """
-
-    return load_from_yaml('names', 'FLIGHT_ROUTES')
 
 
 def plot(data, xlabel, ylabel, title, plot_dir):
