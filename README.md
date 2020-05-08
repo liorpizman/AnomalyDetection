@@ -1,15 +1,38 @@
-# Anomaly Detection on UAVs 
+# Anomaly Detection of GPS Spoofing Attacks on UAVs  
 <p align="center">
     <img src="gui/images/anomaly_detection_logo.png">
 </p>
 
 System's main goal is to create machine learning models for anomaly detection on UAVs.
-The system allows creation and loading of machine learning models by using dynamic inputs. <br/><br/>
+The system allows creation and loading of machine learning models by using dynamic inputs. In the next stage, each model will classify anomalies in the test observations. <br/><br/>
 Moreover, the system displays different output plots and evaluation metrics which compare between different models and the diagnosis of anomalies which were found.
 Running the system with dynamic parameters will allow us to extract many different machine learning models.
 Comparing them based on different evaluation metrics will lead to obtaining the best machine learning models for anomaly detection.<br/><br/>
 Those models will be used as **a baseline for a real-time & light-weight anomaly detection algorithm based on streaming data from UAV sensors
 in to order to get the earliest possible detection of GPS spoofing attacks on UAV’s.**
+
+## Background & Motivation
+
+Various uses of drones can be found in a variety of fields:
+* **Agriculture** : accurate and cheap spraying.
+* **Security** : used for patrolling and following suspects in real time.
+* **Rescue** : locating distressed people.
+* **Military** : intelligence operational activities.
+
+<img height=160 width=200 src="utils/images/drone/drone_background.jpg">
+
+## What is GPS Spoofing ? And how it is harmful?
+
+* Unmanned Aerial Systems (UAS) is vulnerable to different cyber-attacks such as GPS spoofing. In GPS spoofing attack, a malicious user transmits fake signals to the GPS receiver in the UAS.
+* GPS spoofing attacks are aimed at stealing or crashing a UAV by misleading it to a different path than the original course planned by the operator.
+
+**Crashed drone**</br>
+<img height=140 width=140 src="utils/images/drone/drone_crashed.jpg">
+</br>**Kidnapped drone**</br>
+<img height=140 width=155 src="utils/images/drone/drone_stolen.jpg">
+
+## System flow
+<img height=435 width=900 src="utils/images/shared/flow.jpg">
 
 ### Prerequisites
 
@@ -36,7 +59,7 @@ Run 'guiController.py' file in order to run the system.<br/>
 <img src="utils/images/shared/guiController.JPG">
 
 Choose Between two different option:<br/>
-<img height=300 width=320 src="utils/images/shared/mainWindow.JPG">
+<img height=350 width=370 src="utils/images/shared/mainWindow.JPG">
 
 ### First Flow - Create new machine learning model
 
@@ -48,6 +71,9 @@ Select algorithms for which you want to build anomaly detection models<br/>
 
 Select the values for each of the following parameters<br/>
 <img height=350 width=370 src="utils/images/new_model/parametersOptionsWindow.JPG">
+
+Please choose both input and target features<br/>
+<img height=350 width=370 src="utils/images/new_model/featuresSelectionWindow.jpg">
 
 ** See next step under the title: Both Flows - similarity functions step
 
@@ -119,21 +145,106 @@ Choose an algorithm and a flight route in order to get the results<br/>
 | Mixed attack | Changing height and changing velocity. |
 <br/>
 
+# Time Series Regression
+
+Regression algorithms are not intended for time series predicting. Therefore, in order to make a prediction of a record based on N previous records, we will need to change the data. The data will be changed by taking the previous N records and flattening them into a vector. </br>
+
+Assume that the following data matrix exists: (We will mark each line with different color for convenience)</br></br>
+<img height=290 width=240 src="utils/images/time_series/one.png"></br></br>
+
+Now, let's assume we want to process this matrix to fit time series prediction problem. </br>
+We will define the window size to be 2 - that means, each record will be predicted by using **2** previous records.</br>
+**For example**: to predict the fourth record, we need to use records 2 and 3.</br>
+In order to do it, we should combine each record with the following record - that means, combine records 1 and 2, combine records 2 and 3, and combine records 3 and 4. </br>
+</br>The following table will be used as **training vectors**: </br></br>
+<img height=235 width=550 src="utils/images/time_series/two.png"></br>
+
+The **training vectors** should look like this:</br></br>
+<img height=235 width=400 src="utils/images/time_series/three.png"></br>
+
+**Another example with window size = 3** </br></br>
+<img height=285 width=310 src="utils/images/time_series/four.png"></br></br>
+<img height=235 width=610 src="utils/images/time_series/five.png"></br></br>
+<img height=205 width=300 src="utils/images/time_series/six.png">
+
+# Metrics Comparison Results Table
+
+**Example:**<br/>
+Algorithm: Random Forest<br/>
+Similarity function: Cosine similarity<br/>
+Route: Cross route<br/>
+<img height=235 width=680 src="utils/images/results/comparison_table.jpg">
+
+# Outlier Score Testing Results - Visual Illustration
+
+**Normal behavior - green dots**</br>
+**Spoofed path - black dots**
+
 ## LSTM - Results Example 
 
----- to do ----
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/lstm/good_score.png">
 
-## SVR - Results Example 
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/lstm/bad_score.png">
 
----- to do ----
+## SVR -  Results Example 
+
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/svr/good_score.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/svr/bad_score.png">
 
 ## Random Forest - Results Example 
 
----- to do ----
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/random_forest/good_score.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/random_forest/bad_score.png">
 
 ## MLP Neural Network - Results Example 
 
----- to do ----
+**Good model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/mlp/good_score.png">
+
+**Bad model prediction example:**<br/>
+<img height=350 width=920 src="utils/images/mlp/bad_score.png">
+
+# Sensor value - Actual vs. Predicted - Results - Visual Illustration
+
+## LSTM - Results Example 
+
+**Good test prediction example:**<br/>
+<img height=350 width=920 src="utils/images/lstm/actual_preticted_good.png">
+
+**Bad test prediction example:**<br/>
+<img height=350 width=920 src="utils/images/lstm/actual_preticted_bad.png">
+
+## SVR -  Results Example 
+
+**Good test prediction example:**<br/>
+<img height=350 width=920 src="utils/images/svr/actual_preticted_good.png">
+
+**Bad test prediction example:**<br/>
+<img height=350 width=920 src="utils/images/svr/actual_preticted_bad.png">
+
+## Random Forest - Results Example 
+
+**Good test prediction example:**<br/>
+<img height=350 width=920 src="utils/images/random_forest/actual_preticted_good.png">
+
+**Bad test prediction example:**<br/>
+<img height=350 width=920 src="utils/images/random_forest/actual_preticted_bad.png">
+
+## MLP Neural Network - Results Example 
+
+**Good test prediction example:**<br/>
+<img height=350 width=920 src="utils/images/mlp/actual_preticted_good.png">
+
+**Bad test prediction example:**<br/>
+<img height=350 width=920 src="utils/images/mlp/actual_preticted_bad.png">
 
 ## Research Risks
 
