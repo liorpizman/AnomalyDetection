@@ -150,7 +150,7 @@ Choose an algorithm and a flight route in order to get the results<br/>
 Regression algorithms are not intended for time series predicting. Therefore, in order to make a prediction of a record based on N previous records, we will need to change the data. The data will be changed by taking the previous N records and flattening them into a vector. </br>
 
 Assume that the following data matrix exists: (We will mark each line with different color for convenience)</br></br>
-<img height=290 width=225 src="utils/images/time_series/one.png"></br></br>
+<img height=290 width=240 src="utils/images/time_series/one.png"></br></br>
 
 Now, let's assume we want to process this matrix to fit time series prediction problem. </br>
 We will define the window size to be 2 - that means, each record will be predicted by using **2** previous records.</br>
