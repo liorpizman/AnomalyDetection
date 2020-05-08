@@ -1,4 +1,4 @@
-# Anomaly Detection on UAVs 
+# Anomaly Detection of GPS Spoofing Attacks on UAVs  
 <p align="center">
     <img src="gui/images/anomaly_detection_logo.png">
 </p>
@@ -10,6 +10,16 @@ Running the system with dynamic parameters will allow us to extract many differe
 Comparing them based on different evaluation metrics will lead to obtaining the best machine learning models for anomaly detection.<br/><br/>
 Those models will be used as **a baseline for a real-time & light-weight anomaly detection algorithm based on streaming data from UAV sensors
 in to order to get the earliest possible detection of GPS spoofing attacks on UAV’s.**
+
+## Background & Motivation
+
+Various uses of drones can be found in a variety of fields:
+* **Agriculture** : accurate and cheap spraying.
+* **Security** : used for patrolling and following suspects in real time.
+* **Rescue** : locating distressed people.
+* **Military** : intelligence operational activities.
+
+<img src="gui/images/drone/drone_background.jpg">
 
 ### Prerequisites
 
