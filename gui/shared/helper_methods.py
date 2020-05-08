@@ -7,10 +7,10 @@ DataSets: 1. ADS-B dataset 2. simulated data
 Methods to handle repeatable actions which are done by the gui controller
 '''
 
-import os
 import yaml
 import tkinter
 import json
+from pathlib import Path
 
 from string import Template
 from tkinter.filedialog import askdirectory, askopenfilename
@@ -97,7 +97,10 @@ def load_classification_methods(list_name):
     :return: list's values
     """
 
-    with open(r'.\shared\classification_methods.yaml') as file:
+    ROOT_DIR = Path(__file__).parent.parent.parent
+    classification_methods_path = os.path.join(*[str(ROOT_DIR), 'gui', 'shared', 'classification_methods.yaml'])
+
+    with open(classification_methods_path) as file:
         classification_methods = yaml.load(file, Loader=yaml.FullLoader)
         return classification_methods.get(list_name)
 
