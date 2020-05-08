@@ -28,7 +28,7 @@ Various uses of drones can be found in a variety of fields:
 
 **Crashed drone**</br>
 <img height=140 width=140 src="utils/images/drone/drone_crashed.jpg">
-**Kidnapped drone**</br></br>
+</br>**Kidnapped drone**</br>
 <img height=140 width=155 src="utils/images/drone/drone_stolen.jpg">
 
 ### Prerequisites
