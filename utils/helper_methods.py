@@ -9,13 +9,12 @@ Methods to handle repeatable actions which are done by the model controller
 
 import os
 import warnings
-from datetime import datetime
-
 import math
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import yaml
+
+from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
 from scipy.spatial import distance

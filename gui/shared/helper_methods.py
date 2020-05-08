@@ -10,7 +10,7 @@ Methods to handle repeatable actions which are done by the gui controller
 import yaml
 import tkinter
 import json
-from pathlib import Path
+
 
 from string import Template
 from tkinter.filedialog import askdirectory, askopenfilename
