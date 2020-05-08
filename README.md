@@ -122,9 +122,19 @@ Choose an algorithm and a flight route in order to get the results<br/>
 | Mixed attack | Changing height and changing velocity. |
 <br/>
 
+# Results - Visual Illustration
+
+**Note: Outlier score testings plot**</br>
+Normal behavior - green dots</br>
+Spoofed path - black dots
+
 ## LSTM - Results Example 
 
----- to do ----
+**Good model prediction example:**<br/>
+<img height=3300 width=550 src="utils/images/lstm/good_score.png">
+
+**Bad model prediction example:**<br/>
+<img height=300 width=550 src="utils/images/shared/bad_score.png">
 
 ## SVR - Results Example 
 
