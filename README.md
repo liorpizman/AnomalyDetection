@@ -131,10 +131,10 @@ Spoofed path - black dots
 ## LSTM - Outlier Score Testing - Results Example 
 
 **Good model prediction example:**<br/>
-<img height=350 width=850 src="utils/images/lstm/good_score.png">
+<img height=350 width=920 src="utils/images/lstm/good_score.png">
 
 **Bad model prediction example:**<br/>
-<img height=350 width=850 src="utils/images/lstm/bad_score.png">
+<img height=350 width=920 src="utils/images/lstm/bad_score.png">
 
 ## SVR - Outlier Score Testing -  Results Example 
 
