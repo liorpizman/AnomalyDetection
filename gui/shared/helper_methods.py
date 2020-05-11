@@ -66,30 +66,6 @@ def set_file_path():
         return ""
 
 
-def set_training_path():
-    """
-    Set the path of the train data set directory
-    :return: training path
-    """
-
-    global training_path
-    training_path = set_path()
-
-    return training_path
-
-
-def set_test_path():
-    """
-    Set the path of the test data set directory
-    :return: test path
-    """
-
-    global test_path
-    test_path = set_path()
-
-    return test_path
-
-
 def load_classification_methods(list_name):
     """
     Load classification methods from a yaml file according to list's key

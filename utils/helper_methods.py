@@ -211,18 +211,6 @@ def get_threshold(scores, percent):
     return sorted(scores)[index - 1]
 
 
-def get_thresholds(list_scores, percent):
-    """
-    get threshold for classification from this percent of training set that had lower scores
-    (e.g get the threshold error in which 95% of training set had lower values than)
-    :param list_scores: list of scores
-    :param percent: chosen value by the user
-    :return: list of thresholds
-    """
-
-    return [get_threshold(scores, percent) for scores in list_scores]
-
-
 def get_method_scores(prediction, attack_start, attack_end, add_window_size, window_size):
     """
     get previous method scores (tpr, fpr, accuracy, detection delay)
@@ -481,34 +469,34 @@ def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title
     # plt.show()
 
 
-def plot_roc(y_true, y_pred, plot_dir, title="ROC Curve"):
-    """
-    plot roc curve by computing Area Under the Curve (AUC) using the trapezoidal rule
-    :param y_true: ground truth
-    :param y_pred: predictions
-    :param plot_dir: the directory we want to save the plot into
-    :param title: title of the plot
-    :return:
-    """
-
-    true = y_true.reshape(-1, 1).transpose(1, 0)[0]
-    pred = np.array(y_pred)
-
-    fpr, tpr, _ = roc_curve(true, pred)
-    auc_score = auc(fpr, tpr)
-
-    plt.figure(figsize=(7, 6))
-    plt.plot(fpr, tpr, color='blue', label='ROC (AUC = %0.4f)' % auc_score)
-    plt.legend(loc='lower right')
-    plt.title(title)
-    plt.xlabel("FPR")
-    plt.ylabel("TPR")
-
-    plt_path = os.path.join(*[str(plot_dir), str(title) + '.png'])
-    plt.savefig(f"{plt_path}")
-
-    plt.clf()
-    # plt.show()
+# def plot_roc(y_true, y_pred, plot_dir, title="ROC Curve"):
+#     """
+#     plot roc curve by computing Area Under the Curve (AUC) using the trapezoidal rule
+#     :param y_true: ground truth
+#     :param y_pred: predictions
+#     :param plot_dir: the directory we want to save the plot into
+#     :param title: title of the plot
+#     :return:
+#     """
+#
+#     true = y_true.reshape(-1, 1).transpose(1, 0)[0]
+#     pred = np.array(y_pred)
+#
+#     fpr, tpr, _ = roc_curve(true, pred)
+#     auc_score = auc(fpr, tpr)
+#
+#     plt.figure(figsize=(7, 6))
+#     plt.plot(fpr, tpr, color='blue', label='ROC (AUC = %0.4f)' % auc_score)
+#     plt.legend(loc='lower right')
+#     plt.title(title)
+#     plt.xlabel("FPR")
+#     plt.ylabel("TPR")
+#
+#     plt_path = os.path.join(*[str(plot_dir), str(title) + '.png'])
+#     plt.savefig(f"{plt_path}")
+#
+#     plt.clf()
+#     # plt.show()
 
 
 def plot_prediction_performance(Y_train, X_pred, results_path,
