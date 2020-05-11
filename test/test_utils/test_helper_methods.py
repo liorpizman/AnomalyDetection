@@ -39,7 +39,7 @@ class TestGuiHelperMethods(unittest.TestCase):
         """
 
         x = np.array([0.1, 0.2])
-        y = np.array([[0.2], [0.1]])
+        y = np.array([0.1, 0.4])
 
         self.assertEqual(cosine_similarity(x, y), 1 - (dot(x, y) / (norm(x) * norm(y))))
 
@@ -64,9 +64,9 @@ class TestGuiHelperMethods(unittest.TestCase):
         """
 
         x = np.array([2, 2])
-        y = np.array([[1], [1]])
+        y = np.array([1, 1])
 
-        self.assertEqual(euclidean_distance(x, y), 2.0)
+        self.assertEqual(euclidean_distance(x, y), np.linalg.norm(x - y))
 
     def test_valid_mahalanobis_distance(self):
         """
