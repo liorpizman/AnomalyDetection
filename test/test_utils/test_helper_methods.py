@@ -12,7 +12,7 @@ import unittest
 from utils.helper_methods import *
 
 
-class TestGuiHelperMethods(unittest.TestCase):
+class TestUtilsHelperMethods(unittest.TestCase):
 
     def test_valid_directory(self):
         """
