@@ -44,6 +44,38 @@ pip install -r requirements.txt
 
 ** See explanation below - Requirements File
 
+## Directories Structure
+
+**Train directory** - should be in th following structure: </br>
+Chosen directory will contain:</br>
+    -> Route_Name_1</br>
+        -> without_anom.csv</br>
+    -> Route_Name_2</br>
+        -> without_anom.csv</br></br>
+
+**Test directory** - should be in th following structure:</br>
+Chosen directory will contain:</br>
+    -> Route_Name_1</br>
+        -> Attack_Name_1</br>
+            -> sensors_0.csv</br>
+        -> Attack_Name_2</br>
+            -> sensors_0.csv</br>
+        -> Attack_Name_3</br>
+            -> sensors_0.csv</br>
+        -> Attack_Name_4</br>
+            -> sensors_0.csv</br>
+    -> Route_Name_2</br>
+        -> Attack_Name_1</br>
+            -> sensors_0.csv</br>
+        -> Attack_Name_2</br>
+            -> sensors_0.csv</br>
+        -> Attack_Name_3</br>
+            -> sensors_0.csv</br>
+        -> Attack_Name_4</br>
+            -> sensors_0.csv </br></br>
+
+**Results directory** - any directory to save all model configurations and results.</br>
+
 
 ## Getting Started
 
