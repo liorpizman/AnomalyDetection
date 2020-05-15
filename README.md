@@ -48,30 +48,30 @@ pip install -r requirements.txt
 
 **Train directory** - should be in th following structure: </br>
 * Chosen directory</br>
-    * Route_Name_1</br>
+    * Route_Name_1 - directory</br>
         * without_anom.csv</br>
-    * Route_Name_2</br>
+    * Route_Name_2 - directory</br>
         * without_anom.csv</br></br>
 
 **Test directory** - should be in th following structure:</br>
 * Chosen directory</br>
-    * Route_Name_1</br>
-        * Attack_Name_1</br>
+    * Route_Name_1 - directory</br>
+        * Attack_Name_1 - directory</br>
            * sensors_0.csv</br>
-        * Attack_Name_2</br>
+        * Attack_Name_2 - directory</br>
            * sensors_0.csv</br>
-        * Attack_Name_3</br>
+        * Attack_Name_3 - directory</br>
            * sensors_0.csv</br>
-        * Attack_Name_4</br>
+        * Attack_Name_4 - directory</br>
            * sensors_0.csv</br>
-    * Route_Name_2</br>
-        * Attack_Name_1</br>
+    * Route_Name_2 - directory</br>
+        * Attack_Name_1 - directory</br>
            * sensors_0.csv</br>
-        * Attack_Name_2</br>
+        * Attack_Name_2 - directory</br>
            * sensors_0.csv</br>
-        * Attack_Name_3</br>
+        * Attack_Name_3 - directory</br>
            * sensors_0.csv</br>
-        * Attack_Name_4</br>
+        * Attack_Name_4 - directory</br>
            * sensors_0.csv </br></br>
 
 **Results directory** - any directory to save all model configurations and results.</br>
