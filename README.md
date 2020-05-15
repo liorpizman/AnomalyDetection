@@ -44,7 +44,7 @@ pip install -r requirements.txt
 
 ** See explanation below - Requirements File
 
-## Directories Structure
+### Directories Structure
 
 **Train directory** - should be in th following structure: </br>
 * Chosen directory</br>
