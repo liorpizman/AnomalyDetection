@@ -48,8 +48,8 @@ pip install -r requirements.txt
 
 **Train directory** - should be in th following structure: </br>
 Chosen directory will contain:</br>
-&nbsp-> Route_Name_1</br>
-&nbsp&nbsp-> without_anom.csv</br>
+<\t>-> Route_Name_1</br>
+</t>-> without_anom.csv</br>
 &nbsp-> Route_Name_2</br>
 &nbsp&nbsp-> without_anom.csv</br></br>
 
