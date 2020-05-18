@@ -172,8 +172,8 @@ Choose an algorithm and a flight route in order to get the results<br/>
 | Attack | Description |
 | -- | -- |
 | Constant attack | Constant height and constant velocity. |
-| Changing height attack | Constant height and changing velocity. |
-| Changing velocity attack | Changing height and constant velocity. |
+| Changing valocity attack | Constant height and changing velocity. |
+| Changing height attack | Changing height and constant velocity. |
 | Mixed attack | Changing height and changing velocity. |
 <br/>
 
