@@ -156,7 +156,7 @@ class AlgorithmsWindow(tk.Frame):
         :return: updated parameters' values for a given algorithm
         """
 
-        self.controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
+        return self.controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
 
     def remove_algorithm_parameters(self, algorithm_name, algorithm_parameters):
         """

@@ -89,7 +89,7 @@ def set_widget_for_param(frame, text, combobox_values, param_key, y_coordinate, 
         # set_info_configuration(frame.algorithm_param_info_button, image=info_photo)
 
         # Create new combo box - possible values for the label
-        frame.algorithm_param_combo = Combobox(frame, state="readonly", values=combobox_values)
+        frame.algorithm_param_combo = Combobox(frame, values=combobox_values)
         frame.algorithm_param_combo.place(relx=relative_x + 0.35, rely=y_coordinate, height=25, width=150)
         frame.algorithm_param_combo.current(0)
         frame.parameters[param_key] = frame.algorithm_param_combo

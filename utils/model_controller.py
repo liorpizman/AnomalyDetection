@@ -195,7 +195,7 @@ class ModelController:
         return InputSettings.get_results_path()
 
     def set_algorithm_parameters(self, algorithm_name, algorithm_parameters):
-        InputSettings.set_algorithm_parameters(algorithm_name, algorithm_parameters)
+        return InputSettings.set_algorithm_parameters(algorithm_name, algorithm_parameters)
 
     def remove_algorithm_parameters(self, algorithm_name, algorithm_parameters):
         InputSettings.remove_algorithm_parameters(algorithm_name, algorithm_parameters)
