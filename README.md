@@ -326,11 +326,30 @@ See also the list of [contributors](https://github.com/liorpizman/AnomalyDetecti
 
 #### Main methods
 
-    run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
-            Description | Execute models creation/loading process
-* **run_models**(algorithm, similarity_score, test_data_path, results_path, new_model_running)
-    * defintion 
-* **run_models**(algorithm, similarity_score, test_data_path, results_path, new_model_running)
-    * defintion 
-* **run_models**(algorithm, similarity_score, test_data_path, results_path, new_model_running)
-    * defintion 
+
+```
+run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
+        Description | Execute models creation/loading process
+```
+
+```
+run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
+        Description | Execute models creation/loading process
+```
+
+```
+run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
+        Description | Execute models creation/loading process
+```
+
+
+```
+run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
+        Description | Execute models creation/loading process
+```
+
+
+```
+run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
+        Description | Execute models creation/loading process
+```
