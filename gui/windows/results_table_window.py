@@ -11,11 +11,14 @@ Results table window which is part of GUI application
 '''
 
 import os
+import pandas as pd
 
+from datetime import datetime
+from tkinter import messagebox
 from tkinter.font import Font, BOLD
 from ipython_genutils.py3compat import xrange
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
-from gui.shared.helper_methods import trim_unnecessary_chars, transform_list
+from gui.shared.helper_methods import trim_unnecessary_chars, transform_list, set_path
 from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
 from gui.widgets.table.table import Table
@@ -60,6 +63,8 @@ class ResultsTableWindow(tk.Frame):
     generate_table_columns_list()
             Description | Generates a list of columns for table init by given attacks
 
+    export_table_to_csv(algorithm, similarity_function, flight_route)
+            Description | Export current table to csv file
     """
 
     def __init__(self, parent, controller):
@@ -235,6 +240,8 @@ class ResultsTableWindow(tk.Frame):
                                        size=11,
                                        weight=BOLD)
 
+            self.table_dataframe = pd.DataFrame(self.results_table.get_data(), columns=table_columns)
+
             self.algorithm_label = tk.Label(self)
             self.algorithm_label.place(relx=0.015, rely=0.68, height=25, width=300)
             self.algorithm_label.configure(
@@ -259,6 +266,15 @@ class ResultsTableWindow(tk.Frame):
                 fg='blue')
             set_widget_to_left(self.route_label)
 
+            self.export_button = tk.Button(self,
+                                           command=lambda: self.export_table_to_csv(
+                                               algorithm=selected_algorithm,
+                                               similarity_function=selected_similarity_function,
+                                               flight_route=selected_flight_route
+                                           ))
+            self.export_button.place(relx=0.35, rely=0.839, height=25, width=90)
+            set_button_configuration(self.export_button, text='''Export to CSV''')
+            self.export_button.configure(bg='sandy brown')
 
         except Exception as e:
             # Handle error in setting new data in the table
@@ -279,3 +295,27 @@ class ResultsTableWindow(tk.Frame):
             table_columns.append(attack)
 
         return table_columns
+
+    def export_table_to_csv(self, algorithm, similarity_function, flight_route):
+        """
+        Export current table to csv file
+        :return:
+        """
+
+        path = set_path()
+        current_time = datetime.now().strftime("%b-%d-%Y-%H-%M-%S")
+        df_name = "{0}_{1}_{2}_{3}.csv".format(algorithm, similarity_function, flight_route, current_time)
+        full_path = os.path.join(*[str(path), df_name])
+
+        try:
+            self.table_dataframe.to_csv(full_path, index=False)
+
+            messagebox.askokcancel(
+                title="Export to CSV file",
+                message="Export to csv file finished successfully!"
+            )
+        except:
+            messagebox.askokcancel(
+                title="Export to CSV file",
+                message="Export to csv file failed! Please try again."
+            )
