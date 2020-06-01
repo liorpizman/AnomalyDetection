@@ -14,6 +14,9 @@ import os
 import threading
 
 from tkinter.font import Font, BOLD
+
+import win32api
+
 from gui.shared.helper_methods import strfdelta
 from gui.widgets.animated_gif import AnimatedGif
 from datetime import timedelta
@@ -23,6 +26,7 @@ from gui.widgets.menubar import Menubar
 from gui.shared.constants import LOADING_WINDOW_SETTINGS, CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_copyright_configuration, \
     set_widget_to_left, set_button_configuration
+from utils.input_settings import InputSettings
 
 try:
     import Tkinter as tk
@@ -191,7 +195,7 @@ class LoadingWindow(tk.Frame):
         similarity_score, test_data_path, results_path, new_model_running = self.controller.init_models()
 
         if new_model_running:
-            chosen_algorithms = self.controller.get_algorithms()
+            chosen_algorithms = set(self.controller.get_algorithms())
         else:
             chosen_algorithms = set(self.controller.get_existing_algorithms().keys())
 
@@ -212,8 +216,18 @@ class LoadingWindow(tk.Frame):
 
                 y_coordinate += 0.04
 
-            self.controller.run_models(algorithm, similarity_score, test_data_path,
-                                       results_path, new_model_running, self.event)
+            try:
+                self.controller.run_models(algorithm, similarity_score, test_data_path,
+                                           results_path, new_model_running, self.event)
+            except:
+                win32api.MessageBox(0, 'An error occurred while running the {0} algorithm ! \n'
+                                       'Invalid parameter entered. '.format(algorithm), 'Error', 0x00001000)
+
+                # Delete chosen algorithm key from results metrics
+                if new_model_running:
+                    InputSettings.remove_algorithm(algorithm)
+                else:
+                    InputSettings.remove_existing_algorithm(algorithm)
 
             enumerate_details += 1
 

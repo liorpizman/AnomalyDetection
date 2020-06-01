@@ -9,6 +9,7 @@ Main values storage in order to get updated values in each action at the system
 
 import os
 import pandas as pd
+import win32api
 
 from gui.shared.helper_methods import load_anomaly_detection_list
 from models.mlp.mlp_hyper_parameters import mlp_hyper_parameters
@@ -320,16 +321,22 @@ class InputSettings:
     @staticmethod
     def set_algorithm_parameters(algorithm_name, algorithm_parameters):
         set_function = InputSettings.get_algorithm_set_function(algorithm_name)
-        set_function(algorithm_parameters)
+        return set_function(algorithm_parameters)
 
     @staticmethod
     def set_LSTM(algorithm_parameters):
-        InputSettings.ALGORITHMS.add("LSTM")
 
         # Iterate over all parameters for LSTM algorithm
-        for param in algorithm_parameters:
-            lstm_setting_function = getattr(lstm_hyper_parameters, "set_" + param)
-            lstm_setting_function(algorithm_parameters[param])
+        try:
+            for param in algorithm_parameters:
+                lstm_setting_function = getattr(lstm_hyper_parameters, "set_" + param)
+                lstm_setting_function(algorithm_parameters[param])
+        except:
+            win32api.MessageBox(0, 'Chosen parameter is invalid!', 'Invalid input', 0x00001000)
+            return False
+
+        InputSettings.ALGORITHMS.add("LSTM")
+        return True
 
     @staticmethod
     def remove_algorithm_parameters(algorithm_name, algorithm_parameters):
@@ -375,6 +382,11 @@ class InputSettings:
     @staticmethod
     def get_existing_algorithms():
         return InputSettings.EXISTING_ALGORITHMS
+
+    @staticmethod
+    def remove_existing_algorithm(algorithm_name):
+        if algorithm_name in InputSettings.EXISTING_ALGORITHMS:
+            del InputSettings.EXISTING_ALGORITHMS[algorithm_name]
 
     @staticmethod
     def get_existing_algorithm_path(algorithm_name):
@@ -450,30 +462,48 @@ class InputSettings:
 
     @staticmethod
     def set_Random_Forest(algorithm_parameters):
-        InputSettings.ALGORITHMS.add("Random Forest")
 
         # Iterate over all parameters for Random Forest algorithm
-        for param in algorithm_parameters:
-            Random_Forest_setting_function = getattr(random_forest_hyper_parameters, "set_" + param)
-            Random_Forest_setting_function(algorithm_parameters[param])
+        try:
+            for param in algorithm_parameters:
+                Random_Forest_setting_function = getattr(random_forest_hyper_parameters, "set_" + param)
+                Random_Forest_setting_function(algorithm_parameters[param])
+        except:
+            win32api.MessageBox(0, 'Chosen parameter is invalid!', 'Invalid input', 0x00001000)
+            return False
+
+        InputSettings.ALGORITHMS.add("Random Forest")
+        return True
 
     @staticmethod
     def set_SVR(algorithm_parameters):
-        InputSettings.ALGORITHMS.add("SVR")
 
         # Iterate over all parameters for SVR algorithm
-        for param in algorithm_parameters:
-            svr_setting_function = getattr(svr_hyper_parameters, "set_" + param)
-            svr_setting_function(algorithm_parameters[param])
+        try:
+            for param in algorithm_parameters:
+                svr_setting_function = getattr(svr_hyper_parameters, "set_" + param)
+                svr_setting_function(algorithm_parameters[param])
+        except:
+            win32api.MessageBox(0, 'Chosen parameter is invalid!', 'Invalid input', 0x00001000)
+            return False
+
+        InputSettings.ALGORITHMS.add("SVR")
+        return True
 
     @staticmethod
     def set_MLP(algorithm_parameters):
-        InputSettings.ALGORITHMS.add("MLP")
 
-        # Iterate over all parameters for MLP algorithm
-        for param in algorithm_parameters:
-            mlp_setting_function = getattr(mlp_hyper_parameters, "set_" + param)
-            mlp_setting_function(algorithm_parameters[param])
+        # Iterate over all parameters for SVR algorithm
+        try:
+            for param in algorithm_parameters:
+                mlp_setting_function = getattr(mlp_hyper_parameters, "set_" + param)
+                mlp_setting_function(algorithm_parameters[param])
+        except:
+            win32api.MessageBox(0, 'Chosen parameter is invalid!', 'Invalid input', 0x00001000)
+            return False
+
+        InputSettings.ALGORITHMS.add("MLP")
+        return True
 
     @staticmethod
     def get_algorithm_set_function(algorithm_name):

@@ -130,10 +130,7 @@ class svr_hyper_parameters:
     # Epsilon parameter
     @staticmethod
     def set_epsilon(epsilon):
-        try:
-            svr_hyper_parameters.EPSILON = float(epsilon)
-        except:
-            svr_hyper_parameters.EPSILON = svr_hyper_parameters.DEFAULT_EPSILON
+        svr_hyper_parameters.EPSILON = float(epsilon)
 
     @staticmethod
     def remove_epsilon():
@@ -146,10 +143,7 @@ class svr_hyper_parameters:
     # Threshold parameter
     @staticmethod
     def set_threshold(threshold):
-        try:
-            svr_hyper_parameters.THRESHOLD = float(threshold)
-        except:
-            svr_hyper_parameters.THRESHOLD = svr_hyper_parameters.DEFAULT_THRESHOLD
+        svr_hyper_parameters.THRESHOLD = float(threshold)
 
     @staticmethod
     def remove_threshold():

@@ -165,10 +165,7 @@ class random_forest_hyper_parameters:
     # Threshold parameter
     @staticmethod
     def set_threshold(threshold):
-        try:
-            random_forest_hyper_parameters.THRESHOLD = float(threshold)
-        except:
-            random_forest_hyper_parameters.THRESHOLD = random_forest_hyper_parameters.DEFAULT_THRESHOLD
+        random_forest_hyper_parameters.THRESHOLD = float(threshold)
 
     @staticmethod
     def remove_threshold():
