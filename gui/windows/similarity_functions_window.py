@@ -92,12 +92,6 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
 
-        self.instructions = tk.Label(self)
-        self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
-        self.instructions.configure(
-            text='''Please choose similarity functions from the following options.''')
-        set_widget_to_left(self.instructions)
-
         # Page body
         self.similarity_functions = Checkbar(self, load_similarity_list(), checkCallback=self.set_similarity_score)
         self.similarity_functions.place(relx=0.1, rely=0.36, height=400, width=700)
@@ -190,6 +184,16 @@ class SimilarityFunctionsWindow(tk.Frame):
         Reinitialize frame values and view
         :return: new frame view
         """
+
+        if self.controller.get_new_model_running():
+            instruction_prefix = '[Step 4/5] '
+        else:
+            instruction_prefix = '[Step 3/4] '
+        self.instructions = tk.Label(self)
+        self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
+        self.instructions.configure(
+            text=instruction_prefix + '''Please choose similarity functions from the following options.''')
+        set_widget_to_left(self.instructions)
 
         if self.controller.get_new_model_running():
             if not self.save_model_var:
