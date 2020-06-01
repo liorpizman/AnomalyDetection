@@ -101,7 +101,7 @@ class AlgorithmsWindow(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please select the algorithms for which you want to build anomaly detection models.''')
+            text='''[Step 2/5] Please select the algorithms for which you want to build anomaly detection models.''')
         set_widget_to_left(self.instructions)
 
         # Page body

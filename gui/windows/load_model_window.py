@@ -91,7 +91,7 @@ class LoadModel(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please insert input files for existing model.''')
+            text='''[Step 1/4] Please insert input files for existing model.''')
         set_widget_to_left(self.instructions)
 
         # Page body

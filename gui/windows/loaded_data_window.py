@@ -85,8 +85,8 @@ class LoadedDataWindow(tk.Frame):
         set_logo_configuration(self.logo_png, image=logo_img)
 
         self.instructions = tk.Label(self)
-        self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
-        self.instructions.configure(text='''Hyper parameters from existing models:''')
+        self.instructions.place(relx=0.01, rely=0.3, height=32, width=635)
+        self.instructions.configure(text='''[View only] Hyper parameters from existing models:''')
         set_widget_to_left(self.instructions)
 
         # Page body

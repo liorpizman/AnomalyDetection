@@ -94,7 +94,7 @@ class NewModel(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please insert 'Mobilicom Ltd' simulated data / ADS-B dataset input files.''')
+            text='''[Step 1/5] Please insert 'Mobilicom Ltd' simulated data / ADS-B dataset input files.''')
         set_widget_to_left(self.instructions)
 
         # Page body
