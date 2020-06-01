@@ -45,7 +45,7 @@ except ImportError:
 
 class ResultsPlotWindow(tk.Frame):
     """
-    A Class used to present a results table permutation by an algorithm and a flight route
+    A Class used to present a results plots permutation by an algorithm and a flight route
 
     Methods
     -------
