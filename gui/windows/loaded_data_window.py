@@ -168,9 +168,9 @@ class LoadedDataWindow(tk.Frame):
             set_widget_to_left(self.features_label)
 
             self.input_features_button = tk.Button(self,
-                                                   command=lambda: self.show_features(
+                                                   command=lambda current_features=data["features"]: self.show_features(
                                                        title="Input features window",
-                                                       data=data["features"]
+                                                       data=current_features
                                                    ))
             self.input_features_button.place(relx=relative_x + 0.13, rely=relative_y, height=15, width=55)
             set_button_configuration(self.input_features_button, text='''Show all''')
@@ -183,11 +183,11 @@ class LoadedDataWindow(tk.Frame):
             self.target_features_label.configure(text="Target features: ")
             set_widget_to_left(self.target_features_label)
 
-            self.target_features_button = tk.Button(self,
-                                                    command=lambda: self.show_features(
-                                                        title="Target features window",
-                                                        data=data["target_features"]
-                                                    ))
+            self.target_features_button = tk.Button(self, command=lambda
+                target_features=data["target_features"]: self.show_features(
+                title="Target features window",
+                data=target_features
+            ))
             self.target_features_button.place(relx=relative_x + 0.13, rely=relative_y, height=15, width=55)
             set_button_configuration(self.target_features_button, text='''Show all''')
             self.target_features_button.configure(bg='sandy brown')

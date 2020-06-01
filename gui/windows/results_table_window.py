@@ -65,6 +65,7 @@ class ResultsTableWindow(tk.Frame):
 
     export_table_to_csv(algorithm, similarity_function, flight_route)
             Description | Export current table to csv file
+
     """
 
     def __init__(self, parent, controller):
@@ -304,7 +305,7 @@ class ResultsTableWindow(tk.Frame):
 
         path = set_path()
         current_time = datetime.now().strftime("%b-%d-%Y-%H-%M-%S")
-        df_name = "{0}_{1}_{2}_{3}.csv".format(algorithm, similarity_function, flight_route, current_time)
+        df_name = "Table_{0}_{1}_{2}_{3}.csv".format(algorithm, similarity_function, flight_route, current_time)
         full_path = os.path.join(*[str(path), df_name])
 
         try:
@@ -312,10 +313,10 @@ class ResultsTableWindow(tk.Frame):
 
             messagebox.askokcancel(
                 title="Export to CSV file",
-                message="Export to csv file finished successfully!"
+                message="Export to CSV file finished successfully!"
             )
         except:
             messagebox.askokcancel(
                 title="Export to CSV file",
-                message="Export to csv file failed! Please try again."
+                message="Export to CSV file failed! Please try again."
             )

@@ -11,14 +11,16 @@ Results plot window which is part of GUI application
 '''
 
 import os
+import shutil
 
+from datetime import datetime
+from tkinter import messagebox
 from tkinter.font import Font, BOLD
-from ipython_genutils.py3compat import xrange
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
-from gui.shared.helper_methods import trim_unnecessary_chars, transform_list
+from gui.shared.helper_methods import trim_unnecessary_chars, set_path
 from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
-from gui.widgets.table.table import Table
+
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_button_configuration, \
     set_copyright_configuration, set_widget_to_left
 from utils.helper_methods import get_plots_key
@@ -61,6 +63,12 @@ class ResultsPlotWindow(tk.Frame):
 
     show_plot(img_url)
             Description | Show a chosen plot
+
+    export_plot_to_png(algorithm, similarity_function, flight_route)
+            Description | Export current plot to png file
+
+    parseAttacksFromPaths(paths_list)
+            Description | Parse attacks names
 
     """
 
@@ -166,7 +174,7 @@ class ResultsPlotWindow(tk.Frame):
                 if trim_unnecessary_chars(similarity_function).lower() == selected_similarity_function.lower():
                     original_similarity_function = similarity_function
 
-            current_title = 'Test set attacks plots'
+            current_title = 'Test set attacks plots:'
 
             self.instructions = tk.Label(self)
             self.instructions.place(relx=0.015, rely=0.29, height=35, width=635)
@@ -179,15 +187,33 @@ class ResultsPlotWindow(tk.Frame):
             self.plots_index = 0
 
             start_y = 0.33
-            for image_plot_path in self.plots_list:
-                self.plot_label = tk.Label(self)
-                self.plot_label.place(relx=0.015, rely=start_y, height=35, width=300)
-                self.plot_label.configure(text='To view the graph')
-                set_widget_to_left(self.instructions)
+            self.plot_buttons = []
+            self.export_buttons = []
+            print(self.plots_list)
 
-                self.plot_button = tk.Button(self, command=lambda: self.show_plot(image_plot_path))
-                self.plot_button.place(relx=0.315, rely=start_y, height=25, width=81)
+            attacks = self.parseAttacksFromPaths(self.plots_list)
+
+            for attack, image_plot_path in zip(attacks, self.plots_list):
+                self.plot_label = tk.Label(self)
+                self.plot_label.place(relx=0.015, rely=start_y, height=35, width=180)
+                self.plot_label.configure(text='To view {0} graph'.format(attack))
+                set_widget_to_left(self.plot_label)
+
+                self.plot_button = tk.Button(self, command=lambda plot_path=image_plot_path: self.show_plot(plot_path))
+                self.plot_button.place(relx=0.315, rely=start_y, height=25, width=72)
                 set_button_configuration(self.plot_button, text='''Click here''')
+                self.plot_button.configure(bg='navajo white')
+
+                self.export_button = tk.Button(self,
+                                               command=lambda plot_path=image_plot_path: self.export_plot_to_png(
+                                                   algorithm=selected_algorithm,
+                                                   similarity_function=selected_similarity_function,
+                                                   flight_route=selected_flight_route,
+                                                   img_url=plot_path
+                                               ))
+                self.export_button.place(relx=0.485, rely=start_y, height=25, width=90)
+                set_button_configuration(self.export_button, text='''Export to PNG''')
+                self.export_button.configure(bg='sandy brown')
 
                 start_y += 0.08
 
@@ -239,3 +265,47 @@ class ResultsPlotWindow(tk.Frame):
         plot_img = gif1.subsample(2)
         canvas.create_image(10, 10, image=plot_img, anchor=NW)
         canvas.gif1 = plot_img
+
+    def export_plot_to_png(self, algorithm, similarity_function, flight_route, img_url):
+        """
+        Export current plot to png file
+        :param algorithm: chosen algorithm
+        :param similarity_function: chosen similarity function
+        :param flight_route: chosen flight route
+        :param img_url: path of the plot
+        :return: exported png
+        """
+
+        path = set_path()
+        current_time = datetime.now().strftime("%b-%d-%Y-%H-%M-%S")
+        df_name = "Plot_{0}_{1}_{2}_{3}.png".format(algorithm, similarity_function, flight_route, current_time)
+        full_path = os.path.join(*[str(path), df_name])
+
+        try:
+            shutil.copy(src=img_url, dst=full_path)
+
+            messagebox.askokcancel(
+                title="Export to PNG file",
+                message="Export to PNG file finished successfully!"
+            )
+        except:
+            messagebox.askokcancel(
+                title="Export to PNG file",
+                message="Export to PNG file failed! Please try again."
+            )
+
+    def parseAttacksFromPaths(self, paths_list):
+        """
+        Parse attacks names
+        :param paths_list: full paths for each png
+        :return: attacks
+        """
+
+        attacks = []
+
+        for path in paths_list:
+            split_by_bracket_opener = path.split('(')
+            split_by_bracket_closer = split_by_bracket_opener[len(split_by_bracket_opener) - 1].split(')')[0]
+            attacks.append(split_by_bracket_closer.replace('_', ' '))
+
+        return attacks

@@ -288,8 +288,14 @@ class InputSettings:
     get_tune_model_results_path_path(self):
         Description | Get the path for results for tuning a model
 
-     get_window_size(algorithm)
+    get_window_size(algorithm)
         Description | Get the chosen window size for a specific algorithm
+
+    def set_plots(key, plot_path)
+        Description | Set paths of different plot
+
+    def get_plots(key)
+        Description | Get paths of different plot
 
     """
 
