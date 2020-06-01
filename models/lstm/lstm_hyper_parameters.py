@@ -9,7 +9,6 @@ DataSets: 1. ADS-B dataset 2. simulated data
 ---
 LSTM hyper parameters to reach best LSTM model
 '''
-import win32api
 
 
 class lstm_hyper_parameters:
