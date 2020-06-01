@@ -59,6 +59,9 @@ class ResultsPlotWindow(tk.Frame):
     reinitialize_results_plot()
             Description | Reinitialize results table and view
 
+    show_plot(img_url)
+            Description | Show a chosen plot
+
     """
 
     def __init__(self, parent, controller):
@@ -78,6 +81,16 @@ class ResultsPlotWindow(tk.Frame):
         self.menubar = Menubar(controller)
         # Disables ability to tear menu bar into own window
         self.controller.option_add('*tearOff', 'FALSE')
+        system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
+        comparison_logo = CROSS_WINDOWS_SETTINGS.get('RESULTS')
+        photo_location = os.path.join(system_logo)
+        global logo_img
+        logo_img = tk.PhotoImage(file=photo_location)
+
+        # Page header
+        self.logo_png = tk.Button(self)
+        self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
+        set_logo_configuration(self.logo_png, image=logo_img)
 
         # Page footer
         self.back_button = HoverButton(self, command=self.back_window)
@@ -156,7 +169,7 @@ class ResultsPlotWindow(tk.Frame):
             current_title = 'Test set attacks plots'
 
             self.instructions = tk.Label(self)
-            self.instructions.place(relx=0.015, rely=0, height=35, width=635)
+            self.instructions.place(relx=0.015, rely=0.29, height=35, width=635)
             self.instructions.configure(text=current_title)
             set_widget_to_left(self.instructions)
 
@@ -165,34 +178,25 @@ class ResultsPlotWindow(tk.Frame):
             self.plots_list = InputSettings.get_plots(plot_key)
             self.plots_index = 0
 
-            self.plot_buttons = list()
+            start_y = 0.33
             for image_plot_path in self.plots_list:
+                self.plot_label = tk.Label(self)
+                self.plot_label.place(relx=0.015, rely=start_y, height=35, width=300)
+                self.plot_label.configure(text='To view the graph')
+                set_widget_to_left(self.instructions)
 
-            # plot_location = self.plots_list[self.plots_index]
-            # global plot_img
-            #
-            # plot_img = tk.PhotoImage(file=plot_location)
+                self.plot_button = tk.Button(self, command=lambda: self.show_plot(image_plot_path))
+                self.plot_button.place(relx=0.315, rely=start_y, height=25, width=81)
+                set_button_configuration(self.plot_button, text='''Click here''')
 
-            # new_width = 500
-            # old_width = 2688
-            # new_height = 180
-            # old_height = 672
-            # scale_w = new_width / old_width
-            # scale_h = new_height / old_height
-            # plot_img.zoom(scale_w, scale_h)
-
-            #plot_img = plot_img.subsample(4, 2)
-
-            # self.plot_png = tk.Button(self)
-            # self.plot_png.place(relx=0.015, rely=0.05, height=336, width=672)
-            # set_logo_configuration(self.plot_png, image=plot_img)
+                start_y += 0.08
 
             permutation_styling = Font(family="Times New Roman",
                                        size=11,
                                        weight=BOLD)
 
             self.algorithm_label = tk.Label(self)
-            self.algorithm_label.place(relx=0.35, rely=0.72, height=25, width=300)
+            self.algorithm_label.place(relx=0.015, rely=0.68, height=25, width=300)
             self.algorithm_label.configure(
                 text="Algorithm: {0}".format(selected_algorithm),
                 font=permutation_styling,
@@ -200,7 +204,7 @@ class ResultsPlotWindow(tk.Frame):
             set_widget_to_left(self.algorithm_label)
 
             self.similarity_function_label = tk.Label(self)
-            self.similarity_function_label.place(relx=0.35, rely=0.76, height=25, width=300)
+            self.similarity_function_label.place(relx=0.015, rely=0.72, height=25, width=300)
             self.similarity_function_label.configure(
                 text="Similarity function: {0}".format(selected_similarity_function),
                 font=permutation_styling,
@@ -208,7 +212,7 @@ class ResultsPlotWindow(tk.Frame):
             set_widget_to_left(self.similarity_function_label)
 
             self.route_label = tk.Label(self)
-            self.route_label.place(relx=0.35, rely=0.8, height=25, width=300)
+            self.route_label.place(relx=0.015, rely=0.76, height=25, width=300)
             self.route_label.configure(
                 text="Flight route: {0}".format(selected_flight_route),
                 font=permutation_styling,
@@ -221,3 +225,17 @@ class ResultsPlotWindow(tk.Frame):
             print("Source: gui/windows/results_plot_window.py")
             print("Function: reinitialize_results_plot")
             print("error: " + str(e))
+
+    def show_plot(self, img_url):
+        """
+        Show a chosen plot
+        :return: pop up plot
+        """
+
+        novi = tk.Toplevel()
+        canvas = tk.Canvas(novi, width=1450, height=360)
+        canvas.pack(expand=YES, fill=BOTH)
+        gif1 = tk.PhotoImage(file=img_url)
+        plot_img = gif1.subsample(2)
+        canvas.create_image(10, 10, image=plot_img, anchor=NW)
+        canvas.gif1 = plot_img

@@ -238,7 +238,7 @@ class NewModel(tk.Frame):
 
     def set_inputs_third_permutation(self):
         self.set_permutations(
-            training_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Hackaton\\train",
-            test_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Hackaton\\test",
-            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Hackaton\\results"
+            training_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\05-05-2020-Hackathon\\train",
+            test_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\05-05-2020-Hackathon\\test",
+            results_path="C:\\Users\\Lior\\Desktop\\ADS-B Data Set\\05-05-2020-Hackathon\\results"
         )
