@@ -93,7 +93,7 @@ class ParametersOptionsWindow(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please select the values for each of the following parameters:''')
+            text='''Please select the values for each of the following parameters: (*editable inputs)''')
         set_widget_to_left(self.instructions)
 
         # Page body
@@ -150,7 +150,7 @@ class ParametersOptionsWindow(tk.Frame):
         :return: updates state
         """
 
-        self.controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
+        return self.controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
 
     def save_algorithm_parameters(self, algorithm_parameters):
         """
@@ -160,8 +160,8 @@ class ParametersOptionsWindow(tk.Frame):
         """
 
         algorithm_name = self.controller.get_current_algorithm_to_edit()
-        self.set_algorithm_parameters(algorithm_name, algorithm_parameters)
-        self.controller.show_frame("AlgorithmsWindow")
+        if self.set_algorithm_parameters(algorithm_name, algorithm_parameters):
+            self.controller.show_frame("AlgorithmsWindow")
 
     def set_suitable_yaml_file(self, algorithm_name):
         """

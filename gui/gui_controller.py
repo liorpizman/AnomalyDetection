@@ -307,7 +307,7 @@ class AnomalyDetectionGUI(tk.Tk):
         self.model_controller.set_results_path(input_path)
 
     def set_algorithm_parameters(self, algorithm_name, algorithm_parameters):
-        self.model_controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
+        return self.model_controller.set_algorithm_parameters(algorithm_name, algorithm_parameters)
 
     def remove_algorithm_parameters(self, algorithm_name, algorithm_parameters):
         self.model_controller.remove_algorithm_parameters(algorithm_name, algorithm_parameters)

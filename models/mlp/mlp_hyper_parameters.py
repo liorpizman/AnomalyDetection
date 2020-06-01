@@ -190,10 +190,7 @@ class mlp_hyper_parameters:
     # Threshold parameter
     @staticmethod
     def set_threshold(threshold):
-        try:
-            mlp_hyper_parameters.THRESHOLD = float(threshold)
-        except:
-            mlp_hyper_parameters.THRESHOLD = mlp_hyper_parameters.DEFAULT_THRESHOLD
+        mlp_hyper_parameters.THRESHOLD = float(threshold)
 
     @staticmethod
     def remove_threshold():
