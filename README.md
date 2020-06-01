@@ -138,7 +138,7 @@ Click on 'Export to CSV' button to export the results table<br/>
 <img height=350 width=370 src="utils/images/shared/resultsTableWindow.JPG">
 
 Click on 'Export to PNG' button to export the image plots<br/>
-<img height=350 width=370 src="utils/images/shared/resultsPlotWindow.JPG">
+<img height=350 width=370 src="utils/images/shared/resultsPlotWindow.jpg">
 
 ## Generated Machine Learning Models 
 
