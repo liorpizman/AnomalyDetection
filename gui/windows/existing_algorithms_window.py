@@ -335,4 +335,4 @@ class ExistingAlgorithmsWindow(tk.Frame):
         """
 
         self.controller.set_existing_algorithms(self.algorithms)
-        self.controller.reinitialize_frame("SimilarityFunctionsWindow")
+        self.controller.reinitialize_frame("LoadedDataWindow")

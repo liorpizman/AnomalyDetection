@@ -183,7 +183,7 @@ class SimilarityFunctionsWindow(tk.Frame):
         if is_new_model_flow:
             self.controller.show_frame("FeatureSelectionWindow")
         else:
-            self.controller.show_frame("ExistingAlgorithmsWindow")
+            self.controller.reinitialize_frame("LoadedDataWindow")
 
     def reinitialize(self):
         """

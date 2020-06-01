@@ -213,7 +213,7 @@ class ResultsTableWindow(tk.Frame):
             for i, metric in enumerate(data.keys()):
                 attacks_data = data[metric]
                 if metric.upper() == 'DELAY':
-                    self.results_table.cell(i, 0, metric.upper() + " [sec]")
+                    self.results_table.cell(i, 0, "Detection delay [sec]")
                 else:
                     self.results_table.cell(i, 0, metric.upper())
                 for j, attack in enumerate(attacks_data.keys()):
