@@ -19,7 +19,7 @@ def clean_data(data):
     """
     Clean the data by different steps as part of data pre-processing
     :param data: input data frame
-    :return: cleaned data frame
+    :return: clean data frame
     """
 
     # Export constant columns which should be dropped

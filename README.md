@@ -328,18 +328,28 @@ See also the list of [contributors](https://github.com/liorpizman/AnomalyDetecti
 
 
 ```
-1. run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
+1. run_models
+        Inputs      | algorithm, similarity function, test set path, results path, indicator - new/existing model
         Description | Execute models creation/loading process
+        Output      | Plots + evaluation metrics per attack and algorithm
 
-2. run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
-        Description | Execute models creation/loading process
+2. toggle_results
+        Inputs      | selected_algorithm, selected_flight_route, selected_similarity_function
+        Description | Toggle permutation of results
+        Output      | A results table permutation (algorithm, flight route and similarity function)
 
-3. run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
-        Description | Execute models creation/loading process
+3. time_series_split
+        Inputs      | X, test_size=.2, number=False, output_numpy=True
+        Description | Splits a dataset according to the time the data was taken
+        Output      | X_train, X_test
 
-4. run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
-        Description | Execute models creation/loading process
+4. clean_data
+        Inputs      | Data
+        Description | Clean the data by different steps as part of data pre-processing
+        Output      | Clean data
 
-5. run_models(algorithm, similarity_score, test_data_path, results_path, new_model_running)
-        Description | Execute models creation/loading process
+5. anomaly_score_multi
+        Inputs      | input vectors, output vectors, similarity function
+        Description | Calculate the anomaly of a multiple output prediction
+        Output      | anomaly score based on the similarity function
 ```
