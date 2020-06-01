@@ -131,11 +131,14 @@ Choose similarity functions from the following options<br/>
 Loading model, please wait...<br/>
 <img height=350 width=370 src="utils/images/shared/loadingWindow.JPG">
 
-Choose an algorithm and a flight route in order to get the results<br/>
+Choose an algorithm and a flight route in order to get the results table or image plots<br/>
 <img height=350 width=370 src="utils/images/shared/resultsWindow.JPG">
 
-Choose an algorithm and a flight route in order to get the results<br/>
+Click on 'Export to CSV' button to export the results table<br/>
 <img height=350 width=370 src="utils/images/shared/resultsTableWindow.JPG">
+
+Click on 'Export to PNG' button to export the image plots<br/>
+<img height=350 width=370 src="utils/images/shared/resultsPlotWindow.jpg">
 
 ## Generated Machine Learning Models 
 
