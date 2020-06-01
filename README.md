@@ -18,6 +18,7 @@ Various uses of drones can be found in a variety of fields:
 * **Security** : used for patrolling and following suspects in real time.
 * **Rescue** : locating distressed people.
 * **Military** : intelligence operational activities.
+* **Commerce** : From food deliveries, through improved medical services to aerial photography.
 
 <img height=160 width=200 src="utils/images/drone/drone_background.jpg">
 
