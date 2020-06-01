@@ -469,6 +469,10 @@ def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title
     # plt.show()
 
 
+def get_plots_key(algorithm, similarity, flight_route):
+    return str(algorithm + "_" + similarity + "_"+ flight_route)
+
+
 # def plot_roc(y_true, y_pred, plot_dir, title="ROC Curve"):
 #     """
 #     plot roc curve by computing Area Under the Curve (AUC) using the trapezoidal rule

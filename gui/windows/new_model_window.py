@@ -151,6 +151,8 @@ class NewModel(tk.Frame):
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
         set_copyright_configuration(self.copyright)
 
+        self.set_inputs_third_permutation()
+
     def reset_widgets(self):
         """
         Reset check bar values
@@ -225,3 +227,18 @@ class NewModel(tk.Frame):
         self.controller.set_new_model_test_input_path(self.test_input.get())
         self.controller.set_new_model_results_input_path(self.results_input.get())
         self.controller.set_features_columns_options()
+
+    def set_permutations(self, training_path, test_path, results_path):
+        self.controller.set_new_model_training_input_path(training_path)
+        self.controller.set_new_model_test_input_path(test_path)
+        self.controller.set_new_model_results_input_path(results_path)
+        self.training_input.insert(0, training_path)
+        self.test_input.insert(0, test_path)
+        self.results_input.insert(0, results_path)
+
+    def set_inputs_third_permutation(self):
+        self.set_permutations(
+            training_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Hackaton\\train",
+            test_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Hackaton\\test",
+            results_path="C:\\Users\\Yehuda Pashay\\Desktop\\flight_data\\Hackaton\\results"
+        )

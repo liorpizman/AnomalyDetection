@@ -52,6 +52,8 @@ class InputSettings:
     TUNE_MODEL_ALGORITHM = ""
     TUNE_MODEL_RESULTS_PATH = ""
 
+    PLOTS = dict()
+
     """
     Attributes
     ----------
@@ -103,6 +105,8 @@ class InputSettings:
     TUNE_MODEL_ALGORITHM                 : str
     
     TUNE_MODEL_RESULTS_PATH              : str
+    
+    PLOTS                                : dict
 
     Methods
     -------
@@ -166,6 +170,9 @@ class InputSettings:
     get_existing_algorithms()
             Description | Get a dictionary which includes all the algorithm which were chosen by the user in a load
                           existing models flow
+                          
+    remove_existing_algorithm(algorithm_name)
+            Description | Remove the parameters which were chosen by the user to a given algorithm
             
     get_existing_algorithm_path(algorithm_name)
             Description | Get the path for an existing algorithm in a load existing models flow
@@ -650,3 +657,14 @@ class InputSettings:
         }
 
         return switcher.get(algorithm, 1)
+
+    @staticmethod
+    def set_plots(key, plot_path):
+        if key not in InputSettings.PLOTS:
+            InputSettings.PLOTS[key] = list()
+
+        InputSettings.PLOTS[key].append(plot_path)
+
+    @staticmethod
+    def get_plots(key):
+        return InputSettings.PLOTS[key]

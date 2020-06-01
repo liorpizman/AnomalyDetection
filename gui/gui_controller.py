@@ -16,6 +16,7 @@ from gui.windows.existing_algorithms_window import ExistingAlgorithmsWindow
 from gui.windows.feature_selection_window import FeatureSelectionWindow
 from gui.windows.loaded_data_window import LoadedDataWindow
 from gui.windows.pre_tune_window import PreTuneModel
+from gui.windows.results_plot_window import ResultsPlotWindow
 from gui.windows.tune_model_window import TuneModel
 from gui.windows.load_model_window import LoadModel
 from gui.windows.loading_window import LoadingWindow
@@ -256,7 +257,8 @@ class AnomalyDetectionGUI(tk.Tk):
                   ResultsTableWindow,
                   TuningLoadingWindow,
                   LoadedDataWindow,
-                  TuneResultsWindow):
+                  TuneResultsWindow,
+                  ResultsPlotWindow):
             page_name = F.__name__
 
             # Init each frame

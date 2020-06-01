@@ -128,7 +128,8 @@ class ResultsWindow(tk.Frame):
         self.controller.set_results_selected_flight_route(selected_flight_route)
         self.controller.set_results_selected_similarity_function(selected_similarity_function)
 
-        self.controller.reinitialize_frame("ResultsTableWindow")
+        # self.controller.reinitialize_frame("ResultsTableWindow")
+        self.controller.reinitialize_frame("ResultsPlotWindow")
 
     def reinitialize(self):
         """
