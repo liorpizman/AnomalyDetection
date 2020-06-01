@@ -22,10 +22,11 @@ from models.data_preprocessing.data_normalization import normalize_data
 from models.random_forest.random_forest_hyper_parameters import random_forest_hyper_parameters
 from models.time_series_model.time_series_estimator import TimeSeriesRegressor
 from utils.constants import ATTACK_COLUMN
+from utils.input_settings import InputSettings
 from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
     create_directories, get_current_time, \
-    plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score, plot_prediction_performance
+    plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score, plot_prediction_performance, get_plots_key
 from collections import defaultdict
 
 
@@ -369,11 +370,16 @@ def execute_predict(flight_route,
             # Add reconstruction error scatter if plots indicator is true
             event.wait()
             if add_plots:
+                title = f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})'
                 plot_reconstruction_error_scatter(scores=scores_test,
                                                   labels=Y_test_labels_preprocessed,
                                                   threshold=threshold,
                                                   plot_dir=current_attack_figures_results_path,
-                                                  title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
+                                                  title=title
+                                                  )
+                key = get_plots_key(algorithm='Random Forest', similarity=similarity_score, flight_route=flight_route)
+                plt_path = os.path.join(*[str(current_attack_figures_results_path), str(title) + '.png'])
+                InputSettings.set_plots(key, plt_path)
 
                 for i, target_feature in enumerate(target_features_list):
                     title = "Test performance of Random Forest for " + target_feature + " feature in " + flight_csv

@@ -18,11 +18,12 @@ from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
 from utils.constants import ATTACK_COLUMN
+from utils.input_settings import InputSettings
 from utils.routes import *
 from models.lstm.lstm_autoencoder import get_lstm_autoencoder_model
 from utils.helper_methods import get_training_data_lstm, get_testing_data_lstm, anomaly_score_multi, \
     get_threshold, report_results, get_method_scores, get_subdirectories, create_directories, get_current_time, plot, \
-    plot_reconstruction_error_scatter, get_attack_boundaries, multi_mean, plot_prediction_performance
+    plot_reconstruction_error_scatter, get_attack_boundaries, multi_mean, plot_prediction_performance, get_plots_key
 from tensorflow.python.keras.models import load_model
 from collections import defaultdict
 
@@ -369,11 +370,16 @@ def execute_predict(flight_route,
             # Add reconstruction error scatter if plots indicator is true
             event.wait()
             if add_plots:
+                title = f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})'
                 plot_reconstruction_error_scatter(scores=scores_test,
                                                   labels=Y_test_labels_preprocessed,
                                                   threshold=threshold,
                                                   plot_dir=current_attack_figures_results_path,
-                                                  title=f'Outlier Score Testing for {flight_csv} in {flight_route}({attack})')
+                                                  title=title
+                                                  )
+                key = get_plots_key(algorithm='LSTM', similarity=similarity_score, flight_route=flight_route)
+                plt_path = os.path.join(*[str(current_attack_figures_results_path), str(title) + '.png'])
+                InputSettings.set_plots(key, plt_path)
 
                 mean_y_actual = multi_mean(Y_test_preprocessed)
                 mean_y_pred = multi_mean(X_pred)

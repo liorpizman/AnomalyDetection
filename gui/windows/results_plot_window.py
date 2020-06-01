@@ -7,23 +7,24 @@ Authors: Lior Pizman & Yehuda Pashay
 GitHub: https://github.com/liorpizman/AnomalyDetection
 DataSets: 1. ADS-B dataset 2. simulated data
 ---
-Results table window which is part of GUI application
+Results plot window which is part of GUI application
 '''
 
 import os
-import pandas as pd
+import shutil
 
 from datetime import datetime
 from tkinter import messagebox
 from tkinter.font import Font, BOLD
-from ipython_genutils.py3compat import xrange
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
-from gui.shared.helper_methods import trim_unnecessary_chars, transform_list, set_path
+from gui.shared.helper_methods import trim_unnecessary_chars, set_path
 from gui.widgets.hover_button import HoverButton
 from gui.widgets.menubar import Menubar
-from gui.widgets.table.table import Table
+
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_button_configuration, \
     set_copyright_configuration, set_widget_to_left
+from utils.helper_methods import get_plots_key
+from utils.input_settings import InputSettings
 
 try:
     import Tkinter as tk
@@ -42,9 +43,9 @@ except ImportError:
     py3 = True
 
 
-class ResultsTableWindow(tk.Frame):
+class ResultsPlotWindow(tk.Frame):
     """
-    A Class used to present a results table permutation by an algorithm and a flight route
+    A Class used to present a results plots permutation by an algorithm and a flight route
 
     Methods
     -------
@@ -57,14 +58,17 @@ class ResultsTableWindow(tk.Frame):
     reinitialize()
             Description | Reinitialize frame values and view
 
-    reinitialize_results_table()
+    reinitialize_results_plot()
             Description | Reinitialize results table and view
 
-    generate_table_columns_list()
-            Description | Generates a list of columns for table init by given attacks
+    show_plot(img_url)
+            Description | Show a chosen plot
 
-    export_table_to_csv(algorithm, similarity_function, flight_route)
-            Description | Export current table to csv file
+    export_plot_to_png(algorithm, similarity_function, flight_route)
+            Description | Export current plot to png file
+
+    parseAttacksFromPaths(paths_list)
+            Description | Parse attacks names
 
     """
 
@@ -88,27 +92,13 @@ class ResultsTableWindow(tk.Frame):
         system_logo = CROSS_WINDOWS_SETTINGS.get('LOGO')
         comparison_logo = CROSS_WINDOWS_SETTINGS.get('RESULTS')
         photo_location = os.path.join(system_logo)
-        comparison_location = os.path.join(comparison_logo)
-        global logo_img, comparison_img
+        global logo_img
         logo_img = tk.PhotoImage(file=photo_location)
-        comparison_img = tk.PhotoImage(file=comparison_location)
 
         # Page header
         self.logo_png = tk.Button(self)
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
-
-        # Page body
-        self.results_table = Table(self,
-                                   columns=["Metric", "Down attack", "Up attack", "Fore attack", "Random attack"],
-                                   header_anchor=CENTER,
-                                   column_minwidths=[1, 1, 1],
-                                   pady=2)
-        self.results_table.pack(fill=X, padx=18, pady=182)
-
-        self.comparison_png = tk.Button(self)
-        self.comparison_png.place(relx=0.65, rely=0.7, height=150, width=145)
-        set_logo_configuration(self.comparison_png, image=comparison_img)
 
         # Page footer
         self.back_button = HoverButton(self, command=self.back_window)
@@ -141,9 +131,9 @@ class ResultsTableWindow(tk.Frame):
          :return: new frame view
          """
 
-        self.reinitialize_results_table()
+        self.reinitialize_results_plot()
 
-    def reinitialize_results_table(self):
+    def reinitialize_results_plot(self):
         """
          Reinitialize results table and view
          :return: new frame view
@@ -184,64 +174,52 @@ class ResultsTableWindow(tk.Frame):
                 if trim_unnecessary_chars(similarity_function).lower() == selected_similarity_function.lower():
                     original_similarity_function = similarity_function
 
-            current_title = 'Test set attacks comparison table'
+            current_title = 'Test set attacks plots:'
 
             self.instructions = tk.Label(self)
             self.instructions.place(relx=0.015, rely=0.29, height=35, width=635)
             self.instructions.configure(text=current_title)
             set_widget_to_left(self.instructions)
 
-            results_data = self.controller.get_results_metrics_data()
+            # Page header
+            plot_key = get_plots_key(original_algorithm, original_similarity_function, original_flight_route)
+            self.plots_list = InputSettings.get_plots(plot_key)
+            self.plots_index = 0
 
-            data = results_data[original_algorithm][original_flight_route][original_similarity_function]
+            start_y = 0.33
+            self.plot_buttons = []
+            self.export_buttons = []
+            print(self.plots_list)
 
-            attacks_columns = list(data.values())[0]
+            attacks = self.parseAttacksFromPaths(self.plots_list)
 
-            transform_attacks_list = transform_list(list(attacks_columns.keys()))
-            table_columns = self.generate_table_columns_list(transform_attacks_list)
+            for attack, image_plot_path in zip(attacks, self.plots_list):
+                self.plot_label = tk.Label(self)
+                self.plot_label.place(relx=0.015, rely=start_y, height=35, width=180)
+                self.plot_label.configure(text='To view {0} graph'.format(attack))
+                set_widget_to_left(self.plot_label)
 
-            self.results_table.pack_forget()
-            # self.results_table.destroy()
-            self.results_table = Table(self,
-                                       columns=table_columns,
-                                       header_anchor=CENTER,
-                                       column_minwidths=[1, 1, 1],
-                                       pady=2)
-            self.results_table.pack(fill=X, padx=18, pady=182)
+                self.plot_button = tk.Button(self, command=lambda plot_path=image_plot_path: self.show_plot(plot_path))
+                self.plot_button.place(relx=0.315, rely=start_y, height=25, width=72)
+                set_button_configuration(self.plot_button, text='''Click here''')
+                self.plot_button.configure(bg='navajo white')
 
-            # Creates a 2D array, all set to 0
-            rows = len(data.keys()) + 2
-            columns = len(attacks_columns)
-            zero_matrix = [[0 for i in xrange(columns)] for i in xrange(rows)]
-            self.results_table.set_data(zero_matrix)
+                self.export_button = tk.Button(self,
+                                               command=lambda plot_path=image_plot_path: self.export_plot_to_png(
+                                                   algorithm=selected_algorithm,
+                                                   similarity_function=selected_similarity_function,
+                                                   flight_route=selected_flight_route,
+                                                   img_url=plot_path
+                                               ))
+                self.export_button.place(relx=0.485, rely=start_y, height=25, width=90)
+                set_button_configuration(self.export_button, text='''Export to PNG''')
+                self.export_button.configure(bg='sandy brown')
 
-            # Set the updated values to the table
-            for i, metric in enumerate(data.keys()):
-                attacks_data = data[metric]
-                if metric.upper() == 'DELAY':
-                    self.results_table.cell(i, 0, "Detection delay [sec]")
-                else:
-                    self.results_table.cell(i, 0, metric.upper())
-                for j, attack in enumerate(attacks_data.keys()):
-                    self.results_table.cell(i, j + 1, attacks_data[attack])
-
-            self.results_table.cell(rows - 2, 0, "Attack duration [sec]")
-            for i in range(1, columns + 1):
-                self.results_table.cell(rows - 2, i, str(float(results_data[original_algorithm][original_flight_route][
-                                                                   list(attacks_columns.keys())[
-                                                                       i - 1] + "_attack_duration"])))
-
-            self.results_table.cell(rows - 1, 0, "Flight duration [sec]")
-            for i in range(1, columns + 1):
-                self.results_table.cell(rows - 1, i, str(float(results_data[original_algorithm][original_flight_route][
-                                                                   list(attacks_columns.keys())[
-                                                                       i - 1] + "_duration"])))
+                start_y += 0.08
 
             permutation_styling = Font(family="Times New Roman",
                                        size=11,
                                        weight=BOLD)
-
-            self.table_dataframe = pd.DataFrame(self.results_table.get_data(), columns=table_columns)
 
             self.algorithm_label = tk.Label(self)
             self.algorithm_label.place(relx=0.015, rely=0.68, height=25, width=300)
@@ -267,56 +245,67 @@ class ResultsTableWindow(tk.Frame):
                 fg='blue')
             set_widget_to_left(self.route_label)
 
-            self.export_button = tk.Button(self,
-                                           command=lambda: self.export_table_to_csv(
-                                               algorithm=selected_algorithm,
-                                               similarity_function=selected_similarity_function,
-                                               flight_route=selected_flight_route
-                                           ))
-            self.export_button.place(relx=0.35, rely=0.839, height=25, width=90)
-            set_button_configuration(self.export_button, text='''Export to CSV''')
-            self.export_button.configure(bg='sandy brown')
 
         except Exception as e:
             # Handle error in setting new data in the table
-            print("Source: gui/windows/results_table_window.py")
-            print("Function: reinitialize_results_table")
+            print("Source: gui/windows/results_plot_window.py")
+            print("Function: reinitialize_results_plot")
             print("error: " + str(e))
 
-    def generate_table_columns_list(self, attacks_list):
+    def show_plot(self, img_url):
         """
-        Generates a list of columns for table init by given attacks
-        :param attacks_list: all existing attacks in the test data set
-        :return: full columns list for creating a new results table
+        Show a chosen plot
+        :return: pop up plot
         """
 
-        table_columns = ["Metric"]
+        novi = tk.Toplevel()
+        canvas = tk.Canvas(novi, width=1450, height=360)
+        canvas.pack(expand=YES, fill=BOTH)
+        gif1 = tk.PhotoImage(file=img_url)
+        plot_img = gif1.subsample(2)
+        canvas.create_image(10, 10, image=plot_img, anchor=NW)
+        canvas.gif1 = plot_img
 
-        for attack in attacks_list:
-            table_columns.append(attack)
-
-        return table_columns
-
-    def export_table_to_csv(self, algorithm, similarity_function, flight_route):
+    def export_plot_to_png(self, algorithm, similarity_function, flight_route, img_url):
         """
-        Export current table to csv file
-        :return:
+        Export current plot to png file
+        :param algorithm: chosen algorithm
+        :param similarity_function: chosen similarity function
+        :param flight_route: chosen flight route
+        :param img_url: path of the plot
+        :return: exported png
         """
 
         path = set_path()
         current_time = datetime.now().strftime("%b-%d-%Y-%H-%M-%S")
-        df_name = "Table_{0}_{1}_{2}_{3}.csv".format(algorithm, similarity_function, flight_route, current_time)
+        df_name = "Plot_{0}_{1}_{2}_{3}.png".format(algorithm, similarity_function, flight_route, current_time)
         full_path = os.path.join(*[str(path), df_name])
 
         try:
-            self.table_dataframe.to_csv(full_path, index=False)
+            shutil.copy(src=img_url, dst=full_path)
 
             messagebox.askokcancel(
-                title="Export to CSV file",
-                message="Export to CSV file finished successfully!"
+                title="Export to PNG file",
+                message="Export to PNG file finished successfully!"
             )
         except:
             messagebox.askokcancel(
-                title="Export to CSV file",
-                message="Export to CSV file failed! Please try again."
+                title="Export to PNG file",
+                message="Export to PNG file failed! Please try again."
             )
+
+    def parseAttacksFromPaths(self, paths_list):
+        """
+        Parse attacks names
+        :param paths_list: full paths for each png
+        :return: attacks
+        """
+
+        attacks = []
+
+        for path in paths_list:
+            split_by_bracket_opener = path.split('(')
+            split_by_bracket_closer = split_by_bracket_opener[len(split_by_bracket_opener) - 1].split(')')[0]
+            attacks.append(split_by_bracket_closer.replace('_', ' '))
+
+        return attacks

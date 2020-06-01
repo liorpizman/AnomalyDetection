@@ -51,6 +51,9 @@ class ResultsWindow(tk.Frame):
     toggle_results()
             Description | Toggle permutation of results
 
+    toggle_plots()
+            Description | Toggle permutation of toggle_plots
+
     reinitialize()
             Description | Reinitialize frame values and view
 
@@ -84,9 +87,15 @@ class ResultsWindow(tk.Frame):
         set_logo_configuration(self.logo_png, image=logo_img)
 
         # Page body
-        self.toggle_results_button = HoverButton(self, command=self.toggle_results)
+        self.toggle_results_button = tk.Button(self, command=self.toggle_results)
         self.toggle_results_button.place(relx=0.68, rely=0.5, height=25, width=81)
         set_button_configuration(self.toggle_results_button, text='''Show results''')
+        self.toggle_results_button.configure(bg='sandy brown')
+
+        self.toggle_plots_button = tk.Button(self, command=self.toggle_plots)
+        self.toggle_plots_button.place(relx=0.68, rely=0.58, height=25, width=81)
+        set_button_configuration(self.toggle_plots_button, text='''Show plots''')
+        self.toggle_plots_button.configure(bg='navajo white')
 
         # Page footer
         self.back_button = HoverButton(self, command=self.back_window)
@@ -129,6 +138,21 @@ class ResultsWindow(tk.Frame):
         self.controller.set_results_selected_similarity_function(selected_similarity_function)
 
         self.controller.reinitialize_frame("ResultsTableWindow")
+
+    def toggle_plots(self):
+        """
+        Toggle permutation of plots
+        :return: updated permutation which was selected by the user
+        """
+        selected_algorithm = self.parameters['algorithm'].get()
+        selected_flight_route = self.parameters['flight_route'].get()
+        selected_similarity_function = self.parameters['similarity_function'].get()
+
+        self.controller.set_results_selected_algorithm(selected_algorithm)
+        self.controller.set_results_selected_flight_route(selected_flight_route)
+        self.controller.set_results_selected_similarity_function(selected_similarity_function)
+
+        self.controller.reinitialize_frame("ResultsPlotWindow")
 
     def reinitialize(self):
         """
