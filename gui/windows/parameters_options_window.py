@@ -93,7 +93,7 @@ class ParametersOptionsWindow(tk.Frame):
         self.instructions = tk.Label(self)
         self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
         self.instructions.configure(
-            text='''Please select the values for each of the following parameters: (*editable inputs)''')
+            text='''[Step 2.1/5] Please select the values for each of the following parameters: (*editable inputs)''')
         set_widget_to_left(self.instructions)
 
         # Page body

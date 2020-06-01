@@ -98,12 +98,6 @@ class LoadingWindow(tk.Frame):
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
 
-        self.instructions = tk.Label(self)
-        self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
-        self.instructions.configure(text='''Creating models and runs them, please wait...''',
-                                    font=Font(size=9, weight=BOLD))
-        set_widget_to_left(self.instructions)
-
         # Page body
         self.stop_png = tk.Button(self)
         self.loading_gif_animation = LOADING_WINDOW_SETTINGS.get('LOADING_GIF')
@@ -163,6 +157,16 @@ class LoadingWindow(tk.Frame):
         Reinitialize frame values and view
         :return: new frame view
         """
+
+        if self.controller.get_new_model_running():
+            instruction_prefix = '[Step 5/5] '
+        else:
+            instruction_prefix = '[Step 4/4] '
+        self.instructions = tk.Label(self)
+        self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
+        self.instructions.configure(text=instruction_prefix + '''Creating models and runs them, please wait...''',
+                                    font=Font(size=9, weight=BOLD))
+        set_widget_to_left(self.instructions)
 
         self.stop_button.configure(text='Stop')
         self.event = threading.Event()
