@@ -187,7 +187,7 @@ class ResultsTableWindow(tk.Frame):
             current_title = 'Test set attacks comparison table'
 
             self.instructions = tk.Label(self)
-            self.instructions.place(relx=0.015, rely=0.29, height=35, width=635)
+            self.instructions.place(relx=0.015, rely=0.27, height=35, width=635)
             self.instructions.configure(text=current_title)
             set_widget_to_left(self.instructions)
 
@@ -207,7 +207,7 @@ class ResultsTableWindow(tk.Frame):
                                        header_anchor=CENTER,
                                        column_minwidths=[1, 1, 1],
                                        pady=2)
-            self.results_table.pack(fill=X, padx=18, pady=182)
+            self.results_table.pack(fill=X, padx=18, pady=172)  # pady used to add rows in UI
 
             # Creates a 2D array, all set to 0
             rows = len(data.keys()) + 2
@@ -244,7 +244,7 @@ class ResultsTableWindow(tk.Frame):
             self.table_dataframe = pd.DataFrame(self.results_table.get_data(), columns=table_columns)
 
             self.algorithm_label = tk.Label(self)
-            self.algorithm_label.place(relx=0.015, rely=0.68, height=25, width=300)
+            self.algorithm_label.place(relx=0.015, rely=0.69, height=25, width=300)
             self.algorithm_label.configure(
                 text="Algorithm: {0}".format(selected_algorithm),
                 font=permutation_styling,
@@ -252,7 +252,7 @@ class ResultsTableWindow(tk.Frame):
             set_widget_to_left(self.algorithm_label)
 
             self.similarity_function_label = tk.Label(self)
-            self.similarity_function_label.place(relx=0.015, rely=0.72, height=25, width=300)
+            self.similarity_function_label.place(relx=0.015, rely=0.73, height=25, width=300)
             self.similarity_function_label.configure(
                 text="Similarity function: {0}".format(selected_similarity_function),
                 font=permutation_styling,
@@ -260,7 +260,7 @@ class ResultsTableWindow(tk.Frame):
             set_widget_to_left(self.similarity_function_label)
 
             self.route_label = tk.Label(self)
-            self.route_label.place(relx=0.015, rely=0.76, height=25, width=300)
+            self.route_label.place(relx=0.015, rely=0.77, height=25, width=300)
             self.route_label.configure(
                 text="Flight route: {0}".format(selected_flight_route),
                 font=permutation_styling,

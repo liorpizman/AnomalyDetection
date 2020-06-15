@@ -26,7 +26,7 @@ from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
     create_directories, get_current_time, \
     plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score, \
-    plot_prediction_performance, get_plots_key
+    plot_prediction_performance, get_plots_key, get_auc_plot_key, calculate_auc
 from collections import defaultdict
 
 
@@ -136,7 +136,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         for similarity in similarity_score:
             current_results_path = os.path.join(*[str(current_time_path), str(similarity), str(flight_route)])
             create_directories(f"{current_results_path}")
-            tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attacks_duration = execute_predict(
+            tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attacks_duration, auc_scores = execute_predict(
                 flight_route,
                 test_data_path=test_data_path,
                 similarity_score=similarity,
@@ -171,6 +171,10 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
             df = pd.DataFrame(delay_scores)
             delay_path = os.path.join(*[str(current_results_path), str(flight_route) + '_delay.csv'])
             df.to_csv(f"{delay_path}", index=False)
+
+            df = pd.DataFrame(auc_scores)
+            auc_path = os.path.join(*[str(current_results_path), str(flight_route) + '_auc.csv'])
+            df.to_csv(f"{auc_path}", index=False)
 
     algorithm_name = "SVR"
 
@@ -277,7 +281,7 @@ def execute_predict(flight_route,
     :param Y_train: train target data frame
     :param window_size: window size for each instance in training
     :param event: running state flag
-    :return: tpr scores, fpr scores, acc scores, delay scores, routes duration, attack duration
+    :return: tpr scores, fpr scores, acc scores, delay scores, routes duration, attack duration, auc_scores
     """
 
     tpr_scores = defaultdict(list)
@@ -286,6 +290,7 @@ def execute_predict(flight_route,
     delay_scores = defaultdict(list)
     routes_duration = defaultdict(list)
     attack_duration = defaultdict(list)
+    auc_scores = defaultdict(list)
 
     # Set a threshold in new model creation flow
     if run_new_model:
@@ -392,14 +397,21 @@ def execute_predict(flight_route,
             method_scores = get_method_scores(predictions, attack_start, attack_end,
                                               add_window_size=True, window_size=window_size)
 
+            auc_key = get_auc_plot_key(algorithm='SVR', similarity=similarity_score, flight_route=flight_route)
+            auc_title = f'Receiver Operating Characteristic for {flight_csv} in {flight_route}({attack})'
+            auc_plt_path = os.path.join(*[str(current_attack_figures_results_path), str(auc_title) + '.png'])
+            InputSettings.set_plots(auc_key, auc_plt_path)
+            auc = calculate_auc(scores_test, Y_test_labels_preprocessed.ravel(), 'SVR', auc_plt_path, attack)
+
             tpr_scores[attack].append(method_scores[0])
             fpr_scores[attack].append(method_scores[1])
             acc_scores[attack].append(method_scores[2])
             delay_scores[attack].append(method_scores[3])
             routes_duration[attack].append(attack_time)
             attack_duration[attack].append(method_scores[4])
+            auc_scores[attack].append(auc)
 
-    return tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attack_duration
+    return tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attack_duration, auc_scores
 
 
 def predict_train_set(svr_model,

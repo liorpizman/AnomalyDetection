@@ -18,8 +18,7 @@ from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
 from scipy.spatial import distance
-from sklearn.metrics import pairwise, mean_squared_error, roc_curve, auc
-
+from sklearn.metrics import pairwise, mean_squared_error, roc_curve, auc as auc_score
 from utils.constants import NON_ATTACK_VALUE, ATTACK_VALUE
 
 
@@ -211,6 +210,42 @@ def get_threshold(scores, percent):
     return sorted(scores)[index - 1]
 
 
+def calculate_auc(y_score, pred, algorithm_name, plt_path, attack_name):
+    """
+    Compute Area Under the Receiver Operating Characteristic Curve
+    :param y_score: Target scores
+    :param pred: Binary label indicators
+    :param algorithm_name: name of the algorithm
+    :param plt_path: the path of the plot
+    :param attack_name: name of the attack
+    :return: ROC AUC
+    """
+
+    assert len(y_score) == len(pred)
+
+    fpr, tpr, thresholds = roc_curve(pred, y_score, pos_label=1)
+    auc = auc_score(fpr, tpr)
+
+    # Plot the computed values
+    plt.figure(figsize=(28, 7))
+    plt.plot(fpr, tpr, label='%s ROC (area = %0.2f)' % (algorithm_name, auc))
+    # Custom settings for the plot
+    plt.plot([0, 1], [0, 1], 'r--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('1-Specificity(False Positive Rate)', fontsize=20)
+    plt.ylabel('Sensitivity(True Positive Rate)', fontsize=20)
+    plt.title('Receiver Operating Characteristic ({0})'.format(attack_name), fontsize=24)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.legend(loc="lower right", fontsize=20)
+
+    plt.savefig(f"{plt_path}")
+    plt.clf()
+
+    return auc
+
+
 def get_method_scores(prediction, attack_start, attack_end, add_window_size, window_size):
     """
     get previous method scores (tpr, fpr, accuracy, detection delay)
@@ -371,7 +406,7 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
 
         results_data[algorithm_name][flight_route][similarity_function] = dict()
 
-    metrics_list = ['fpr', 'tpr', 'acc', 'delay']
+    metrics_list = ['fpr', 'tpr', 'acc', 'delay', 'auc']
 
     for metric in metrics_list:
 
@@ -457,9 +492,11 @@ def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title
     plt.figure(figsize=(28, 7))
     plt.scatter(range(len(scores)), scores, c=['k' if label == 1 else 'w' for label in labels],
                 edgecolors=['k' if label == 1 else 'y' for label in labels], s=15, alpha=0.4)
-    plt.xlabel("Index")
-    plt.ylabel("Score")
-    plt.title(title)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.xlabel("Time [sec]", fontsize=20)
+    plt.ylabel("Evaluation function score", fontsize=20)
+    plt.title(title, fontsize=24)
 
     plt.hlines(y=threshold, xmin=plt.xlim()[0], xmax=plt.xlim()[1], colors='r')
     plt_path = os.path.join(*[str(plot_dir), str(title) + '.png'])
@@ -470,7 +507,27 @@ def plot_reconstruction_error_scatter(scores, labels, threshold, plot_dir, title
 
 
 def get_plots_key(algorithm, similarity, flight_route):
-    return str(algorithm + "_" + similarity + "_"+ flight_route)
+    """
+    Plot key
+    :param algorithm: algorithm
+    :param similarity: evaluation function
+    :param flight_route: flight route
+    :return: plot key
+    """
+
+    return str(algorithm + "_" + similarity + "_" + flight_route)
+
+
+def get_auc_plot_key(algorithm, similarity, flight_route):
+    """
+    AUC plot key
+    :param algorithm: algorithm
+    :param similarity:  evaluation function
+    :param flight_route: flight route
+    :return: auc key
+    """
+
+    return str("auc_" + algorithm + "_" + similarity + "_" + flight_route)
 
 
 # def plot_roc(y_true, y_pred, plot_dir, title="ROC Curve"):
