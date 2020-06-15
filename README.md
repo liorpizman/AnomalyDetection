@@ -213,10 +213,10 @@ The **training vectors** should look like this:</br></br>
 # Metrics Comparison Results Table
 
 **Example:**<br/>
-Algorithm: Random Forest<br/>
+Algorithm: SVR<br/>
 Similarity function: Cosine similarity<br/>
 Route: Cross route<br/>
-<img height=235 width=680 src="utils/images/results/comparison_table.jpg">
+<img height=250 width=720 src="utils/images/results/comparison_table.jpg">
 
 # Outlier Score Testing Results - Visual Illustration
 
@@ -288,6 +288,16 @@ Route: Cross route<br/>
 
 **Bad test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/mlp/actual_preticted_bad.png">
+
+# Receiver Operating Characteristic (ROC)
+
+## LSTM - Results Example 
+
+**High AUC**<br/>
+<img height=350 width=920 src="utils/images/auc/high.png">
+
+**Low AUC:**<br/>
+<img height=350 width=920 src="utils/images/auc/low.png">
 
 ## Research Risks
 
