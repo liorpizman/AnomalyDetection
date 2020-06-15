@@ -115,7 +115,7 @@ class ResultsPlotWindow(tk.Frame):
         :return: empty values in the widgets
         """
 
-        InputSettings.remove_plots()  # --------------------------------------------------------------------------------------- should be checked
+        InputSettings.remove_plots()
 
     def back_window(self):
         """
