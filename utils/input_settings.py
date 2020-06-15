@@ -297,6 +297,9 @@ class InputSettings:
     def get_plots(key)
         Description | Get paths of different plot
 
+    def remove_plots(key)
+        Description | Remove all existing plots
+        
     """
 
     @staticmethod
@@ -674,3 +677,7 @@ class InputSettings:
     @staticmethod
     def get_plots(key):
         return InputSettings.PLOTS[key]
+
+    @staticmethod
+    def remove_plots():
+        InputSettings.PLOTS = dict()

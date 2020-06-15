@@ -23,7 +23,7 @@ from gui.widgets.menubar import Menubar
 
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_button_configuration, \
     set_copyright_configuration, set_widget_to_left
-from utils.helper_methods import get_plots_key
+from utils.helper_methods import get_plots_key, get_auc_plot_key
 from utils.input_settings import InputSettings
 
 try:
@@ -115,7 +115,7 @@ class ResultsPlotWindow(tk.Frame):
         :return: empty values in the widgets
         """
 
-        pass
+        InputSettings.remove_plots()  # --------------------------------------------------------------------------------------- should be checked
 
     def back_window(self):
         """
@@ -183,17 +183,18 @@ class ResultsPlotWindow(tk.Frame):
 
             # Page header
             plot_key = get_plots_key(original_algorithm, original_similarity_function, original_flight_route)
+            auc_plot_key = get_auc_plot_key(original_algorithm, original_similarity_function, original_flight_route)
             self.plots_list = InputSettings.get_plots(plot_key)
+            self.auc_plots_list = InputSettings.get_plots(auc_plot_key)
             self.plots_index = 0
 
             start_y = 0.33
             self.plot_buttons = []
             self.export_buttons = []
-            print(self.plots_list)
 
             attacks = self.parseAttacksFromPaths(self.plots_list)
 
-            for attack, image_plot_path in zip(attacks, self.plots_list):
+            for attack, image_plot_path, auc_plot_path in zip(attacks, self.plots_list, self.auc_plots_list):
                 self.plot_label = tk.Label(self)
                 self.plot_label.place(relx=0.015, rely=start_y, height=35, width=180)
                 self.plot_label.configure(text='To view {0} graph'.format(attack))
@@ -211,9 +212,25 @@ class ResultsPlotWindow(tk.Frame):
                                                    flight_route=selected_flight_route,
                                                    img_url=plot_path
                                                ))
-                self.export_button.place(relx=0.485, rely=start_y, height=25, width=90)
-                set_button_configuration(self.export_button, text='''Export to PNG''')
+                self.export_button.place(relx=0.465, rely=start_y, height=25, width=60)
+                set_button_configuration(self.export_button, text='''Export''')
                 self.export_button.configure(bg='sandy brown')
+
+                self.auc_button = tk.Button(self, command=lambda auc_path=auc_plot_path: self.show_plot(auc_path))
+                self.auc_button.place(relx=0.65, rely=start_y, height=25, width=72)
+                set_button_configuration(self.auc_button, text='''ROC plot''')
+                self.auc_button.configure(bg='navajo white')
+
+                self.auc_export_button = tk.Button(self,
+                                                   command=lambda plot_path=auc_plot_path: self.export_plot_to_png(
+                                                       algorithm=selected_algorithm,
+                                                       similarity_function=selected_similarity_function,
+                                                       flight_route=selected_flight_route,
+                                                       img_url=plot_path
+                                                   ))
+                self.auc_export_button.place(relx=0.8, rely=start_y, height=25, width=60)
+                set_button_configuration(self.auc_export_button, text='''Export''')
+                self.auc_export_button.configure(bg='sandy brown')
 
                 start_y += 0.08
 
