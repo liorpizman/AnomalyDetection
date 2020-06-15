@@ -291,12 +291,12 @@ Route: Cross route<br/>
 
 # Receiver Operating Characteristic (ROC)
 
-## LSTM - Results Example 
+## MLP - Results Example 
 
 **High AUC**<br/>
 <img height=350 width=920 src="utils/images/auc/high.png">
 
-**Low AUC:**<br/>
+**Low AUC**<br/>
 <img height=350 width=920 src="utils/images/auc/low.png">
 
 ## Research Risks
