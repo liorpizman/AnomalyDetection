@@ -184,6 +184,10 @@ Click on 'Export to PNG' button to export the image plots<br/>
 | Mixed attack | Changing height and changing velocity. |
 <br/>
 
+# Anomaly detection process 
+
+<img height=600 width=800 src="utils/images/shared/anomaly_detection_process_1.JPG"></br></br>
+<img height=600 width=800 src="utils/images/shared/anomaly_detection_process_2.JPG"></br>
 # Time Series Regression
 
 Regression algorithms are not intended for time series predicting. Therefore, in order to make a prediction of a record based on N previous records, we will need to change the data. The data will be changed by taking the previous N records and flattening them into a vector. </br>
