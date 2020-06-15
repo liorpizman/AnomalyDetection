@@ -184,6 +184,10 @@ Click on 'Export to PNG' button to export the image plots<br/>
 | Mixed attack | Changing height and changing velocity. |
 <br/>
 
+# Anomaly detection process 
+
+<img height=600 width=800 src="utils/images/shared/anomaly_detection_process_1.JPG"></br></br>
+<img height=600 width=800 src="utils/images/shared/anomaly_detection_process_2.JPG"></br>
 # Time Series Regression
 
 Regression algorithms are not intended for time series predicting. Therefore, in order to make a prediction of a record based on N previous records, we will need to change the data. The data will be changed by taking the previous N records and flattening them into a vector. </br>
@@ -209,10 +213,10 @@ The **training vectors** should look like this:</br></br>
 # Metrics Comparison Results Table
 
 **Example:**<br/>
-Algorithm: Random Forest<br/>
+Algorithm: SVR<br/>
 Similarity function: Cosine similarity<br/>
 Route: Cross route<br/>
-<img height=235 width=680 src="utils/images/results/comparison_table.jpg">
+<img height=250 width=720 src="utils/images/results/comparison_table.jpg">
 
 # Outlier Score Testing Results - Visual Illustration
 
@@ -284,6 +288,16 @@ Route: Cross route<br/>
 
 **Bad test prediction example:**<br/>
 <img height=350 width=920 src="utils/images/mlp/actual_preticted_bad.png">
+
+# Receiver Operating Characteristic (ROC)
+
+## MLP - Results Example 
+
+**High AUC**<br/>
+<img height=350 width=920 src="utils/images/auc/high.png">
+
+**Low AUC**<br/>
+<img height=350 width=920 src="utils/images/auc/low.png">
 
 ## Research Risks
 
