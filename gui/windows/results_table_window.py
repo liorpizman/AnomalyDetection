@@ -199,9 +199,8 @@ class ResultsTableWindow(tk.Frame):
             data = results_data[original_algorithm][original_flight_route][original_similarity_function]
             # print('data: {0}'.format(data))
 
-            if not InputSettings.is_grid_search_dict_empty():
-                self.params_pair = data.pop('params', 'No Key found')
-                # print('self.params_pair: {0}'.format(self.params_pair))
+            self.params_pair = data.pop('params', 'No Key found')
+            # print('self.params_pair: {0}'.format(self.params_pair))
 
             attacks_columns = list(data.values())[0]
 
@@ -289,7 +288,7 @@ class ResultsTableWindow(tk.Frame):
             set_button_configuration(self.export_button, text='''Export table''')
             self.export_button.configure(bg='sandy brown')
 
-            if InputSettings.is_grid_search_dict_empty():
+            if InputSettings.is_algorithm_grid_search_dict_empty(selected_algorithm.upper().replace(" ", "_")):
                 best_params_state = "disabled"
             else:
                 best_params_state = "active"

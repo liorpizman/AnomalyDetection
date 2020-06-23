@@ -235,7 +235,17 @@ class LoadingWindow(tk.Frame):
 
             enumerate_details += 1
 
-        self.controller.reinitialize_frame("ResultsWindow")
+        if new_model_running:
+            count_algorithms = len(InputSettings.get_algorithms())
+        else:
+            count_algorithms = len(InputSettings.get_existing_algorithms())
+
+        if count_algorithms > 0:
+            self.controller.reinitialize_frame("ResultsWindow")
+        else:
+            self.controller.reset_frame()
+            self.controller.reset_input_settings_params()
+            self.controller.show_frame("MainWindow")
 
     def show_model_process_label(self, y_coordinate, algorithm):
         """
