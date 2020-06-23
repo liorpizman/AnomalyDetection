@@ -102,7 +102,7 @@ Insert simulated data / ADS-B data set input files<br/>
 Select algorithms for which you want to build anomaly detection models<br/>
 <img height=350 width=370 src="utils/images/new_model/algorithmsWindow.JPG">
 
-Select the values for each of the following parameters<br/>
+Select the values for each of the following parameters or run a **GridSearch** with chosen parameters<br/>
 <img height=350 width=370 src="utils/images/new_model/parametersOptionsWindow.JPG">
 
 Please choose both input and target features<br/>
@@ -134,7 +134,7 @@ Loading model, please wait...<br/>
 Choose an algorithm and a flight route in order to get the results table or image plots<br/>
 <img height=350 width=370 src="utils/images/shared/resultsWindow.JPG">
 
-Click on 'Export to CSV' button to export the results table<br/>
+Click on 'Export table' button to export the results table or click on 'Display & Export best algorithm params' button to export the **best params** for of the **GridSearch** <br/>
 <img height=350 width=370 src="utils/images/shared/resultsTableWindow.JPG">
 
 Click on 'Export to PNG' button to export the image plots<br/>
