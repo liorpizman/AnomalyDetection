@@ -313,6 +313,9 @@ class InputSettings:
     is_grid_search_dict_empty
         Description | Check whether the grid search dictionary is empty
     
+    is_algorithm_grid_search_dict_empty(algorithm)
+        Description | Check whether the algorithm grid search dictionary is empty
+
     """
 
     @staticmethod
@@ -718,6 +721,15 @@ class InputSettings:
     @staticmethod
     def is_grid_search_dict_empty():
         return not InputSettings.GRID_SEARCH
+
+    @staticmethod
+    def is_algorithm_grid_search_dict_empty(algorithm):
+        try:
+            is_empty = not InputSettings.GRID_SEARCH[algorithm]
+        except:
+            is_empty = True
+
+        return is_empty
 
     @staticmethod
     def reset_grid_dictionary(algorithm):
