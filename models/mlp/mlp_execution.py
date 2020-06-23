@@ -390,7 +390,7 @@ def execute_predict(flight_route,
 
             current_best_params = {}
             if grid_dictionary:
-                svr_model, current_best_params = get_gridSearch_model(grid_dictionary, X_test, Y_test_labels,
+                mlp_model, current_best_params = get_gridSearch_model(grid_dictionary, X_test, Y_test_labels,
                                                                       window_size,
                                                                       X_train, Y_train)
 
