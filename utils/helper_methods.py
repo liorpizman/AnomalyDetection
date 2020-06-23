@@ -18,7 +18,12 @@ from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
 from scipy.spatial import distance
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import pairwise, mean_squared_error, roc_curve, auc as auc_score
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.neural_network import MLPRegressor
+from sklearn.svm import SVR
+
 from utils.constants import NON_ATTACK_VALUE, ATTACK_VALUE
 
 
@@ -406,7 +411,7 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
 
         results_data[algorithm_name][flight_route][similarity_function] = dict()
 
-    metrics_list = ['fpr', 'tpr', 'acc', 'delay', 'auc']
+    metrics_list = ['fpr', 'tpr', 'acc', 'delay', 'auc','params']
 
     for metric in metrics_list:
 
@@ -418,14 +423,19 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
                 *[str(results_dir_path), str(flight_route), str(flight_route) + '_' + str(metric) + '.csv']
             )
             df = pd.read_csv(f"{flight_route_metric_path}")
-            mean = df.mean(axis=0).values
-            std = df.std(axis=0).values
             output = []
-            for x, y in zip(mean, std):
-                if math.isnan(y):
-                    output.append(f"{round(x, 2)}")
-                else:
-                    output.append(f"{round(x, 2)}±{round(y, 2)}%")
+            if metric == 'params':
+                output = df.values[0]
+            else:
+                mean = df.mean(axis=0).values
+                std = df.std(axis=0).values
+
+                for x, y in zip(mean, std):
+                    if math.isnan(y):
+                        output.append(f"{round(x, 2)}")
+                    else:
+                        output.append(f"{round(x, 2)}±{round(y, 2)}%")
+
             results.loc[i] = output
 
             results_data[algorithm_name][flight_route][similarity_function][metric] = dict()
@@ -445,14 +455,15 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
 
         results.index = FLIGHT_ROUTES
 
-        if verbose:
-            print(results)
+        # if verbose:
+        #     print(results)
 
         # Update evaluated evaluation metric for each attack according to the current algorithm and metric
         InputSettings.update_results_metrics_data(results_data)
 
-        final_metric_path = os.path.join(*[str(results_dir_path), 'final_' + str(metric) + '.csv'])
-        results.to_csv(f"{final_metric_path}")
+        if metric != 'params':
+            final_metric_path = os.path.join(*[str(results_dir_path), 'final_' + str(metric) + '.csv'])
+            results.to_csv(f"{final_metric_path}")
 
 
 def plot(data, xlabel, ylabel, title, plot_dir):
@@ -601,3 +612,41 @@ def multi_mean(X1):
         transformed_X1[i] = value.mean(axis=0)
 
     return transformed_X1
+
+
+def get_estimator(algoritm_name):
+    switcher = {
+        "SVR": MultiOutputRegressor(SVR()),
+        "MLP": MLPRegressor(),
+        "Random Forest": MultiOutputRegressor(RandomForestRegressor()),
+    }
+    return switcher.get(algoritm_name, None)
+
+
+def tuning_auc(y_score, pred):
+    """
+    Compute Area Under the Receiver Operating Characteristic Curve
+    :param y_score: Target scores
+    :param pred: Binary label indicators
+    :return: AUC
+    """
+
+    window_size = len(y_score) - len(pred)
+    y_score_preprocessed = y_score[window_size:]
+
+    assert len(y_score_preprocessed) == len(pred)
+
+    fpr, tpr, thresholds = roc_curve(y_score_preprocessed, pred, pos_label=1)
+    auc = auc_score(fpr, tpr)
+
+    return auc
+
+def tuning_delay(y_score, pred):
+    """
+    Compute model detection delay
+    :param y_score: Target scores
+    :param pred: Binary label indicators
+    :return: AUC
+    """
+
+    pass
