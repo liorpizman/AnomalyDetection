@@ -15,6 +15,7 @@ from tkinter import *
 from gui.shared.helper_methods import load_anomaly_detection_list
 from gui.widgets.hover_button import HoverButton
 from gui.widgets_configurations.helper_methods import set_widget_to_left
+from utils.input_settings import InputSettings
 
 
 class Checkbar(Frame):
@@ -169,6 +170,7 @@ class Checkbar(Frame):
         :return: suitable parameters for LSTM algorithm
         """
 
+        InputSettings.reset_grid_dictionary("LSTM")
         self.parent.show_algorithms_options(load_anomaly_detection_list()[0])
 
     def show_SVR_options(self):
@@ -177,6 +179,7 @@ class Checkbar(Frame):
         :return: suitable parameters for SVR algorithm
         """
 
+        InputSettings.reset_grid_dictionary("SVR")
         self.parent.show_algorithms_options(load_anomaly_detection_list()[1])
 
     def show_MLP_options(self):
@@ -185,6 +188,7 @@ class Checkbar(Frame):
         :return: suitable parameters for MLP algorithm
         """
 
+        InputSettings.reset_grid_dictionary("MLP")
         self.parent.show_algorithms_options(load_anomaly_detection_list()[2])
 
     def show_Random_Forest_options(self):
@@ -193,6 +197,7 @@ class Checkbar(Frame):
         :return: suitable parameters for Random forest algorithm
         """
 
+        InputSettings.reset_grid_dictionary("RANDOM_FOREST")
         self.parent.show_algorithms_options(load_anomaly_detection_list()[3])
 
     def get_algorithm_show_function(self, algorithm_name):

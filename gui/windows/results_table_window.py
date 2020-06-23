@@ -24,6 +24,7 @@ from gui.widgets.menubar import Menubar
 from gui.widgets.table.table import Table
 from gui.widgets_configurations.helper_methods import set_logo_configuration, set_button_configuration, \
     set_copyright_configuration, set_widget_to_left
+from utils.input_settings import InputSettings
 
 try:
     import Tkinter as tk
@@ -107,7 +108,7 @@ class ResultsTableWindow(tk.Frame):
         self.results_table.pack(fill=X, padx=18, pady=182)
 
         self.comparison_png = tk.Button(self)
-        self.comparison_png.place(relx=0.65, rely=0.7, height=150, width=145)
+        self.comparison_png.place(relx=0.7, rely=0.7, height=150, width=145)
         set_logo_configuration(self.comparison_png, image=comparison_img)
 
         # Page footer
@@ -218,6 +219,8 @@ class ResultsTableWindow(tk.Frame):
             # Set the updated values to the table
             for i, metric in enumerate(data.keys()):
                 attacks_data = data[metric]
+                if metric.upper() == 'PARAMS':
+                    continue
                 if metric.upper() == 'DELAY':
                     self.results_table.cell(i, 0, "Detection delay [sec]")
                 else:
@@ -273,9 +276,25 @@ class ResultsTableWindow(tk.Frame):
                                                similarity_function=selected_similarity_function,
                                                flight_route=selected_flight_route
                                            ))
-            self.export_button.place(relx=0.35, rely=0.839, height=25, width=90)
-            set_button_configuration(self.export_button, text='''Export to CSV''')
+            self.export_button.place(relx=0.849, rely=0.26, height=25, width=89)
+            set_button_configuration(self.export_button, text='''Export table''')
             self.export_button.configure(bg='sandy brown')
+
+            if InputSettings.is_grid_search_dict_empty():
+                best_params_state = "disabled"
+            else:
+                best_params_state = "active"
+
+            self.best_params_button = tk.Button(self,
+                                                command=lambda: self.export_best_params_to_csv(
+                                                    algorithm=selected_algorithm,
+                                                    similarity_function=selected_similarity_function,
+                                                    flight_route=selected_flight_route
+                                                ))
+            self.best_params_button.place(relx=0.35, rely=0.839, height=25, width=220)
+            self.best_params_button['state'] = best_params_state
+            set_button_configuration(self.best_params_button, text='''Display & Export best algorithm params''')
+            self.best_params_button.configure(bg='sandy brown')
 
         except Exception as e:
             # Handle error in setting new data in the table
@@ -300,7 +319,7 @@ class ResultsTableWindow(tk.Frame):
     def export_table_to_csv(self, algorithm, similarity_function, flight_route):
         """
         Export current table to csv file
-        :return:
+        :return: csv file
         """
 
         path = set_path()
@@ -310,6 +329,36 @@ class ResultsTableWindow(tk.Frame):
 
         try:
             self.table_dataframe.to_csv(full_path, index=False)
+
+            messagebox.askokcancel(
+                title="Export to CSV file",
+                message="Export to CSV file finished successfully!"
+            )
+        except:
+            messagebox.askokcancel(
+                title="Export to CSV file",
+                message="Export to CSV file failed! Please try again."
+            )
+
+    def export_best_params_to_csv(self, algorithm, similarity_function, flight_route):
+        """
+        Export best params to csv file
+        :return: csv file
+        """
+
+        try:
+            messagebox.showinfo(
+                title="Best Parameters - Grid Search - {0}".format(algorithm.upper()),
+                message=str(self.table_dataframe.loc[5])
+            )
+
+            path = set_path()
+            current_time = datetime.now().strftime("%b-%d-%Y-%H-%M-%S")
+            df_name = "Best_Params_{0}_{1}_{2}_{3}.csv".format(algorithm, similarity_function, flight_route,
+                                                               current_time)
+            full_path = os.path.join(*[str(path), df_name])
+
+            self.table_dataframe.loc[5].to_csv(full_path, index=False)
 
             messagebox.askokcancel(
                 title="Export to CSV file",

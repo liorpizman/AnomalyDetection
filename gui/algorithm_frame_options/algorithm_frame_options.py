@@ -15,6 +15,7 @@ import os
 from gui.algorithm_frame_options.shared.helper_methods import set_widget_for_param, load_algorithm_constants
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_logo_configuration
+from utils.input_settings import InputSettings
 
 try:
     import Tkinter as tk
@@ -109,3 +110,17 @@ class AlgorithmFrameOptions(tk.Frame):
         for parameter in self.parameters.keys():
             chosen_params[parameter] = self.parameters[parameter].get()
         return chosen_params
+
+    def grid_search_validation(self, algorithm):
+        """
+        Check if the user chose params for grid search
+        :param algorithm: current algorithm
+        :return: existing grid search dictionary
+        """
+
+        grid_search_dict = InputSettings.get_grid_search_dict(algorithm)
+
+        if not grid_search_dict:
+            return False
+
+        return True

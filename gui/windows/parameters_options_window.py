@@ -11,6 +11,7 @@ Parameters options window which is part of GUI application
 '''
 
 import os
+from tkinter import messagebox
 
 from gui.algorithm_frame_options.algorithm_frame_options import AlgorithmFrameOptions
 from gui.widgets.hover_button import HoverButton
@@ -90,12 +91,6 @@ class ParametersOptionsWindow(tk.Frame):
         self.logo_png.place(relx=0.28, rely=0.029, height=172, width=300)
         set_logo_configuration(self.logo_png, image=logo_img)
 
-        self.instructions = tk.Label(self)
-        self.instructions.place(relx=0.015, rely=0.3, height=32, width=635)
-        self.instructions.configure(
-            text='''[Step 2.1/5] Please select the values for each of the following parameters: (*editable inputs)''')
-        set_widget_to_left(self.instructions)
-
         # Page body
 
         # Dynamic algorithm options
@@ -113,13 +108,6 @@ class ParametersOptionsWindow(tk.Frame):
                                    width=self.width_options_frame)
 
         # Page footer
-        self.next_button = HoverButton(self, command=self.handle_next_button)
-        self.next_button.place(relx=0.813, rely=0.839, height=25, width=81)
-        set_button_configuration(self.next_button, text='''Save''')
-
-        self.back_button = HoverButton(self, command=lambda: self.controller.show_frame("AlgorithmsWindow"))
-        self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
-        set_button_configuration(self.back_button, text='''Cancel''')
 
         self.copyright = tk.Label(self)
         self.copyright.place(relx=0, rely=0.958, height=25, width=750)
@@ -141,6 +129,25 @@ class ParametersOptionsWindow(tk.Frame):
 
         algorithm_parameters = self.options_to_show.get_algorithm_parameters()
         self.save_algorithm_parameters(algorithm_parameters)
+
+    def handle_grid_search_next_button(self):
+        """
+        Handle a click on grid search next button
+        :return:  if validations pass move to next window
+        """
+
+        if self.current_algorithm.upper() == 'RANDOM FOREST':
+            algorithm = 'RANDOM_FOREST'
+        else:
+            algorithm = self.current_algorithm.upper()
+
+        if self.options_to_show.grid_search_validation(algorithm):
+            self.controller.show_frame("AlgorithmsWindow")
+        else:
+            messagebox.askokcancel(
+                title="Tune Hyper Parameters",
+                message="Please select at least on parameter for tuning!"
+            )
 
     def set_algorithm_parameters(self, algorithm_name, algorithm_parameters):
         """
@@ -193,6 +200,14 @@ class ParametersOptionsWindow(tk.Frame):
         :return: new frame view
         """
 
+        self.instructions = tk.Label(self)
+        self.instructions.place(relx=0.015, rely=0.27, height=32, width=635)
+        self.instructions.configure(
+            text='''[Step 2.1/5] Please select the values for each of the following parameters:\n''' +
+                 '''                    (*editable inputs)                                      ''' +
+                 '''                                         Tune hyper param?''')
+        set_widget_to_left(self.instructions)
+
         self.current_algorithm = self.controller.get_current_algorithm_to_edit()
         self.current_yaml = self.set_suitable_yaml_file(self.current_algorithm)
         self.controller.remove_algorithm(self.current_algorithm)
@@ -200,3 +215,16 @@ class ParametersOptionsWindow(tk.Frame):
         self.options_to_show.destroy()
         self.options_to_show = AlgorithmFrameOptions(self, yaml_filename=self.current_yaml)
         self.options_to_show.place(relx=0.05, rely=0.35, height=268, width=620)
+
+        self.next_button = HoverButton(self, command=self.handle_next_button)
+        self.next_button.place(relx=0.713, rely=0.839, height=25, width=150)
+        set_button_configuration(self.next_button, text='''Save chosen config''')
+
+        self.grid_next_button = HoverButton(self,
+                                            command=self.handle_grid_search_next_button)
+        self.grid_next_button.place(relx=0.713, rely=0.769, height=25, width=150)
+        set_button_configuration(self.grid_next_button, text='''Save GridSearch config''')
+
+        self.back_button = HoverButton(self, command=lambda: self.controller.show_frame("AlgorithmsWindow"))
+        self.back_button.place(relx=0.017, rely=0.839, height=25, width=81)
+        set_button_configuration(self.back_button, text='''Cancel''')
