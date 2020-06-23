@@ -15,6 +15,7 @@ import pickle
 import pandas as pd
 import json
 
+from gui.algorithm_frame_options.shared.helper_methods import init_lstm_params
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
 from models.lstm.lstm_hyper_parameters import lstm_hyper_parameters
@@ -545,10 +546,7 @@ def predict_train_set(lstm,
 
 
 def get_lstm_grid_params():
-    encoding_dimension = [8, 9]
-    activation_list = ["relu", "softmax"]
-
-    args = [encoding_dimension, activation_list]
+    args = init_lstm_params()
     configs = []
     for combination in itertools.product(*args):
         print(combination)
@@ -581,9 +579,9 @@ def get_gridSearch_model(grid_dictionary, X_test, Y_test, X_train, Y_train,
     best_labels = None
 
     for config in grid_dictionary:
-        encoding_dimension, activation = config
 
-        window_size = 2
+        epochs, activation, loss, optimizer, window_size, encoding_dimension = config
+
         X_test_preprocessed, Y_test_labels_preprocessed = get_testing_data_lstm(X_test, test_labels, window_size)
 
         Y_test_preprocessed = get_training_data_lstm(Y_test, window_size)
@@ -601,8 +599,8 @@ def get_gridSearch_model(grid_dictionary, X_test, Y_test, X_train, Y_train,
                                                 target_features=target_features_list_shape,
                                                 encoding_dimension=encoding_dimension,
                                                 activation=activation,
-                                                loss="mean_squared_error",
-                                                optimizer="Adam")
+                                                loss=loss,
+                                                optimizer=optimizer)
         lstm_model.fit(X_test_preprocessed, Y_test_preprocessed, epochs=2, verbose=0)
 
         X_test_pred = lstm_model.predict(X_test_preprocessed)
@@ -621,4 +619,4 @@ def get_gridSearch_model(grid_dictionary, X_test, Y_test, X_train, Y_train,
             best_y = Y_test_preprocessed
             best_labels = Y_test_labels_preprocessed
 
-    return best_model, best_params , best_x, best_y, best_labels
+    return best_model, best_params, best_x, best_y, best_labels
