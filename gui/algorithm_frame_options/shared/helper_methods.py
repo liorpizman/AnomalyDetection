@@ -20,6 +20,7 @@ from os.path import dirname, abspath
 from tkinter.ttk import Combobox
 from gui.shared.constants import CROSS_WINDOWS_SETTINGS
 from gui.widgets_configurations.helper_methods import set_widget_to_left, set_info_configuration
+from utils.input_settings import InputSettings
 
 try:
     import Tkinter as tk
@@ -94,12 +95,37 @@ def set_widget_for_param(frame, text, combobox_values, param_key, y_coordinate, 
         frame.algorithm_param_combo.current(0)
         frame.parameters[param_key] = frame.algorithm_param_combo
 
+        algorithm = filename.replace("_params.yaml", "").upper()
+
+        if text not in ["Threshold percent"]:  # "Window size"
+            var = tk.IntVar()
+            enable_functionality = "active"
+            frame.tune_hyper_param_checkbox = tk.Checkbutton(frame,
+                                                             variable=var,
+                                                             state=enable_functionality,
+                                                             command=lambda: toggle_hyper_param_for_tune(text,
+                                                                                                         algorithm))
+            frame.tune_hyper_param_checkbox.place(relx=relative_x + 0.65, rely=y_coordinate, height=30, width=20)
+
+
     except Exception as e:
 
         # Handle an error with a stack trace print
         print("Source: gui/algorithm_frame_options/shared/helper_methods.py")
         print("Function: set_widget_for_param")
         print("error: " + str(e))
+
+
+def toggle_hyper_param_for_tune(param, algorithm):
+    """
+    Toggle values for grid search
+    :param param: param to toggle
+    :param algorithm: current algorithm
+    :return: update the grid search dictionary
+    """
+
+    InputSettings.toggle_param_for_grid_search(algorithm, param)
+    print(InputSettings.GRID_SEARCH)
 
 
 def on_info_button_click(attribute, filename):
@@ -163,3 +189,71 @@ def convert_string_to_boolean(source_dict):
         source_dict[key] = [changes.get(x, x) for x in source_dict[key]]
 
     return source_dict
+
+
+def get_grid_params(algorithm):
+    """
+    Get grid params for grid search
+    :param algorithm: current algorithm
+    :return: grid params for grid search
+    """
+
+    grid_params = dict()
+    grid_params_dict = InputSettings.get_grid_search_dict(algorithm)
+
+    for param_key in grid_params_dict.keys():
+        grid_param = map_grid_params(algorithm, param_key)
+        grid_params.update(grid_param)
+
+    return grid_params
+
+
+def map_grid_params(algorithm, param_key):
+    """
+    Map key to key,value pair as needed for grid search
+    :param algorithm: current algorithm
+    :param param_key: give key
+    :return: key,value pair
+    """
+
+    mlp_switcher = {
+        'Hidden layer sizes': {'hidden_layer_sizes': [(50, 50, 50), (50, 100, 50), (100,)]},
+        'Activation': {'activation': ['tanh', 'relu']},
+        'Solver': {'solver': ['sgd', 'adam']},
+        'Alpha': {'alpha': [0.0001, 0.05]},
+        'Random state': {},
+        'Window size': {}
+    }
+
+    svr_switcher = {
+        'Gamma': {'estimator__gamma': [1e-4, 0.01, 0.1, 0.2]},
+        'Kernel': {'estimator__kernel': ['linear', 'poly']},
+        'Epsilon': {'estimator__epsilon': [0.0001, 0.05]},
+        'Window size': {}
+    }
+
+    random_forest_switcher = {
+        'N estimators': {'estimator__n_estimators': [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]},
+        'Criterion': {'estimator__criterion': ["gini", "entropy"]},
+        'Max features': {'estimator__max_features': ['auto', 'sqrt']},
+        'Random state': {},
+        'Window size': {},
+    }
+
+    lstm_switcher = {
+        'Epochs': {},
+        'Activation function': {},
+        'Loss function': {},
+        'Optimizer': {},
+        'Window size': {},
+        'Encoding dimension': {}
+    }
+
+    algorithm_switcher = {
+        'MLP': mlp_switcher.get(param_key, {}),
+        'SVR': svr_switcher.get(param_key, {}),
+        'RANDOM FOREST': random_forest_switcher.get(param_key, {}),
+        'LSTM': lstm_switcher.get(param_key, {})
+    }
+
+    return algorithm_switcher.get(algorithm, {})

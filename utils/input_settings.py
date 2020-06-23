@@ -54,6 +54,8 @@ class InputSettings:
 
     PLOTS = dict()
 
+    GRID_SEARCH = dict()
+
     """
     Attributes
     ----------
@@ -108,6 +110,8 @@ class InputSettings:
     
     PLOTS                                : dict
 
+    GRID_SEARCH                          : dict
+    
     Methods
     -------
     set_training_data_path(path)
@@ -291,15 +295,24 @@ class InputSettings:
     get_window_size(algorithm)
         Description | Get the chosen window size for a specific algorithm
 
-    def set_plots(key, plot_path)
+    set_plots(key, plot_path)
         Description | Set paths of different plot
 
-    def get_plots(key)
+    get_plots(key)
         Description | Get paths of different plot
 
-    def remove_plots(key)
+    remove_plots(key)
         Description | Remove all existing plots
         
+    toggle_param_for_grid_search(algorithm, param)
+        Description | Toggle params for grid search
+       
+    get_grid_search_dict(algorithm)
+        Description | Get grid search params dictionary for a current algorithm
+
+    is_grid_search_dict_empty
+        Description | Check whether the grid search dictionary is empty
+    
     """
 
     @staticmethod
@@ -681,3 +694,32 @@ class InputSettings:
     @staticmethod
     def remove_plots():
         InputSettings.PLOTS = dict()
+
+    @staticmethod
+    def toggle_param_for_grid_search(algorithm, param):
+        if algorithm in InputSettings.GRID_SEARCH:
+            if param in InputSettings.GRID_SEARCH[algorithm]:
+                InputSettings.GRID_SEARCH[algorithm].pop(param, None)
+                if not InputSettings.GRID_SEARCH[algorithm]:
+                    InputSettings.GRID_SEARCH.pop(algorithm, None)
+            else:
+                InputSettings.GRID_SEARCH[algorithm][param] = dict()
+        else:
+            InputSettings.GRID_SEARCH[algorithm] = dict()
+            InputSettings.GRID_SEARCH[algorithm][param] = dict()
+
+    @staticmethod
+    def get_grid_search_dict(algorithm):
+        if algorithm in InputSettings.GRID_SEARCH:
+            return InputSettings.GRID_SEARCH[algorithm]
+        else:
+            return dict()
+
+    @staticmethod
+    def is_grid_search_dict_empty():
+        return not InputSettings.GRID_SEARCH
+
+    @staticmethod
+    def reset_grid_dictionary(algorithm):
+        if algorithm in InputSettings.GRID_SEARCH:
+            InputSettings.GRID_SEARCH.pop(algorithm, None)
