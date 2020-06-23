@@ -29,7 +29,7 @@ from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
     create_directories, get_current_time, \
     plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score, plot_prediction_performance, get_plots_key, \
-    calculate_auc, get_auc_plot_key, get_estimator, tuning_auc
+    calculate_auc, get_auc_plot_key, get_estimator, tuning_auc_and_delay
 from collections import defaultdict
 
 
@@ -567,9 +567,9 @@ def get_gridSearch_model(grid_dictionary, X_test, Y_test_labels, window_size, X_
     """
     estimator = get_estimator("MLP")
     tsr = TimeSeriesRegressor(estimator, n_prev=window_size)
-    grid_auc = make_scorer(tuning_auc, greater_is_better=True, needs_threshold=True)
+    grid_auc_and_delay = make_scorer(tuning_auc_and_delay, greater_is_better=True, needs_threshold=True)
 
-    grid_search_model = GridSearchCV(tsr, param_grid=grid_dictionary, scoring=grid_auc)
+    grid_search_model = GridSearchCV(tsr, param_grid=grid_dictionary, scoring=grid_auc_and_delay)
     grid_search_model.fit(X_test, Y_test_labels)
 
     return get_best_model(grid_search_model.best_params_, X_train, Y_train, window_size)
