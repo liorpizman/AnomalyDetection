@@ -12,6 +12,8 @@ Results table window which is part of GUI application
 
 import os
 import pandas as pd
+import json
+import csv
 
 from datetime import datetime
 from tkinter import messagebox
@@ -195,11 +197,20 @@ class ResultsTableWindow(tk.Frame):
             results_data = self.controller.get_results_metrics_data()
 
             data = results_data[original_algorithm][original_flight_route][original_similarity_function]
+            # print('data: {0}'.format(data))
+
+            if not InputSettings.is_grid_search_dict_empty():
+                self.params_pair = data.pop('params', 'No Key found')
+                # print('self.params_pair: {0}'.format(self.params_pair))
 
             attacks_columns = list(data.values())[0]
 
             transform_attacks_list = transform_list(list(attacks_columns.keys()))
             table_columns = self.generate_table_columns_list(transform_attacks_list)
+            # print('table_columns {0}'.format(table_columns))
+            self.grid_table_columns = list(table_columns)
+            self.grid_table_columns.remove('Metric')
+            # print('self.grid_table_columns {0}'.format(self.grid_table_columns))
 
             self.results_table.pack_forget()
             # self.results_table.destroy()
@@ -219,8 +230,6 @@ class ResultsTableWindow(tk.Frame):
             # Set the updated values to the table
             for i, metric in enumerate(data.keys()):
                 attacks_data = data[metric]
-                if metric.upper() == 'PARAMS':
-                    continue
                 if metric.upper() == 'DELAY':
                     self.results_table.cell(i, 0, "Detection delay [sec]")
                 else:
@@ -349,23 +358,24 @@ class ResultsTableWindow(tk.Frame):
         try:
             messagebox.showinfo(
                 title="Best Parameters - Grid Search - {0}".format(algorithm.upper()),
-                message=str(self.table_dataframe.loc[5])
+                message=str(json.dumps(self.params_pair, indent=2))
             )
 
             path = set_path()
             current_time = datetime.now().strftime("%b-%d-%Y-%H-%M-%S")
-            df_name = "Best_Params_{0}_{1}_{2}_{3}.csv".format(algorithm, similarity_function, flight_route,
+            df_name = "Best_Params_{0}_{1}_{2}_{3}.txt".format(algorithm, similarity_function, flight_route,
                                                                current_time)
             full_path = os.path.join(*[str(path), df_name])
 
-            self.table_dataframe.loc[5].to_csv(full_path, index=False)
+            with open(full_path, 'w') as file:
+                file.write(json.dumps(self.params_pair))
 
-            messagebox.askokcancel(
-                title="Export to CSV file",
-                message="Export to CSV file finished successfully!"
-            )
+                messagebox.askokcancel(
+                    title="Export to TXT file",
+                    message="Export to TXT file finished successfully!"
+                )
         except:
             messagebox.askokcancel(
-                title="Export to CSV file",
-                message="Export to CSV file failed! Please try again."
+                title="Export to TXT file",
+                message="Export to TXT file failed! Please try again."
             )

@@ -142,7 +142,8 @@ class ParametersOptionsWindow(tk.Frame):
             algorithm = self.current_algorithm.upper()
 
         if self.options_to_show.grid_search_validation(algorithm):
-            self.controller.show_frame("AlgorithmsWindow")
+            algorithm_parameters = self.options_to_show.get_algorithm_parameters()
+            self.save_algorithm_parameters(algorithm_parameters)
         else:
             messagebox.askokcancel(
                 title="Tune Hyper Parameters",
