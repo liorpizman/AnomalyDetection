@@ -426,7 +426,6 @@ def report_results(results_dir_path, test_data_path, FLIGHT_ROUTES, algorithm_na
             output = []
             if metric == 'params':
                 output = df.values[0]
-                print('output: {0}'.format(output))
             else:
                 mean = df.mean(axis=0).values
                 std = df.std(axis=0).values

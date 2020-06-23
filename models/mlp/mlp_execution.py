@@ -110,7 +110,6 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     """
 
     grid_dictionary = get_grid_params("MLP")
-    print('grid_dictionary: {0}'.format(grid_dictionary))
     # Choose between new model creation flow and load existing model flow
     if new_model_running:
         hidden_layer_sizes, activation, solver, alpha, \
