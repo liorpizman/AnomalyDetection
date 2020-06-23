@@ -13,6 +13,8 @@ SVR train and prediction execution function
 import pickle
 import json
 import pandas as pd
+from sklearn.metrics import make_scorer
+from sklearn.model_selection import GridSearchCV
 
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.svm import SVR
@@ -26,7 +28,7 @@ from utils.routes import *
 from utils.helper_methods import get_threshold, report_results, get_method_scores, get_subdirectories, \
     create_directories, get_current_time, \
     plot_reconstruction_error_scatter, get_attack_boundaries, anomaly_score, \
-    plot_prediction_performance, get_plots_key, get_auc_plot_key, calculate_auc
+    plot_prediction_performance, get_plots_key, get_auc_plot_key, calculate_auc, get_estimator, tuning_auc
 from collections import defaultdict
 
 
@@ -94,6 +96,11 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :return:  reported results for SVR execution
     """
 
+    grid_dictionary = {
+        'estimator__epsilon': [0.0001],
+        'estimator__kernel': ['linear', 'poly']
+    }
+
     # Choose between new model creation flow and load existing model flow
     if new_model_running:
         kernel, gamma, epsilon, threshold, window_size = get_svr_new_model_parameters()
@@ -136,7 +143,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         for similarity in similarity_score:
             current_results_path = os.path.join(*[str(current_time_path), str(similarity), str(flight_route)])
             create_directories(f"{current_results_path}")
-            tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attacks_duration, auc_scores = execute_predict(
+            tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attacks_duration, auc_scores, best_params = execute_predict(
                 flight_route,
                 test_data_path=test_data_path,
                 similarity_score=similarity,
@@ -153,7 +160,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                 Y_train_scaler=Y_train_scaler,
                 Y_train=Y_train,
                 window_size=window_size,
-                event=event
+                event=event,
+                grid_dictionary=grid_dictionary
             )
 
             df = pd.DataFrame(tpr_scores)
@@ -175,6 +183,10 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
             df = pd.DataFrame(auc_scores)
             auc_path = os.path.join(*[str(current_results_path), str(flight_route) + '_auc.csv'])
             df.to_csv(f"{auc_path}", index=False)
+
+            df = pd.DataFrame(best_params)
+            best_params_path = os.path.join(*[str(current_results_path), str(flight_route) + '_params.csv'])
+            df.to_csv(f"{best_params_path}", index=False)
 
     algorithm_name = "SVR"
 
@@ -261,7 +273,8 @@ def execute_predict(flight_route,
                     Y_train_scaler=None,
                     Y_train=None,
                     window_size=None,
-                    event=None):
+                    event=None,
+                    grid_dictionary=None):
     """
     Execute predictions function for a specific flight route
     :param flight_route: current flight route we should train on
@@ -281,6 +294,7 @@ def execute_predict(flight_route,
     :param Y_train: train target data frame
     :param window_size: window size for each instance in training
     :param event: running state flag
+    :param grid_dictionary: grid search parameters
     :return: tpr scores, fpr scores, acc scores, delay scores, routes duration, attack duration, auc_scores
     """
 
@@ -291,6 +305,7 @@ def execute_predict(flight_route,
     routes_duration = defaultdict(list)
     attack_duration = defaultdict(list)
     auc_scores = defaultdict(list)
+    best_params = defaultdict(list)
 
     # Set a threshold in new model creation flow
     if run_new_model:
@@ -350,12 +365,15 @@ def execute_predict(flight_route,
             # Step 2: Normalize the data
             X_test = X_train_scaler.transform(input_clean_df_test)
 
-            # Y_test = normalize_data(data=target_clean_df_test,
-            #                         scaler="power_transform")[0]
-
             Y_test = Y_train_scaler.transform(target_clean_df_test)
 
             Y_test_preprocessed = svr_model._preprocess(Y_test, Y_test)[1]
+
+            current_best_params = {}
+            if grid_dictionary:
+                svr_model, current_best_params = get_gridSearch_model(grid_dictionary, X_test, Y_test_labels,
+                                                                      window_size,
+                                                                      X_train, Y_train)
 
             X_pred = svr_model.predict(X_test)
             assert len(Y_test_preprocessed) == len(X_pred)
@@ -410,8 +428,9 @@ def execute_predict(flight_route,
             routes_duration[attack].append(attack_time)
             attack_duration[attack].append(method_scores[4])
             auc_scores[attack].append(auc)
+            best_params[attack].append(current_best_params)
 
-    return tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attack_duration, auc_scores
+    return tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attack_duration, auc_scores, best_params
 
 
 def predict_train_set(svr_model,
@@ -500,3 +519,43 @@ def predict_train_set(svr_model,
             pickle.dump(Y_train_scaler, file)
 
     return threshold
+
+
+def get_best_model(best_params_, X_train, Y_train, window_size):
+    """
+    get best model according to gridSearch result
+    :param best_params_: model params
+    :param X_train: X_train
+    :param Y_train: Y_train
+    :param window_size: window_size
+    :return: best model , best params
+    """
+    parameters = dict()
+
+    for key in best_params_.keys():
+        parameters[(str(key)).split("__")[1]] = best_params_[key]
+
+    tsr = TimeSeriesRegressor(MultiOutputRegressor(SVR(**parameters)), n_prev=window_size)
+    tsr.fit(X_train, Y_train)
+    return tsr, parameters
+
+
+def get_gridSearch_model(grid_dictionary, X_test, Y_test_labels, window_size, X_train, Y_train):
+    """
+    run algorithm gridSearch
+    :param grid_dictionary: params dictionary
+    :param X_test: X_test
+    :param Y_test_labels: Y_test_labels
+    :param window_size: window_size
+    :param X_train: X_train
+    :param Y_train: Y_train
+    :return: best model , best params
+    """
+    estimator = get_estimator("SVR")
+    tsr = TimeSeriesRegressor(estimator, n_prev=window_size)
+    grid_auc = make_scorer(tuning_auc, greater_is_better=True, needs_threshold=True)
+
+    grid_search_model = GridSearchCV(tsr, param_grid=grid_dictionary, scoring=grid_auc)
+    grid_search_model.fit(X_test, Y_test_labels)
+
+    return get_best_model(grid_search_model.best_params_, X_train, Y_train, window_size)
