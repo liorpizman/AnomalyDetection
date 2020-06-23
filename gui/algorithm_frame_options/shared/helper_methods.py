@@ -208,6 +208,33 @@ def get_grid_params(algorithm):
     return grid_params
 
 
+def init_lstm_params():
+    """
+    Init LSTM default values for KERAS
+    :return: all parameters for grid search
+    """
+
+    grid_params = list()
+    chosen_params = get_grid_params("LSTM")
+
+    lstm_default_values_switcher = {
+        'epochs': [1],
+        'activation': ['relu'],
+        'loss': ['mean_squared_error'],
+        'optimizer': ['adam'],
+        'window_size': [1],
+        'encoding_dimension': [10]
+    }
+
+    for parameter in lstm_default_values_switcher.keys():
+        if parameter in chosen_params.keys():
+            grid_params.append(chosen_params.get(parameter, {}))
+        else:
+            grid_params.append(lstm_default_values_switcher.get(parameter, {}))
+
+    return grid_params
+
+
 def map_grid_params(algorithm, param_key):
     """
     Map key to key,value pair as needed for grid search
@@ -241,12 +268,12 @@ def map_grid_params(algorithm, param_key):
     }
 
     lstm_switcher = {
-        'Epochs': {},
-        'Activation function': {},
-        'Loss function': {},
-        'Optimizer': {},
-        'Window size': {},
-        'Encoding dimension': {}
+        'Epochs': {'epochs': [1, 2, 3, 5, 7, 10]},
+        'Activation function': {'activation': ['relu', 'softmax', 'tanh', 'linear']},
+        'Loss function': {'loss': ['mean_squared_error', 'mean_absolute_error']},
+        'Optimizer': {'optimizer': ['adam', 'SGD', 'Adadelta']},
+        'Window size': {'window_size': [1, 2, 3, 5, 10]},
+        'Encoding dimension': {'encoding_dimension': [8, 9, 10, 11, 12]}
     }
 
     algorithm_switcher = {
