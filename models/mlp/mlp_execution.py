@@ -17,6 +17,8 @@ from sklearn.metrics import make_scorer
 from sklearn.model_selection import GridSearchCV
 
 from sklearn.neural_network import MLPRegressor
+
+from gui.algorithm_frame_options.shared.helper_methods import get_grid_params
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
 from models.mlp.mlp_hyper_parameters import mlp_hyper_parameters
@@ -107,10 +109,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :return:  reported results for MLP execution
     """
 
-    grid_dictionary = {
-        'activation': ["logistic",  "relu"],
-        'solver': ['sgd', 'adam']
-    }
+    grid_dictionary = get_grid_params("MLP")
+    print('grid_dictionary: {0}'.format(grid_dictionary))
     # Choose between new model creation flow and load existing model flow
     if new_model_running:
         hidden_layer_sizes, activation, solver, alpha, \

@@ -19,6 +19,7 @@ from sklearn.metrics import make_scorer
 from sklearn.model_selection import GridSearchCV
 from sklearn.multioutput import MultiOutputRegressor
 
+from gui.algorithm_frame_options.shared.helper_methods import get_grid_params
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
 from models.random_forest.random_forest_hyper_parameters import random_forest_hyper_parameters
@@ -100,10 +101,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :return:  reported results for Random forest execution
     """
 
-    grid_dictionary = {
-        'estimator__n_estimators': [100, 50],
-        'estimator__criterion': ["mse", "mae"]
-    }
+    grid_dictionary = get_grid_params("RANDOM_FOREST")
     # Choose between new model creation flow and load existing model flow
     if new_model_running:
         n_estimators, criterion, max_features, \

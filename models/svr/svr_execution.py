@@ -18,6 +18,8 @@ from sklearn.model_selection import GridSearchCV
 
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.svm import SVR
+
+from gui.algorithm_frame_options.shared.helper_methods import get_grid_params
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
 from models.svr.svr_hyper_parameters import svr_hyper_parameters
@@ -96,11 +98,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :return:  reported results for SVR execution
     """
 
-    grid_dictionary = {
-        'estimator__epsilon': [0.0001],
-        'estimator__kernel': ['linear', 'poly']
-    }
-
+    grid_dictionary = get_grid_params("SVR")
     # Choose between new model creation flow and load existing model flow
     if new_model_running:
         kernel, gamma, epsilon, threshold, window_size = get_svr_new_model_parameters()
