@@ -9,6 +9,7 @@ DataSets: 1. ADS-B dataset 2. simulated data
 ---
 LSTM train and prediction execution function
 '''
+import itertools
 import pickle
 
 import pandas as pd
@@ -24,7 +25,7 @@ from models.lstm.lstm_autoencoder import get_lstm_autoencoder_model
 from utils.helper_methods import get_training_data_lstm, get_testing_data_lstm, anomaly_score_multi, \
     get_threshold, report_results, get_method_scores, get_subdirectories, create_directories, get_current_time, plot, \
     plot_reconstruction_error_scatter, get_attack_boundaries, multi_mean, plot_prediction_performance, get_plots_key, \
-    get_auc_plot_key, calculate_auc
+    get_auc_plot_key, calculate_auc, tuning_auc_and_delay
 from tensorflow.python.keras.models import load_model
 from collections import defaultdict
 
@@ -86,6 +87,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :return: reported results for LSTM execution
     """
 
+    grid_dictionary = get_lstm_grid_params()
     # Choose between new model creation flow and load existing model flow
     if new_model_running:
         window_size, encoding_dimension, activation, loss, optimizer, threshold, epochs = get_lstm_new_model_parameters()
@@ -132,7 +134,7 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
         for similarity in similarity_score:
             current_results_path = os.path.join(*[str(current_time_path), str(similarity), str(flight_route)])
             create_directories(f"{current_results_path}")
-            tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attack_duration, auc_scores = execute_predict(
+            tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attack_duration, auc_scores, best_params = execute_predict(
                 flight_route,
                 test_data_path=test_data_path,
                 similarity_score=similarity,
@@ -149,7 +151,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
                 save_model=save_model,
                 Y_train_scaler=Y_train_scaler,
                 Y_train=Y_train,
-                event=event
+                event=event,
+                grid_dictionary=grid_dictionary
             )
 
             df = pd.DataFrame(tpr_scores)
@@ -171,6 +174,10 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
             df = pd.DataFrame(auc_scores)
             auc_path = os.path.join(*[str(current_results_path), str(flight_route) + '_auc.csv'])
             df.to_csv(f"{auc_path}", index=False)
+
+            df = pd.DataFrame(best_params)
+            best_params_path = os.path.join(*[str(current_results_path), str(flight_route) + '_params.csv'])
+            df.to_csv(f"{best_params_path}", index=False)
 
     algorithm_name = "LSTM"
 
@@ -273,7 +280,8 @@ def execute_predict(flight_route,
                     save_model=False,
                     Y_train_scaler=None,
                     Y_train=None,
-                    event=None):
+                    event=None,
+                    grid_dictionary=None):
     """
     Execute predictions function for a specific flight route
     :param flight_route: current flight route we should train on
@@ -293,6 +301,7 @@ def execute_predict(flight_route,
     :param Y_train_scaler: normalization train target scalar
     :param Y_train: train target data frame
     :param event: running state flag
+    :param grid_dictionary: grid search parameters
     :return: tpr scores, fpr scores, acc scores, delay scores, routes duration, attack duration, auc_scores
     """
 
@@ -303,6 +312,7 @@ def execute_predict(flight_route,
     routes_duration = defaultdict(list)
     attack_duration = defaultdict(list)
     auc_scores = defaultdict(list)
+    best_params = defaultdict(list)
 
     # Set a threshold in new model creation flow
     if run_new_model:
@@ -366,6 +376,19 @@ def execute_predict(flight_route,
 
             Y_test_preprocessed = get_training_data_lstm(Y_test, window_size)
 
+            current_best_params = {}
+            if grid_dictionary:
+                lstm, current_best_params, X_test_preprocessed, Y_test_preprocessed, Y_test_labels_preprocessed = get_gridSearch_model(
+                    grid_dictionary,
+                    X_test,
+                    Y_test,
+                    X_train,
+                    Y_train,
+                    len(features_list),
+                    len(target_features_list),
+                    df_test_labels,
+                    similarity_score)
+
             X_pred = lstm.predict(X_test_preprocessed, verbose=0)
             assert len(Y_test_preprocessed) == len(X_pred)
 
@@ -425,8 +448,9 @@ def execute_predict(flight_route,
             routes_duration[attack].append(attack_time)
             attack_duration[attack].append(method_scores[4])
             auc_scores[attack].append(auc)
+            best_params[attack].append(current_best_params)
 
-    return tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attack_duration, auc_scores
+    return tpr_scores, fpr_scores, acc_scores, delay_scores, routes_duration, attack_duration, auc_scores, best_params
 
 
 def predict_train_set(lstm,
@@ -518,3 +542,83 @@ def predict_train_set(lstm,
             pickle.dump(Y_train_scaler, file)
 
     return threshold
+
+
+def get_lstm_grid_params():
+    encoding_dimension = [8, 9]
+    activation_list = ["relu", "softmax"]
+
+    args = [encoding_dimension, activation_list]
+    configs = []
+    for combination in itertools.product(*args):
+        print(combination)
+        configs.append(combination)
+
+    return configs
+
+
+def get_gridSearch_model(grid_dictionary, X_test, Y_test, X_train, Y_train,
+                         features_list_shape, target_features_list_shape, test_labels, similarity_score):
+    """
+    run algorithm gridSearch
+    :param grid_dictionary: params dictionary
+    :param X_test: X_test
+    :param Y_test: Y_test
+    :param X_train: X_train
+    :param Y_train: Y_train
+    :param features_list_shape: features_list_shape
+    :param target_features_list_shape: target_features_list_shape
+    :param test_labels: test_labels
+    :param similarity_score: similarity_score
+    :return: best model , best params
+    """
+
+    best_model = None
+    best_auc = 0
+    best_params = None
+    best_x = None
+    best_y = None
+    best_labels = None
+
+    for config in grid_dictionary:
+        encoding_dimension, activation = config
+
+        window_size = 2
+        X_test_preprocessed, Y_test_labels_preprocessed = get_testing_data_lstm(X_test, test_labels, window_size)
+
+        Y_test_preprocessed = get_training_data_lstm(Y_test, window_size)
+
+        # lstm_model = get_lstm_autoencoder_model(timesteps=window_size,
+        #                                         input_features=input_df_train.shape[1],
+        #                                         target_features=target_df_train.shape[1],
+        #                                         encoding_dimension=encoding_dimension,
+        #                                         activation=activation,
+        #                                         loss=loss,
+        #                                         optimizer=optimizer)
+
+        lstm_model = get_lstm_autoencoder_model(timesteps=window_size,
+                                                input_features=features_list_shape,
+                                                target_features=target_features_list_shape,
+                                                encoding_dimension=encoding_dimension,
+                                                activation=activation,
+                                                loss="mean_squared_error",
+                                                optimizer="Adam")
+        lstm_model.fit(X_test_preprocessed, Y_test_preprocessed, epochs=2, verbose=0)
+
+        X_test_pred = lstm_model.predict(X_test_preprocessed)
+
+        scores = []
+        for i, pred in enumerate(X_test_pred):
+            scores.append(anomaly_score_multi(Y_test_preprocessed[i], pred, similarity_score))
+
+        auc = tuning_auc_and_delay(test_labels, scores)
+
+        if auc > best_auc:
+            best_model = lstm_model
+            best_auc = auc
+            best_params = config
+            best_x = X_test_preprocessed
+            best_y = Y_test_preprocessed
+            best_labels = Y_test_labels_preprocessed
+
+    return best_model, best_params , best_x, best_y, best_labels

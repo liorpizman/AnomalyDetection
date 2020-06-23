@@ -623,7 +623,7 @@ def get_estimator(algoritm_name):
     return switcher.get(algoritm_name, None)
 
 
-def tuning_auc(y_score, pred):
+def tuning_auc_and_delay(y_score, pred):
     """
     Compute Area Under the Receiver Operating Characteristic Curve
     :param y_score: Target scores
@@ -640,13 +640,3 @@ def tuning_auc(y_score, pred):
     auc = auc_score(fpr, tpr)
 
     return auc
-
-def tuning_delay(y_score, pred):
-    """
-    Compute model detection delay
-    :param y_score: Target scores
-    :param pred: Binary label indicators
-    :return: AUC
-    """
-
-    pass
