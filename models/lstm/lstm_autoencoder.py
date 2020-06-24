@@ -36,14 +36,6 @@ def get_lstm_autoencoder_model(timesteps,
     :return: LSTM auto encoder model
     """
 
-    print('encoding_dimension {0}'.format(encoding_dimension))
-    print('activation {0}'.format(activation))
-    print('optimizer {0}'.format(optimizer))
-    print('loss {0}'.format(loss))
-    print('timesteps {0}'.format(timesteps))
-    print('input_features {0}'.format(input_features))
-    print('target_features {0}'.format(target_features))
-
     model = Sequential()
     model.add(LSTM(encoding_dimension, activation=activation, input_shape=(timesteps, input_features)))
     model.add(RepeatVector(timesteps))

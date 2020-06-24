@@ -587,7 +587,6 @@ def get_gridSearch_model(grid_dictionary, X_test, Y_test, X_train, Y_train,
     best_labels = None
 
     for config in grid_dictionary:
-        print("config: {0}".format(config))
 
         epochs, activation, loss, optimizer, window_size, encoding_dimension = config
 
