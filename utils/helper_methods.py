@@ -229,7 +229,7 @@ def calculate_auc(y_score, pred, algorithm_name, plt_path, attack_name):
     assert len(y_score) == len(pred)
 
     fpr, tpr, thresholds = roc_curve(pred, y_score, pos_label=1)
-    auc = auc_score(fpr, tpr)
+    auc = max_auc_min_delay_score(fpr, tpr)
 
     # Plot the computed values
     plt.figure(figsize=(28, 7))

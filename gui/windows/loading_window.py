@@ -12,11 +12,10 @@ Loading window which is part of GUI application
 
 import os
 import threading
-
-from tkinter.font import Font, BOLD
-
+import traceback
 import win32api
 
+from tkinter.font import Font, BOLD
 from gui.shared.helper_methods import strfdelta
 from gui.widgets.animated_gif import AnimatedGif
 from datetime import timedelta
@@ -66,6 +65,10 @@ class LoadingWindow(tk.Frame):
 
     show_model_process_label(y_coordinate, algorithm):
             Description | Show model process label on the screen
+
+    reset_widget()
+            Description | Reset check bar values
+
     """
 
     def __init__(self, parent, controller):
@@ -158,6 +161,8 @@ class LoadingWindow(tk.Frame):
         :return: new frame view
         """
 
+        self.algorithm_process_finished = []
+
         if self.controller.get_new_model_running():
             instruction_prefix = '[Step 5/5] '
         else:
@@ -213,17 +218,23 @@ class LoadingWindow(tk.Frame):
                 print_text = '''{0} : Runs the test data...'''.format(algorithm)
 
             if enumerate_details < 4:
-                self.algorithm_process_finished = tk.Label(self)
-                self.algorithm_process_finished.place(relx=0.015, rely=y_coordinate, height=22, width=400)
-                self.algorithm_process_finished.configure(text=print_text)
-                set_widget_to_left(self.algorithm_process_finished)
+                self.algorithm_process = tk.Label(self)
+                self.algorithm_process.place(relx=0.015, rely=y_coordinate, height=22, width=400)
+                self.algorithm_process.configure(text=print_text)
+                set_widget_to_left(self.algorithm_process)
+
+                self.algorithm_process_finished.append(self.algorithm_process)
 
                 y_coordinate += 0.04
 
             try:
                 self.controller.run_models(algorithm, similarity_score, test_data_path,
                                            results_path, new_model_running, self.event)
-            except:
+            except Exception:
+                print('src: gui/windows/loading_window.py')
+                print('Thread: model_process')
+                print('Loading window traceback:')
+                print(traceback.format_exc())
                 win32api.MessageBox(0, 'An error occurred while running the {0} algorithm ! \n'
                                        'Invalid parameter entered. '.format(algorithm), 'Error', 0x00001000)
 
@@ -259,3 +270,12 @@ class LoadingWindow(tk.Frame):
         self.model_process_finished.place(relx=0.015, rely=y_coordinate, height=22, width=215)
         self.model_process_finished.configure(text='''{0} model runs on the test...'''.format(algorithm))
         set_widget_to_left(self.model_process_finished)
+
+    def reset_widgets(self):
+        """
+        Reset values
+        :return: empty values in the widgets
+        """
+
+        for label in self.algorithm_process_finished:
+            label.destroy()

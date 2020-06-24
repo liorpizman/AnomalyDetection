@@ -102,12 +102,6 @@ class SimilarityFunctionsWindow(tk.Frame):
                                                       variable=self.save_model_var,
                                                       command=self.set_saving_model)
 
-        self.note = tk.Label(self)
-        self.note.place(relx=0.015, rely=0.7, height=32, width=635)
-        self.note.configure(
-            text='''Note: Similarity function is used for calculating a score for each record''',
-            font=Font(size=9, weight=BOLD))
-        set_widget_to_left(self.note)
 
         # Page footer
         self.next_button = HoverButton(self, command=self.next_window)
@@ -194,6 +188,13 @@ class SimilarityFunctionsWindow(tk.Frame):
         self.instructions.configure(
             text=instruction_prefix + '''Please choose similarity functions from the following options.''')
         set_widget_to_left(self.instructions)
+
+        self.note = tk.Label(self)
+        self.note.place(relx=0.015, rely=0.7, height=32, width=635)
+        self.note.configure(
+            text='''Note: Similarity function is used for calculating a score for each record''',
+            font=Font(size=9, weight=BOLD))
+        set_widget_to_left(self.note)
 
         if self.controller.get_new_model_running():
             if not self.save_model_var:
