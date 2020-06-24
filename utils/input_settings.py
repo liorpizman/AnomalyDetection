@@ -599,12 +599,18 @@ class InputSettings:
 
         InputSettings.RESULTS_TABLE_ALGORITHM = ""
         InputSettings.RESULTS_TABLE_FLIGHT_ROUTE = ""
+        InputSettings.RESULTS_TABLE_SIMILARITY_FUNCTION = ""
 
         InputSettings.TUNE_MODEL_PATH = ""
         InputSettings.TUNE_MODEL_INPUT_FEATURES = []
         InputSettings.TUNE_MODEL_TARGET_FEATURES = []
         InputSettings.TUNE_MODEL_WINDOW_SIZE = []
         InputSettings.TUNE_MODEL_ALGORITHM = ""
+        InputSettings.TUNE_MODEL_RESULTS_PATH = ""
+
+        InputSettings.PLOTS = dict()
+
+        InputSettings.GRID_SEARCH = dict()
 
     @staticmethod
     def set_results_selected_similarity_function(similarity_function):

@@ -15,6 +15,7 @@ import pickle
 import pandas as pd
 import json
 
+from keras.backend import clear_session
 from gui.algorithm_frame_options.shared.helper_methods import init_lstm_params
 from models.data_preprocessing.data_cleaning import clean_data
 from models.data_preprocessing.data_normalization import normalize_data
@@ -87,6 +88,8 @@ def run_model(training_data_path, test_data_path, results_path, similarity_score
     :param event: running state flag
     :return: reported results for LSTM execution
     """
+
+    clear_session()
 
     grid_dictionary = get_lstm_grid_params()
     # Choose between new model creation flow and load existing model flow
@@ -546,8 +549,13 @@ def predict_train_set(lstm,
 
 
 def get_lstm_grid_params():
-    args = init_lstm_params()
     configs = []
+
+    if InputSettings.is_algorithm_grid_search_dict_empty("LSTM"):
+        return configs
+
+    args = init_lstm_params()
+
     for combination in itertools.product(*args):
         print(combination)
         configs.append(combination)
@@ -585,14 +593,6 @@ def get_gridSearch_model(grid_dictionary, X_test, Y_test, X_train, Y_train,
         X_test_preprocessed, Y_test_labels_preprocessed = get_testing_data_lstm(X_test, test_labels, window_size)
 
         Y_test_preprocessed = get_training_data_lstm(Y_test, window_size)
-
-        # lstm_model = get_lstm_autoencoder_model(timesteps=window_size,
-        #                                         input_features=input_df_train.shape[1],
-        #                                         target_features=target_df_train.shape[1],
-        #                                         encoding_dimension=encoding_dimension,
-        #                                         activation=activation,
-        #                                         loss=loss,
-        #                                         optimizer=optimizer)
 
         lstm_model = get_lstm_autoencoder_model(timesteps=window_size,
                                                 input_features=features_list_shape,

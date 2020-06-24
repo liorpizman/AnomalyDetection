@@ -103,6 +103,7 @@ Select algorithms for which you want to build anomaly detection models<br/>
 <img height=350 width=370 src="utils/images/new_model/algorithmsWindow.JPG">
 
 Select the values for each of the following parameters or run a **GridSearch** with chosen parameters<br/>
+The **decision function** of the GridSearch is **max AUC** and **min Delay**<br/>
 <img height=350 width=370 src="utils/images/new_model/parametersOptionsWindow.JPG">
 
 Please choose both input and target features<br/>
