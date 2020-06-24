@@ -19,7 +19,7 @@ from numpy import dot
 from numpy.linalg import norm
 from scipy.spatial import distance
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import pairwise, mean_squared_error, roc_curve, auc as auc_score
+from sklearn.metrics import pairwise, mean_squared_error, roc_curve, auc as max_auc_min_delay_score
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
@@ -637,6 +637,6 @@ def tuning_auc_and_delay(y_score, pred):
     assert len(y_score_preprocessed) == len(pred)
 
     fpr, tpr, thresholds = roc_curve(y_score_preprocessed, pred, pos_label=1)
-    auc = auc_score(fpr, tpr)
+    auc = max_auc_min_delay_score(fpr, tpr)
 
     return auc
